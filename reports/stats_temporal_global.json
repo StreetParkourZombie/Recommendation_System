@@ -1,0 +1,181 @@
+{
+  "split": "temporal_global",
+  "paired_users": 1363,
+  "bootstrap_n_boot": 10000,
+  "seed": 42,
+  "run_at": "2026-11-04T03:03:31.421267",
+  "metrics": {
+    "NDCG@10": {
+      "label": "NDCG@10",
+      "popularity": {
+        "mean": 0.043537,
+        "ci_low": 0.038006,
+        "ci_high": 0.049298,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "als": {
+        "mean": 0.136404,
+        "ci_low": 0.126008,
+        "ci_high": 0.146976,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "paired_diff_als_minus_pop": {
+        "mean": 0.092867,
+        "ci_low": 0.083438,
+        "ci_high": 0.102373,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "wilcoxon": {
+        "W": 99215.5,
+        "z": -25.4637,
+        "p": 0.0,
+        "n_pairs": 1363,
+        "n_nonzero": 1363,
+        "median_diff": 0.0,
+        "mean_diff": 0.092867
+      },
+      "cohens_dz": 0.5207,
+      "rank_biserial_r": 0.7292,
+      "kendall_tau_b": {
+        "tau_b": 0.361,
+        "p": 3.184e-57
+      },
+      "constant_metric": false,
+      "direction": "ALS > Popularity",
+      "significant_0.05": true
+    },
+    "Hit@10": {
+      "label": "Hit@10",
+      "popularity": {
+        "mean": 0.04182,
+        "ci_low": 0.031548,
+        "ci_high": 0.052825,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "als": {
+        "mean": 0.159941,
+        "ci_low": 0.140866,
+        "ci_high": 0.179017,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "paired_diff_als_minus_pop": {
+        "mean": 0.118122,
+        "ci_low": 0.097579,
+        "ci_high": 0.137931,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "wilcoxon": {
+        "W": 38812.0,
+        "z": -31.737,
+        "p": 0.0,
+        "n_pairs": 1363,
+        "n_nonzero": 1363,
+        "median_diff": 0.0,
+        "mean_diff": 0.118122
+      },
+      "cohens_dz": 0.3052,
+      "rank_biserial_r": 0.722,
+      "kendall_tau_b": {
+        "tau_b": 0.1688,
+        "p": 4.658e-10
+      },
+      "constant_metric": false,
+      "direction": "ALS > Popularity",
+      "significant_0.05": true
+    },
+    "PerUserPopSkew": {
+      "label": "PerUserPopSkew",
+      "popularity": {
+        "mean": 101.258019,
+        "ci_low": 101.258019,
+        "ci_high": 101.258019,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "als": {
+        "mean": 28.991944,
+        "ci_low": 27.904963,
+        "ci_high": 30.11655,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "paired_diff_als_minus_pop": {
+        "mean": -72.266075,
+        "ci_low": -73.353056,
+        "ci_high": -71.141469,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "wilcoxon": {
+        "W": 0.0,
+        "z": -31.9785,
+        "p": 0.0,
+        "n_pairs": 1363,
+        "n_nonzero": 1363,
+        "median_diff": -79.116809,
+        "mean_diff": -72.266075
+      },
+      "cohens_dz": -3.4597,
+      "rank_biserial_r": -1.0,
+      "kendall_tau_b": {
+        "tau_b": null,
+        "p": null,
+        "note": "one series is constant - Kendall tau-b undefined"
+      },
+      "constant_metric": false,
+      "direction": "ALS < Popularity",
+      "significant_0.05": true
+    },
+    "TailCount@10": {
+      "label": "TailCount@10",
+      "popularity": {
+        "mean": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "als": {
+        "mean": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "paired_diff_als_minus_pop": {
+        "mean": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n": 1363,
+        "n_boot": 10000
+      },
+      "wilcoxon": {
+        "W": 0.0,
+        "z": null,
+        "p": null,
+        "n_pairs": 1363,
+        "n_nonzero": 0,
+        "median_diff": 0.0,
+        "mean_diff": 0.0,
+        "note": "all paired differences are zero - test not applicable"
+      },
+      "cohens_dz": null,
+      "rank_biserial_r": null,
+      "kendall_tau_b": {
+        "tau_b": null,
+        "p": null,
+        "note": "one series is constant - Kendall tau-b undefined"
+      },
+      "constant_metric": true,
+      "direction": "equal",
+      "significant_0.05": false,
+      "note": "metric constant across users for both models - no variance to test; reported as descriptive only"
+    }
+  }
+}

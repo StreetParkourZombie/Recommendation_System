@@ -1,0 +1,81 @@
+% ============================================================
+% TÀI LIỆU THAM KHẢO - CHUẨN IEEE (theo Bài 05, Bảng 26)
+% Yêu cầu: 15-20 tài liệu; >= 50% là bài báo khoa học 5 năm gần nhất;
+% sách 10-15%; tài liệu kỹ thuật 10-15%; báo cáo thị trường 10-15%;
+% trang web <= 10%.
+% Dưới đây là 5 ví dụ mẫu cho 5 loại tài liệu - học viên thay bằng
+% tài liệu thực tế của đề tài.
+% ============================================================
+
+% 1. Bài báo tạp chí (Article)
+% Các thành phần bổ sung: author đầy đủ, number, month, publisher, doi, issn
+@article{vidu_tapchi,
+  author    = {T. H. Nguyen and Q. T. Minh and V. H. Tran},
+  title     = {Demand Forecasting Using {LSTM} Networks with Seasonal Decomposition in Retail Supply Chains},
+  journal   = {IEEE Access},
+  volume    = {9},
+  number    = {4},
+  pages     = {45678--45689},
+  month     = apr,
+  year      = {2021},
+  publisher = {IEEE},
+  doi       = {10.1109/ACCESS.2021.3071234},
+  issn      = {2169-3536}
+}
+
+% 2. Bài báo kỷ yếu hội nghị (Inproceedings / Conference Paper)
+% Các thành phần bổ sung: author đầy đủ, booktitle hoàn chỉnh, publisher, address, month, doi, series
+@inproceedings{vidu_hoinghi,
+  author    = {L. Chen and Y. Wang and K. Zhang and M. Liu},
+  title     = {Machine Learning for Retail Demand Forecasting: A Large-Scale Empirical Study},
+  booktitle = {Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining},
+  series    = {KDD '20},
+  pages     = {101--110},
+  month     = aug,
+  year      = {2020},
+  address   = {New York, NY, USA},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/3394486.3403123}
+}
+
+% 3. Sách chuyên khảo (Book)
+% Các thành phần bổ sung: đồng tác giả (E. R. Khan), tên NXB đầy đủ, nơi xuất bản, số trang (pages), isbn
+@book{vidu_sach,
+  author    = {Huma Anwar and Ehtiram Raza Khan},
+  title     = {Research Methods of Computer Science},
+  edition   = {1st},
+  address   = {New Delhi, India},
+  publisher = {University Science Press (An Imprint of Laxmi Publications Pvt. Ltd.)},
+  year      = {2018},
+  pages     = {1--105},
+  isbn      = {978-93-83828-24-1}
+}
+
+% 4. Trang web / Tài liệu trực tuyến (Online Documentation / Misc)
+% Các thành phần bổ sung: tổ chức xuất bản (publisher/organization), tháng, url trực tiếp, tiêu đề chi tiết
+@misc{vidu_website,
+  author       = {{Google LLC}},
+  title        = {{TensorFlow} Documentation: Core {API} and Tutorials},
+  howpublished = {[Online]. Available: \url{https://www.tensorflow.org/}},
+  organization = {Google Brain Team},
+  month        = dec,
+  year         = {2023},
+  url          = {https://www.tensorflow.org/},
+  note         = {[Accessed: Jan. 10, 2026]}
+}
+
+% 5. Báo cáo kỹ thuật (Technical Report / Preprint)
+% Các thành phần bổ sung: danh sách tác giả chính, loại báo cáo (type), số hiệu (number/arXiv), nơi xuất bản, tháng, số trang (pages), doi, url
+@techreport{vidu_baocao,
+  author      = {Josh Achiam and Steven Adler and Sandhini Agarwal and Lama Ahmad and Ilge Akkaya and others},
+  title       = {{GPT-4} Technical Report},
+  institution = {OpenAI Inc.},
+  type        = {Research Technical Report},
+  number      = {arXiv:2303.08774 [cs.CL]},
+  address     = {San Francisco, CA, USA},
+  month       = mar,
+  year        = {2023},
+  pages       = {1--100},
+  doi         = {10.48550/arXiv.2303.08774},
+  url         = {https://arxiv.org/abs/2303.08774}
+}

@@ -1,0 +1,158 @@
+% !TEX root = main.tex
+% Chương 1: Hệ thống hóa lý thuyết (20% tổng điểm, 4-6 trang)
+
+\chapter{Hệ thống hóa lý thuyết}
+\label{ch:chuong1}
+
+\begin{spacing}{1.2}
+
+\section*{Giới thiệu chương}
+
+\begin{huongdan}
+Trọng số: 20\% tổng điểm. Độ dài khuyến nghị: 5--10 trang. Chương này trình bày và phân tích các khái niệm nền tảng về phương pháp luận nghiên cứu khoa học đã học trong môn học. Không chép lại định nghĩa từ sách giáo khoa, mà tổng hợp, chắt lọc và kết nối lý thuyết với bối cảnh đề tài cụ thể của mình. Đoạn mở đầu này nên nêu ngắn gọn: chương gồm những mục nào (tương ứng Mục~\ref{sec:tri_thuc}, Mục~\ref{sec:quy_trinh_mo_hinh}, Mục~\ref{sec:dao_duc}) và mối liên hệ giữa chúng. Sau chương này cần đạt được: hệ thống hóa chu trình tri thức DIKW và ba phương pháp tư duy khoa học; mô tả và so sánh được ít nhất ba mô hình quy trình nghiên cứu; trình bày được các nguyên tắc đạo đức khoa học và cách áp dụng vào đề tài.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\section{Hệ thống tri thức khoa học (Knowledge System)}
+\label{sec:tri_thuc}
+
+\subsection{Chu trình DIKW -- từ dữ liệu đến lý thuyết}
+\label{subsec:dikw}
+
+\begin{huongdan}
+Định nghĩa và mô tả bốn cấp độ: dữ liệu (Data), thông tin (Information), tri thức (Knowledge), lý thuyết/trí tuệ (Wisdom/Theory); mô tả quá trình chuyển đổi giữa các cấp; minh họa bằng ví dụ cụ thể từ lĩnh vực nghiên cứu của đề tài; nêu rõ đề tài đóng góp ở cấp độ nào trong chu trình DIKW.
+\end{huongdan}
+
+Nội dung của phần này. Chu trình \tvt{DIKW}{Data, Information, Knowledge, Wisdom -- các cấp độ của tri thức} là khung lý thuyết được sử dụng xuyên suốt mục này.
+
+\subsection{Ba phương pháp tư duy khoa học}
+\label{subsec:tu_duy}
+
+\begin{huongdan}
+Định nghĩa ngắn gọn từng phương pháp (diễn dịch, quy nạp, suy đoán), lấy ví dụ minh họa từ chính đề tài đang thực hiện, và chỉ rõ phương pháp nào là chủ đạo trong đề tài kèm lý do lựa chọn.
+\end{huongdan}
+
+Nội dung của phần này. Ba phương pháp tư duy khoa học được tóm tắt và liên hệ với đề tài tại Bảng~\ref{tab:tu_duy}.
+
+\begin{table}[htpb]
+\centering
+\caption{So sánh ba phương pháp tư duy khoa học và ứng dụng trong đề tài}
+\label{tab:tu_duy}
+\renewcommand{\arraystretch}{1.3}
+{\fontsize{12}{14}\selectfont
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.6cm}|X|}
+\hline
+\textbf{Phương pháp} & \textbf{Hướng suy luận} & \textbf{Ứng dụng trong đề tài} \\
+\hline
+Diễn dịch (Deductive) & Lý thuyết chung $\rightarrow$ Trường hợp cụ thể & [Học viên điền ví dụ từ đề tài] \\
+\hline
+Quy nạp (Inductive) & Quan sát nhiều trường hợp $\rightarrow$ Quy luật chung & [Học viên điền ví dụ từ đề tài] \\
+\hline
+Suy đoán (Abductive) & Dữ kiện không đầy đủ $\rightarrow$ Giả thuyết tốt nhất & [Học viên điền ví dụ từ đề tài] \\
+\hline
+\end{tabularx}
+}
+\end{table}
+
+\section{Quy trình và mô hình nghiên cứu}
+\label{sec:quy_trinh_mo_hinh}
+
+\subsection{Quy trình nghiên cứu khoa học cơ bản}
+\label{subsec:quy_trinh}
+
+\begin{huongdan}
+Liệt kê và mô tả ít nhất bảy bước trong quy trình nghiên cứu khoa học cơ bản; giải thích mối liên hệ và phụ thuộc giữa các bước; chỉ ra bước dễ xảy ra sai lầm nhất và cách phòng tránh; ánh xạ từng bước vào kế hoạch thực hiện của đề tài.
+\end{huongdan}
+
+Nội dung của phần này. Quy trình nghiên cứu khoa học cơ bản gồm bảy bước, được trình bày một cách hệ thống trong giáo trình phương pháp luận nghiên cứu \cite{vidu_sach}, và được minh họa tại Hình~\ref{fig:quy_trinh_nc}.
+
+\begin{figure}[htpb]
+\centering
+\begin{tikzpicture}[
+  bstep/.style={rectangle, draw=blue!70, fill=blue!5, rounded corners,
+               minimum width=7cm, minimum height=0.75cm, font=\small},
+  arrow/.style={-{Stealth[scale=1.1]}, thick, draw=blue!80!black}
+]
+\node[bstep] (b1) {Bước 1: Xác định vấn đề};
+\node[bstep, below=0.4cm of b1] (b2) {Bước 2: Tổng quan tài liệu};
+\node[bstep, below=0.4cm of b2] (b3) {Bước 3: Xây dựng giả thuyết};
+\node[bstep, below=0.4cm of b3] (b4) {Bước 4: Thiết kế nghiên cứu};
+\node[bstep, below=0.4cm of b4] (b5) {Bước 5: Thu thập dữ liệu};
+\node[bstep, below=0.4cm of b5] (b6) {Bước 6: Phân tích và diễn giải};
+\node[bstep, below=0.4cm of b6] (b7) {Bước 7: Công bố và phản hồi};
+\draw[arrow] (b1) -- (b2);
+\draw[arrow] (b2) -- (b3);
+\draw[arrow] (b3) -- (b4);
+\draw[arrow] (b4) -- (b5);
+\draw[arrow] (b5) -- (b6);
+\draw[arrow] (b6) -- (b7);
+\end{tikzpicture}
+\caption{Quy trình nghiên cứu khoa học cơ bản (7 bước)}
+\label{fig:quy_trinh_nc}
+\end{figure}
+
+\subsection{So sánh các mô hình nghiên cứu}
+\label{subsec:so_sanh_mo_hinh}
+
+\begin{huongdan}
+Mô tả đặc điểm của ít nhất ba mô hình nghiên cứu: tuần tự (Sequential), vòng lặp (Iterative), tiến hóa (Evolutionary); phân tích ưu và nhược điểm của từng mô hình; lý giải cụ thể tại sao chọn một mô hình cho đề tài (không chỉ nói "phù hợp" mà không giải thích).
+\end{huongdan}
+
+Nội dung của phần này. Đặc điểm của ba mô hình nghiên cứu được so sánh tại Bảng~\ref{tab:mo_hinh_nc}.
+
+\begin{table}[htpb]
+\centering
+\caption{So sánh các mô hình nghiên cứu}
+\label{tab:mo_hinh_nc}
+\renewcommand{\arraystretch}{1.3}
+{\fontsize{12}{14}\selectfont
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|X|X|X|}
+\hline
+\textbf{Tiêu chí} & \textbf{Mô hình tuần tự} & \textbf{Mô hình vòng lặp} & \textbf{Mô hình tiến hóa} \\
+\hline
+Đặc điểm chính & Các bước thực hiện lần lượt, tuyến tính & Lặp lại các chu kỳ để cải tiến dần & Kết hợp nhiều phương pháp, thích nghi liên tục \\
+\hline
+Ưu điểm & Dễ quản lý, kế hoạch rõ ràng & Linh hoạt, phát hiện lỗi sớm & Thích hợp nghiên cứu phức tạp \\
+\hline
+Nhược điểm & Khó sửa đổi khi đã qua bước trước & Khó kiểm soát thời gian, phạm vi & Yêu cầu kinh nghiệm cao \\
+\hline
+Phù hợp khi & Bài toán rõ ràng, yêu cầu ổn định & Cần điều chỉnh dựa trên kết quả & Nghiên cứu dài hạn, phức tạp \\
+\hline
+Đề tài này dùng? & [Có / Không] & [Có / Không] & [Có / Không] \\
+\hline
+\end{tabularx}
+}
+\end{table}
+
+\section{Đạo đức trong nghiên cứu khoa học}
+\label{sec:dao_duc}
+
+\subsection{Liêm chính học thuật và đạo văn (Plagiarism)}
+\label{subsec:dao_van}
+
+\begin{huongdan}
+Định nghĩa đạo văn và các hình thức (sao chép nguyên văn, diễn giải không trích dẫn, tự đạo văn); trình bày kỹ thuật paraphrasing đúng cách kèm ví dụ câu gốc và câu diễn giải lại; nêu cách trích dẫn đúng theo chuẩn IEEE; kết thúc bằng cam kết của học viên về tính liêm chính trong tiểu luận này.
+\end{huongdan}
+
+Nội dung của phần này. Chuẩn trích dẫn \tvt{IEEE}{Institute of Electrical and Electronics Engineers} được áp dụng thống nhất cho toàn bộ tiểu luận.
+
+\subsection{Đạo đức thu thập và sử dụng dữ liệu}
+\label{subsec:dao_duc_du_lieu}
+
+\begin{huongdan}
+Trình bày nguyên tắc bảo mật dữ liệu doanh nghiệp (xin phép, ký thỏa thuận bảo mật, ẩn danh hóa); quyền riêng tư của người dùng/khách hàng trong dữ liệu thu thập; trách nhiệm công bố kết quả trung thực; kết thúc bằng cam kết cụ thể về cách đảm bảo đạo đức trong đề tài.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\section{Tổng kết chương 1}
+\label{sec:tong_ket_c1}
+
+\begin{huongdan}
+Điểm lại ngắn gọn ba nội dung chính đã trình bày: chu trình DIKW và các phương pháp tư duy khoa học (Mục~\ref{sec:tri_thuc}); quy trình và mô hình nghiên cứu đã chọn (Mục~\ref{sec:quy_trinh_mo_hinh}); các nguyên tắc đạo đức khoa học sẽ tuân thủ (Mục~\ref{sec:dao_duc}). Kết thúc bằng một câu chuyển ý sang Chương 2, ví dụ: khung lý thuyết vừa hệ thống hóa sẽ được vận dụng để phân tích bài toán thực tế tại doanh nghiệp.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\end{spacing}

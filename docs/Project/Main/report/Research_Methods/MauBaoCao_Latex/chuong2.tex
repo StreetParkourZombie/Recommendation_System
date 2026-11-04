@@ -1,0 +1,240 @@
+% !TEX root = main.tex
+% Chương 2: Xác lập nền tảng và ứng dụng công cụ (30% tổng điểm, 6-9 trang)
+
+\chapter{Xác lập nền tảng và ứng dụng công cụ}
+\label{ch:chuong2}
+
+\begin{spacing}{1.2}
+
+\section*{Giới thiệu chương}
+
+\begin{huongdan}
+Trọng số: 30\% tổng điểm. Độ dài khuyến nghị: 10--15 trang. Chương này nặng về bằng chứng thực tế. Mỗi luận điểm cần minh chứng bằng số liệu cụ thể từ doanh nghiệp hoặc trích dẫn từ bài báo khoa học, tránh viết chung chung. Đoạn mở đầu này nên nêu ngắn gọn chương gồm những mục nào (Mục~\ref{sec:bai_toan_dn}, Mục~\ref{sec:cong_cu_tai_lieu}, Mục~\ref{sec:synthesis}) và cách chúng nối tiếp nhau. Sau chương này cần đạt được: phân tích được bài toán doanh nghiệp theo khung W5H2 với số liệu cụ thể; có minh chứng (ảnh chụp màn hình) việc sử dụng Mendeley/Zotero cho ít nhất năm bài báo; thiết lập bộ tiêu chí đánh giá độ tin cậy nguồn tài liệu (theo nguyên tắc Think-Check-Submit, loại trừ xuất bản săn mồi/trục lợi) và minh chứng tra cứu xếp hạng học thuật (SCImago SJR Q1/Q2 cho tạp chí, CORE Ranking A*/A/B cho hội nghị); lập được ma trận tổng hợp và viết đoạn phân tích Research Gap rõ ràng.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\section{Phân tích bài toán tại doanh nghiệp}
+\label{sec:bai_toan_dn}
+
+\subsection{Tổng quan doanh nghiệp khảo sát}
+\label{subsec:tong_quan_dn}
+
+\begin{huongdan}
+Nêu tên/loại hình doanh nghiệp (dùng tên giả nếu cần bảo mật), quy mô, lĩnh vực hoạt động, hạ tầng CNTT hiện tại, mức độ trưởng thành số hóa. Sau bảng, viết một đoạn văn tóm tắt khoảng 100 từ kết nối các thông tin, không liệt kê đơn thuần.
+\end{huongdan}
+
+Nội dung của phần này. Thông tin tổng quan về doanh nghiệp khảo sát được trình bày tại Bảng~\ref{tab:thong_tin_dn}.
+
+\begin{table}[htpb]
+\centering
+\caption{Thông tin doanh nghiệp khảo sát}
+\label{tab:thong_tin_dn}
+\renewcommand{\arraystretch}{1.3}
+{\fontsize{12}{14}\selectfont
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{5cm}|X|}
+\hline
+\textbf{Tiêu chí} & \textbf{Thông tin doanh nghiệp (Học viên điền)} \\
+\hline
+Tên doanh nghiệp & [Tên chính thức hoặc tên giả nếu bảo mật] \\
+\hline
+Lĩnh vực hoạt động & [Bán lẻ / Sản xuất / Logistics / FinTech\ldots] \\
+\hline
+Quy mô nhân sự, chi nhánh & [X nhân viên, X chi nhánh tại\ldots] \\
+\hline
+Hạ tầng CNTT (phần cứng, phần mềm) & [On-premise / Cloud; ERP, CRM\ldots] \\
+\hline
+Loại và khối lượng dữ liệu & [Giao dịch POS / Khách hàng; $\sim$X GB/năm] \\
+\hline
+Mức độ số hóa hiện tại & [Mới bắt đầu / Đang triển khai / Đã hoàn thiện] \\
+\hline
+\end{tabularx}
+}
+\end{table}
+
+\subsection{Xác định vấn đề theo khung W5H2}
+\label{subsec:w5h2}
+
+\begin{huongdan}
+Trả lời đầy đủ sáu chiều phân tích, mỗi chiều ít nhất hai đến ba câu, có số liệu định lượng cụ thể (thiệt hại, tỷ lệ phần trăm, thời gian, chi phí); xác định nguyên nhân gốc rễ, không chỉ mô tả triệu chứng.
+\end{huongdan}
+
+Nội dung của phần này. Kết quả phân tích vấn đề theo khung \tvt{W5H2}{What, Who, Where, When, Why, How much -- sáu chiều phân tích vấn đề} được tổng hợp tại Bảng~\ref{tab:w5h2}.
+
+\begin{table}[htpb]
+\centering
+\caption{Phân tích vấn đề theo khung W5H2}
+\label{tab:w5h2}
+\renewcommand{\arraystretch}{1.3}
+{\fontsize{12}{14}\selectfont
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{4.6cm}|X|}
+\hline
+\textbf{Chiều} & \textbf{Câu hỏi} & \textbf{Phân tích chi tiết (cần có số liệu)} \\
+\hline
+WHAT? & Bài toán/thách thức cụ thể là gì? & [Học viên điền] \\
+\hline
+WHO? & Bộ phận/người nào bị ảnh hưởng? & [Học viên điền] \\
+\hline
+WHERE? & Vấn đề xảy ra tại đâu? & [Học viên điền] \\
+\hline
+WHEN? & Tần suất và thời điểm xảy ra? & [Học viên điền] \\
+\hline
+WHY? & Nguyên nhân gốc rễ là gì? & [Học viên điền] \\
+\hline
+HOW MUCH? & Chi phí/tổn thất cụ thể là bao nhiêu? & [Học viên điền] \\
+\hline
+\end{tabularx}
+}
+\end{table}
+
+\subsection{Phát biểu vấn đề nghiên cứu (Problem Statement)}
+\label{subsec:problem_statement}
+
+\begin{huongdan}
+Viết một đoạn văn súc tích, đo lường được, tổng hợp từ kết quả phân tích W5H2, theo cấu trúc: [Tên doanh nghiệp], một [loại hình] với [quy mô], đang đối mặt với vấn đề [mô tả cụ thể], dẫn đến [hậu quả đo lường được]. Mặc dù [giải pháp hiện tại], hiệu quả chỉ đạt [con số]. Khoảng trống: chưa có [điều gì] để [mục tiêu]. Nghiên cứu này đề xuất [giải pháp] nhằm đạt [kết quả kỳ vọng] trong [thời gian].
+\end{huongdan}
+
+Nội dung của phần này.
+
+\section{Ứng dụng công cụ quản lý tài liệu (Mendeley/Zotero)}
+\label{sec:cong_cu_tai_lieu}
+
+\subsection{Giới thiệu công cụ và lý do lựa chọn}
+\label{subsec:gioi_thieu_cong_cu}
+
+\begin{huongdan}
+Giới thiệu ngắn gọn Mendeley và Zotero, nêu lý do chọn công cụ cụ thể cho tiểu luận này, và mô tả quy trình làm việc khoa học: tìm kiếm bài báo từ các cơ sở dữ liệu uy tín (Scopus, Web of Science, IEEE Xplore), nhập vào thư viện, thẩm định độ tin cậy và xếp hạng, gắn thẻ phân loại (theo chủ đề, phân vị Q1/Q2 hoặc CORE A*/A), và trích xuất trích dẫn theo định dạng IEEE.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\subsection{Minh chứng sử dụng công cụ (ảnh màn hình)}
+\label{subsec:minh_chung_cong_cu}
+
+\begin{huongdan}
+Cần đủ bốn ảnh màn hình: (1) thư viện hiển thị ít nhất năm bài báo với metadata đầy đủ; (2) gắn thẻ phân loại bài báo theo chủ đề và xếp hạng học thuật (ví dụ: gắn thẻ Q1, Q2, CORE A, Scopus để phục vụ quản lý và sàng lọc); (3) chi tiết metadata của một bài báo (DOI, tóm tắt, nguồn, ấn phẩm); (4) thao tác xuất trích dẫn theo định dạng IEEE. Mỗi hình phải có chú thích và được tham chiếu trong văn bản; sau mỗi hình viết thêm hai đến ba câu mô tả ý nghĩa.
+\end{huongdan}
+
+Nội dung của phần này. Hình~\ref{fig:mendeley} minh họa thư viện tài liệu được xây dựng cho đề tài.
+
+\begin{figure}[htpb]
+\centering
+\begin{tikzpicture}
+\draw[dashed, thick, gray, rounded corners] (0,0) rectangle (13.5,5.5);
+\node[align=center, gray, font=\small] at (6.75,2.75)
+  {[Chèn ảnh chụp màn hình thư viện Mendeley/Zotero\\
+   hiển thị tối thiểu 5 bài báo với metadata đầy đủ và gắn thẻ xếp hạng (Q1/Q2/CORE)]\\[0.5em]
+   (Cần đủ 4 hình: thư viện, gắn thẻ phân loại chủ đề \& xếp hạng, chi tiết bài báo, xuất trích dẫn IEEE)};
+\end{tikzpicture}
+\caption{Thư viện Mendeley/Zotero với 5 bài báo liên quan đến đề tài}
+\label{fig:mendeley}
+\end{figure}
+
+\section{Ma trận tổng hợp tài liệu (Synthesis Matrix)}
+\label{sec:synthesis}
+
+\subsection{Tiêu chí chọn lọc và đánh giá độ tin cậy, xếp hạng bài báo}
+\label{subsec:tieu_chi_chon_bai}
+
+\begin{huongdan}
+Chọn năm bài báo xuất bản trong năm năm gần nhất, từ nguồn học thuật uy tín và cơ sở dữ liệu hàng đầu (IEEE Xplore, ACM Digital Library, SpringerLink, Elsevier ScienceDirect, Scopus, Web of Science). Trình bày rõ các tiêu chí lựa chọn và loại trừ (Inclusion/Exclusion Criteria) bao gồm: tính thời sự (trong vòng 5 năm gần nhất), độ liên quan trực tiếp đến bài toán nghiên cứu, phương pháp luận chặt chẽ, và đặc biệt là độ tin cậy của ấn phẩm (quy chuẩn Think-Check-Submit, loại trừ tuyệt đối tạp chí săn mồi/kém chất lượng) cùng chuẩn xếp hạng học thuật bắt buộc (tạp chí đạt phân vị SCImago SJR Q1/Q2; hội nghị đạt chuẩn CORE Ranking A*/A/B). Mô tả chiến lược tìm kiếm: từ khóa sử dụng (kết hợp toán tử Boolean AND/OR), cơ sở dữ liệu tra cứu, số lượng kết quả thu được ở từng bước và lý do tinh lọc ra năm bài báo này.
+\end{huongdan}
+
+Nội dung của phần này. Chiến lược tìm kiếm và tiêu chí chọn lọc bài báo được xây dựng nhằm bảo đảm tính cập nhật, độ tin cậy học thuật và chất lượng nghiên cứu cao nhất. Các tài liệu được sàng lọc qua cơ sở dữ liệu Scopus, Web of Science và IEEE Xplore, tuân thủ nghiêm ngặt bộ tiêu chí an toàn xuất bản Think-Check-Submit và đối chiếu hệ thống xếp hạng SCImago Journal Rank (SJR) cùng CORE Conference Ranking. Kết quả đánh giá độ tin cậy và xếp hạng của 5 bài báo tiêu biểu được tổng hợp tại Bảng~\ref{tab:danh_gia_xep_hang}. Minh chứng tra cứu xếp hạng trực tuyến từ cổng SCImago và CORE Portal được thể hiện tại Hình~\ref{fig:minh_chung_xep_hang}.
+
+% BẢNG ĐÁNH GIÁ ĐỘ TIN CẬY VÀ XẾP HẠNG TÀI LIỆU
+\begin{table}[htpb]
+\centering
+\caption{Đánh giá độ tin cậy và xếp hạng của các tài liệu nghiên cứu}
+\label{tab:danh_gia_xep_hang}
+\renewcommand{\arraystretch}{1.3}
+{\fontsize{10}{12}\selectfont
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}p{1.4cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{2.3cm}|>{\centering\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Bài báo} & \textbf{Tên ấn phẩm \& NXB} & \textbf{CSDL chỉ mục} & \textbf{Xếp hạng (SJR / CORE)} & \textbf{Thẩm định độ tin cậy (Think-Check-Submit)} \\
+\hline
+\cite{vidu_tapchi} & IEEE Transactions on Software Engineering (IEEE) & Scopus, WoS (SCIE) & SJR Q1 (IF: 6.5, CiteScore: 12.8) & Tạp chí đầu ngành, quy trình bình duyệt ngang hàng nghiêm ngặt; không nằm trong danh mục cảnh báo/săn mồi. \\
+\hline
+\cite{vidu_hoinghi} & International Conference on Software Engineering (ACM/IEEE) & Scopus, WoS, DBLP & CORE Rank A* (Flagship) & Hội thảo khoa học máy tính hàng đầu; tỷ lệ chấp nhận bài $\sim$18\%; ban chương trình quốc tế uy tín. \\
+\hline
+[Bài báo 3] & [Điền tên Tạp chí/Hội thảo, NXB] & [Scopus / WoS] & [SJR Q1/Q2 / CORE A*/A/B] & [Điền kết quả kiểm tra Think-Check-Submit: phản biện minh bạch, NXB uy tín, chỉ mục chuẩn] \\
+\hline
+[Bài báo 4] & [Điền tên Tạp chí/Hội thảo, NXB] & [Scopus / WoS] & [SJR Q1/Q2 / CORE A*/A/B] & [Điền kết quả kiểm tra Think-Check-Submit: phản biện minh bạch, NXB uy tín, chỉ mục chuẩn] \\
+\hline
+[Bài báo 5] & [Điền tên Tạp chí/Hội thảo, NXB] & [Scopus / WoS] & [SJR Q1/Q2 / CORE A*/A/B] & [Điền kết quả kiểm tra Think-Check-Submit: phản biện minh bạch, NXB uy tín, chỉ mục chuẩn] \\
+\hline
+\end{tabularx}
+}
+\end{table}
+
+% HÌNH MINH CHỨNG TRA CỨU XẾP HẠNG VÀ ĐỘ TIN CẬY
+\begin{figure}[htpb]
+\centering
+\begin{tikzpicture}
+\draw[dashed, thick, gray, rounded corners] (0,0) rectangle (13.5,6.0);
+\node[align=center, gray, font=\small] at (6.75,3.0)
+  {\textbf{[Chèn ảnh chụp màn hình minh chứng tra cứu xếp hạng và độ tin cậy của tài liệu]}\\[0.6em]
+   \textit{(Cần tối thiểu 2--3 ảnh màn hình tra cứu từ các nguồn cơ sở dữ liệu chính thống):}\\[0.5em]
+   \textbf{1. Minh chứng SCImago Journal Rank (SJR):} Tra cứu tại \texttt{scimagojr.com},\\
+   thể hiện rõ tên tạp chí, phân hạng Quartile (Q1/Q2), chỉ số SJR và CSDL Scopus;\\[0.3em]
+   \textbf{2. Minh chứng CORE Conference Ranking:} Tra cứu tại \texttt{portal.core.edu.au},\\
+   thể hiện tên hội thảo khoa học máy tính, niên khóa và xếp hạng (Rank A*, A, hoặc B);\\[0.3em]
+   \textbf{3. Minh chứng chỉ mục CSDL \& An toàn xuất bản:} Tra cứu trên Scopus/WoS Master Journal List\\
+   hoặc quy chuẩn Think-Check-Submit nhằm chứng minh không thuộc ấn phẩm săn mồi/trục lợi.};
+\end{tikzpicture}
+\caption{Minh chứng tra cứu xếp hạng SCImago/CORE và thẩm định nguồn tài liệu tin cậy}
+\label{fig:minh_chung_xep_hang}
+\end{figure}
+
+\subsection{Ma trận tổng hợp 5 bài báo}
+\label{subsec:ma_tran}
+
+\begin{huongdan}
+So sánh năm bài báo theo các tiêu chí: trích dẫn IEEE đầy đủ kèm phân hạng học thuật (SJR Q1/Q2 hoặc CORE A*/A), vấn đề nghiên cứu chính, phương pháp, dữ liệu và quy mô, chỉ số đánh giá, kết quả nổi bật, điểm mạnh, hạn chế (GAP), bối cảnh địa lý và mức độ liên quan.
+\end{huongdan}
+
+Nội dung của phần này. Kết quả tổng hợp và so sánh các nghiên cứu liên quan được trình bày tại Bảng~\ref{tab:synthesis_matrix}. Hai dòng đầu minh họa cách trích dẫn thực tế bằng lệnh \texttt{\textbackslash cite} kết hợp thông tin phân hạng học thuật, giúp số thứ tự bài báo và Tài liệu tham khảo tự động khớp nhau; ba dòng còn lại là chỗ trống để học viên điền bài báo của đề tài mình.
+
+\begin{table}[htpb]
+\centering
+\caption{Ma trận tổng hợp các nghiên cứu liên quan}
+\label{tab:synthesis_matrix}
+\renewcommand{\arraystretch}{1.3}
+{\fontsize{10}{12}\selectfont
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}p{1.8cm}|X|X|X|X|X|}
+\hline
+\textbf{Bài báo \& Xếp hạng} & \textbf{Vấn đề nghiên cứu} & \textbf{Phương pháp} & \textbf{Dữ liệu} & \textbf{Kết quả nổi bật} & \textbf{Hạn chế (GAP)} \\
+\hline
+\cite{vidu_tapchi}\newline \textbf{(SJR Q1)} & [Điền] & [Điền] & [Điền] & [Điền] & [Điền] \\
+\hline
+\cite{vidu_hoinghi}\newline \textbf{(CORE A*)} & [Điền] & [Điền] & [Điền] & [Điền] & [Điền] \\
+\hline
+[Bài báo 3]\newline \textbf{([Q1/Q2/A])} & [Điền] & [Điền] & [Điền] & [Điền] & [Điền] \\
+\hline
+[Bài báo 4]\newline \textbf{([Q1/Q2/A])} & [Điền] & [Điền] & [Điền] & [Điền] & [Điền] \\
+\hline
+[Bài báo 5]\newline \textbf{([Q1/Q2/A])} & [Điền] & [Điền] & [Điền] & [Điền] & [Điền] \\
+\hline
+\end{tabularx}
+}
+\end{table}
+
+\subsection{Phân tích khoảng trống nghiên cứu (Research Gap)}
+\label{subsec:research_gap}
+
+\begin{huongdan}
+Đây là mục quan trọng nhất của chương. Viết đoạn phân tích tổng hợp tối thiểu 200 từ, gồm: xu hướng chung mà các nghiên cứu đã đồng thuận (hai đến ba điểm); hạn chế còn tồn tại mà chưa nghiên cứu nào giải quyết; Research Gap cụ thể, đặc biệt trong bối cảnh Việt Nam hoặc đặc thù đề tài; và phần kết nối giải thích tại sao khoảng trống này đặt ra sự cần thiết cho nghiên cứu của bạn.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\section{Tổng kết chương 2}
+\label{sec:tong_ket_c2}
+
+\begin{huongdan}
+Điểm lại ngắn gọn: bài toán doanh nghiệp đã phân tích theo khung W5H2 và Problem Statement (Mục~\ref{sec:bai_toan_dn}); quy trình ứng dụng công cụ quản lý tài liệu và thẩm định độ tin cậy, xếp hạng học thuật (Mục~\ref{sec:cong_cu_tai_lieu} và Mục~\ref{sec:synthesis}); và khoảng trống nghiên cứu đã xác định qua ma trận tổng hợp (Mục~\ref{sec:synthesis}). Kết thúc bằng câu chuyển ý sang Chương 3, ví dụ: khoảng trống nghiên cứu vừa xác định trên nền tảng các tài liệu khoa học uy tín sẽ là cơ sở vững chắc để xây dựng đề cương nghiên cứu chi tiết.
+\end{huongdan}
+
+Nội dung của phần này.
+
+\end{spacing}

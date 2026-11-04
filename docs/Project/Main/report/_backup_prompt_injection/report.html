@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Phát hiện tấn công Prompt Injection — Báo cáo đồ án Big Data</title>
+<style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+
+:root {
+  --ink: #16202c;
+  --muted: #5a6b7d;
+  --line: #d7dfe7;
+  --accent: #1f4e79;
+  --soft: #f2f6fa;
+  --code-bg: #f5f7f9;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Segoe UI", "Times New Roman", Arial, sans-serif;
+  color: var(--ink);
+  font-size: 11pt;
+  line-height: 1.55;
+  margin: 0 auto;
+  max-width: 190mm;
+  padding: 0 4mm;
+}
+
+/* ---- Cover ---- */
+.cover {
+  page-break-after: always;
+  min-height: 245mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 14mm;
+  margin-bottom: 10mm;
+}
+.cover .school { font-size: 12pt; color: var(--muted); letter-spacing: .5px; }
+.cover h1 {
+  font-size: 23pt; margin: 10mm 0 4mm; color: var(--accent);
+  line-height: 1.3; text-transform: none;
+}
+.cover h2 { font-size: 14pt; font-weight: 500; color: var(--ink); margin: 0 0 12mm; }
+.cover .meta { font-size: 11pt; color: var(--muted); }
+.cover .meta table { margin: 0 auto; border-collapse: collapse; text-align: left; }
+.cover .meta td { padding: 2mm 6mm; border: none; }
+.cover .meta td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+
+/* ---- Headings ---- */
+h1 {
+  font-size: 17pt; color: var(--accent); border-bottom: 2px solid var(--accent);
+  padding-bottom: 2mm; margin: 0 0 6mm; page-break-before: always;
+}
+h1:first-of-type { page-break-before: avoid; }
+h2 { font-size: 13.5pt; color: var(--accent); margin: 7mm 0 3mm; }
+h3 { font-size: 12pt; color: #24405c; margin: 5mm 0 2mm; }
+h4 { font-size: 11pt; color: var(--muted); margin: 4mm 0 2mm; font-weight: 600; }
+
+p { margin: 0 0 2.6mm; text-align: justify; }
+strong { color: #0d1a26; }
+
+/* ---- TOC ---- */
+.toc { page-break-after: always; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { margin: 1.1mm 0; }
+.toc li.lv2 { padding-left: 6mm; color: var(--muted); font-size: 10.5pt; }
+.toc a { text-decoration: none; color: var(--ink); }
+.toc a::after { content: " ....... "; color: var(--line); }
+
+/* ---- Tables ---- */
+table {
+  border-collapse: collapse; width: 100%; margin: 3mm 0 4mm;
+  font-size: 9.5pt;
+  /* KHONG dung page-break-inside: avoid - bang dai > 1 trang se bi day
+     sang trang sau va de lai nhieu trang trang. */
+  page-break-inside: auto;
+  break-inside: auto;
+}
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; break-inside: avoid; }
+th {
+  background: var(--accent); color: #fff; text-align: left;
+  padding: 1.8mm 2.2mm; font-weight: 600; border: 1px solid var(--accent);
+}
+td { padding: 1.6mm 2.2mm; border: 1px solid var(--line); vertical-align: top; }
+tbody tr:nth-child(even) { background: var(--soft); }
+td code { font-size: 9pt; }
+
+/* ---- Code ---- */
+code {
+  font-family: "Cascadia Mono", Consolas, monospace; font-size: 9.3pt;
+  background: var(--code-bg); padding: 0.4mm 1mm; border-radius: 2px;
+}
+pre {
+  background: var(--code-bg); border-left: 3px solid var(--accent);
+  padding: 2.5mm 3mm; overflow-x: auto; font-size: 9pt; line-height: 1.4;
+  page-break-inside: auto; break-inside: auto;
+  white-space: pre-wrap; word-break: break-word;
+}
+pre code { background: none; padding: 0; }
+
+/* ---- Blockquote ---- */
+blockquote {
+  margin: 3mm 0; padding: 2mm 4mm; background: var(--soft);
+  border-left: 3px solid var(--accent); color: #2a3a4a;
+  page-break-inside: auto; break-inside: auto;
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+hr { border: none; border-top: 1px solid var(--line); margin: 6mm 0; }
+
+ul, ol { margin: 0 0 3mm; padding-left: 7mm; }
+li { margin: 1mm 0; }
+
+img { max-width: 100%; max-height: 150mm; object-fit: contain; }
+figure { margin: 4mm 0; page-break-inside: avoid; break-inside: avoid; text-align: center; }
+figcaption { font-size: 9.5pt; color: var(--muted); margin-top: 1.5mm; }
+
+p, li { orphans: 2; widows: 2; }
+
+.chapter-note {
+  background: var(--soft); border: 1px solid var(--line); border-radius: 3px;
+  padding: 2.5mm 3.5mm; font-size: 9.8pt; color: var(--muted);
+  margin-bottom: 6mm; page-break-inside: auto; break-inside: auto;
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="school">TRƯỜNG ĐẠI HỌC FOM (HUFLIT) — KHOA THỐNG KÊ TÓM TẮT</div>
+  <h1>Phát hiện tấn công Prompt Injection<br>trên hội thoại LLM</h1>
+  <h2>Đồ án môn Xử lý dữ liệu lớn (IT252BIDA)<br>
+      <span style="font-size:11.5pt;color:#5a6b7d">
+      Hệ phân tán Big Data: PySpark · MongoDB · R Language · Prototype ứng dụng</span></h2>
+  <div class="meta">
+    <table>
+      <tr><td>Học viên</td><td>Trần Khôi Nguyên (MIT26004)</td></tr>
+      <tr><td>Lớp</td><td>MIT261 — Học trước Thạc sĩ CNTT</td></tr>
+      <tr><td>Giảng viên hướng dẫn</td><td>TS. Võ Thị Hồng Tuyết</td></tr>
+      <tr><td>Niên khóa</td><td>2026</td></tr>
+    </table>
+  </div>
+</div>
+
+<nav class="toc">
+<h1>Mục lục</h1>
+<ul>
+<li><a href="#h-chương-1-ứng-dụng-và-dữ-liệu">Chương 1 — Ứng dụng và dữ liệu</a></li>
+<li class="lv2"><a href="#h-11-bài-toán">1.1 Bài toán</a></li>
+<li class="lv3"><a href="#h-ba-câu-hỏi-nghiên-cứu">Ba câu hỏi nghiên cứu</a></li>
+<li class="lv2"><a href="#h-12-nguồn-dữ-liệu-10-nguồn-3-họ-nguồn">1.2 Nguồn dữ liệu — 10 nguồn, 3 họ nguồn</a></li>
+<li class="lv3"><a href="#h-121-ba-ca-hiểu-sai-nhãn-cùng-một-dạng-lỗi">1.2.1 Ba ca hiểu sai nhãn — cùng một dạng lỗi</a></li>
+<li class="lv2"><a href="#h-13-dựng-corpus-3-bước-chống-rò-rỉ">1.3 Dựng corpus — 3 bước chống rò rỉ</a></li>
+<li class="lv3"><a href="#h-131-dedupe-toàn-cục">1.3.1 Dedupe toàn cục</a></li>
+<li class="lv3"><a href="#h-132-chống-leakage-3-lớp">1.3.2 Chống leakage — 3 lớp</a></li>
+<li class="lv3"><a href="#h-133-quy-tắc-nhãn-theo-nguồn">1.3.3 Quy tắc nhãn theo nguồn</a></li>
+<li class="lv2"><a href="#h-14-đặc-trưng-phân-bố-và-bẫy-độ-dài">1.4 Đặc trưng phân bố — và bẫy độ dài</a></li>
+<li class="lv2"><a href="#h-15-kiểm-chứng-dữ-liệu-đầu-vào">1.5 Kiểm chứng dữ liệu đầu vào</a></li>
+<li><a href="#h-chương-2-phương-pháp">Chương 2 — Phương pháp</a></li>
+<li class="lv2"><a href="#h-21-yêu-cầu-đề-cương-và-cách-ánh-xạ">2.1 Yêu cầu đề cương và cách ánh xạ</a></li>
+<li class="lv2"><a href="#h-22-kiến-trúc-tổng-thể-2-đường-dữ-liệu">2.2 Kiến trúc tổng thể — 2 đường dữ liệu</a></li>
+<li class="lv3"><a href="#h-221-vì-sao-tách-2-đường-đây-là-luận-điểm-chính">2.2.1 Vì sao tách 2 đường — đây là luận điểm chính</a></li>
+<li class="lv2"><a href="#h-23-lớp-pyspark-batch-path">2.3 Lớp PySpark (batch path)</a></li>
+<li class="lv3"><a href="#h-231-eda-bằng-spark-sql-srceda-sparkpy">2.3.1 EDA bằng Spark SQL — `src/eda_spark.py`</a></li>
+<li class="lv3"><a href="#h-232-pipeline-mllib-srctrain-spark-mlpy">2.3.2 Pipeline MLlib — `src/train_spark_ml.py`</a></li>
+<li class="lv3"><a href="#h-233-chi-phí-scale-đo-không-đoán">2.3.3 Chi phí scale — đo, không đoán</a></li>
+<li class="lv2"><a href="#h-24-lớp-mongodb-operational-path-srcmongo-storepy">2.4 Lớp MongoDB (operational path) — `src/mongo_store.py`</a></li>
+<li class="lv3"><a href="#h-241-schema-index">2.4.1 Schema &amp; index</a></li>
+<li class="lv3"><a href="#h-242-kết-quả">2.4.2 Kết quả</a></li>
+<li class="lv2"><a href="#h-25-lớp-r-thống-kê-ranalysisr">2.5 Lớp R — thống kê — `r/analysis.R`</a></li>
+<li class="lv3"><a href="#h-251-kiểm-định-giả-thuyết">2.5.1 Kiểm định giả thuyết</a></li>
+<li class="lv3"><a href="#h-252-5-biểu-đồ-sinh-ra">2.5.2 5 biểu đồ sinh ra</a></li>
+<li class="lv2"><a href="#h-26-prototype-app-streamlit-appstreamlit-apppy">2.6 Prototype — App Streamlit — `app/streamlit_app.py`</a></li>
+<li class="lv2"><a href="#h-27-đo-trên-corpus-thật-1m-dòng-srcbenchmark-scalepy">2.7 Đo trên corpus thật (~1M dòng) — `src/benchmark_scale.py`</a></li>
+<li class="lv3"><a href="#h-271-vấn-đề-phát-hiện-được-912-shard-wildchat-bị-cắt-dở">2.7.1 Vấn đề phát hiện được: 9/12 shard WildChat bị cắt dở</a></li>
+<li class="lv3"><a href="#h-272-thiết-kế-benchmark">2.7.2 Thiết kế benchmark</a></li>
+<li class="lv2"><a href="#h-27b-detector-streaming-srcstream-detectorpy">2.7b Detector streaming — `src/stream_detector.py`</a></li>
+<li class="lv2"><a href="#h-28-đánh-giá-3-mức">2.8 Đánh giá — 3 mức</a></li>
+<li class="lv2"><a href="#h-29-môi-trường-tái-lập-cái-gì-tái-lập-được-cái-gì-không">2.9 Môi trường tái lập — cái gì tái lập được, cái gì không</a></li>
+<li class="lv3"><a href="#h-291-ghim-version-đã-làm">2.9.1 Ghim version — đã làm</a></li>
+<li class="lv3"><a href="#h-292-số-liệu-nào-tái-lập-được">2.9.2 Số liệu nào tái lập được</a></li>
+<li class="lv3"><a href="#h-293-ghim-môi-trường-khác-với-ghim-nền-tảng">2.9.3 Ghim môi trường khác với ghim nền tảng</a></li>
+<li class="lv3"><a href="#h-294-vì-sao-chọn-máy-local-thay-vì-colab">2.9.4 Vì sao chọn máy local thay vì Colab</a></li>
+<li class="lv3"><a href="#h-295-cách-tái-lập-trên-máy-khác">2.9.5 Cách tái lập trên máy khác</a></li>
+<li><a href="#h-chương-3-kết-quả-đánh-giá">Chương 3 — Kết quả đánh giá</a></li>
+<li class="lv2"><a href="#h-31-rq1-hiệu-năng-in-domain">3.1 RQ1 — Hiệu năng in-domain</a></li>
+<li class="lv3"><a href="#h-311-baseline-sklearn-tf-idf-word-1-2-char-wb-3-5-120k-chiều-lr-balanced">3.1.1 Baseline sklearn (TF-IDF word 1-2 + char_wb 3-5, 120k chiều, LR balanced)</a></li>
+<li class="lv3"><a href="#h-312-pipeline-mllib-token-hashingtf-218-idf-lr">3.1.2 Pipeline MLlib (Token → HashingTF 2^18 → IDF → LR)</a></li>
+<li class="lv3"><a href="#h-313-so-sánh">3.1.3 So sánh</a></li>
+<li class="lv2"><a href="#h-32-rq2-đổi-nguồn-dữ-liệu-thì-mất-bao-nhiêu">3.2 RQ2 — Đổi nguồn dữ liệu thì mất bao nhiêu?</a></li>
+<li class="lv3"><a href="#h-321-per-source-sklearn-baseline-nguồn-có-trong-tập-train">3.2.1 Per-source — sklearn baseline (nguồn **có trong** tập train)</a></li>
+<li class="lv3"><a href="#h-322-per-source-mllib-cùng-tập-để-so-sánh-trực-tiếp">3.2.2 Per-source — MLlib (cùng tập, để so sánh trực tiếp)</a></li>
+<li class="lv3"><a href="#h-323-phát-hiện-quan-trọng-nhất-của-đồ-án">3.2.3 Phát hiện quan trọng nhất của đồ án</a></li>
+<li class="lv3"><a href="#h-324-điểm-yếu-lmsystoxic-chat-f1-05114">3.2.4 Điểm yếu: `lmsys/toxic-chat` F1 0.5114</a></li>
+<li class="lv2"><a href="#h-33-rq3-đóng-góp-của-độ-dài-vs-từ-vựng">3.3 RQ3 — Đóng góp của độ dài vs từ vựng</a></li>
+<li class="lv3"><a href="#h-331-ablation-trên-test-19374-dòng">3.3.1 Ablation (trên test, 19,374 dòng)</a></li>
+<li class="lv3"><a href="#h-332-độ-dài-một-mình-kiểm-định-bằng-r">3.3.2 Độ dài một mình — kiểm định bằng R</a></li>
+<li class="lv3"><a href="#h-333-kết-luận-rq3-diễn-giải-đúng">3.3.3 Kết luận RQ3 — diễn giải đúng</a></li>
+<li class="lv2"><a href="#h-34-lớp-nosql-mongodb">3.4 Lớp NoSQL — MongoDB</a></li>
+<li class="lv2"><a href="#h-35-lớp-r-thống-kê">3.5 Lớp R — thống kê</a></li>
+<li class="lv2"><a href="#h-36-hạn-chế-hướng-mở-rộng">3.6 Hạn chế &amp; hướng mở rộng</a></li>
+<li class="lv3"><a href="#h-361-hạn-chế-đã-đo-được">3.6.1 Hạn chế đã đo được</a></li>
+<li class="lv3"><a href="#h-362-hướng-mở-rộng">3.6.2 Hướng mở rộng</a></li>
+<li class="lv2"><a href="#h-37-loso-zero-shot-thật">3.7 LOSO — Zero-shot thật</a></li>
+<li class="lv3"><a href="#h-371-kết-quả-từng-fold-threshold-mặc-định-05">3.7.1 Kết quả từng fold — threshold mặc định 0.5</a></li>
+<li class="lv3"><a href="#h-372-tổng-hợp">3.7.2 Tổng hợp</a></li>
+<li class="lv3"><a href="#h-373-phát-hiện-quan-trọng-auc-khá-cao-nhưng-f105-thấp">3.7.3 Phát hiện quan trọng: AUC khá cao nhưng F1@0.5 thấp</a></li>
+<li class="lv3"><a href="#h-374-nguồn-khó-nhất-và-vì-sao-đây-là-bằng-chứng-mạnh">3.7.4 Nguồn khó nhất — và vì sao đây là bằng chứng mạnh</a></li>
+<li class="lv3"><a href="#h-375-kết-luận-rq3">3.7.5 Kết luận RQ3</a></li>
+<li class="lv2"><a href="#h-38-benchmark-trên-corpus-thật-827422-dòng">3.8 Benchmark trên corpus thật — 827,422 dòng</a></li>
+<li class="lv3"><a href="#h-381-quy-mô-dữ-liệu">3.8.1 Quy mô dữ liệu</a></li>
+<li class="lv3"><a href="#h-382-thời-gian-xử-lý">3.8.2 Thời gian xử lý</a></li>
+<li class="lv3"><a href="#h-383-train-mllib-trên-969147-dòng">3.8.3 Train MLlib trên 969,147 dòng</a></li>
+<li class="lv3"><a href="#h-384-hai-bài-học-kỹ-thuật">3.8.4 Hai bài học kỹ thuật</a></li>
+<li class="lv3"><a href="#h-385-phát-hiện-thêm-pipelinefit-idf-không-scale">3.8.5 Phát hiện thêm: `Pipeline.fit` + `IDF` không scale</a></li>
+<li><a href="#h-phụ-lục-dàn-ý-slide-thuyết-trình">Phụ lục — Dàn ý slide thuyết trình</a></li>
+<li class="lv2"><a href="#h-slide-1-bìa">Slide 1 — Bìa</a></li>
+<li class="lv2"><a href="#h-slide-2-bài-toán-3-câu-hỏi-nghiên-cứu">Slide 2 — Bài toán &amp; 3 câu hỏi nghiên cứu</a></li>
+<li class="lv2"><a href="#h-slide-3-dữ-liệu-10-nguồn-141725-dòng">Slide 3 — Dữ liệu: 10 nguồn, 141,725 dòng</a></li>
+<li class="lv2"><a href="#h-slide-4-ba-ca-hiểu-sai-nhãn-phần-em-tự-hào-nhất">Slide 4 — 🔴 Ba ca hiểu sai nhãn (phần em tự hào nhất)</a></li>
+<li class="lv2"><a href="#h-slide-5-chống-rò-rỉ-3-lớp">Slide 5 — Chống rò rỉ 3 lớp</a></li>
+<li class="lv2"><a href="#h-slide-6-kiến-trúc-2-đường-dữ-liệu">Slide 6 — Kiến trúc: 2 đường dữ liệu</a></li>
+<li class="lv2"><a href="#h-slide-7-so-sánh-4-engine-số-đo-thật">Slide 7 — 🔴 So sánh 4 engine (số đo thật)</a></li>
+<li class="lv2"><a href="#h-slide-8-phát-hiện-quan-trọng-nhất-model-học-template-không-học-cơ-chế">Slide 8 — 🔴 Phát hiện quan trọng nhất: model học template, không học cơ chế</a></li>
+<li class="lv2"><a href="#h-slide-9-rq3-độ-dài-vs-từ-vựng">Slide 9 — 🔴 RQ3: độ dài vs từ vựng</a></li>
+<li class="lv2"><a href="#h-slide-10-chi-phí-scale-đo-không-đoán">Slide 10 — 🔴 Chi phí scale — đo, không đoán</a></li>
+<li class="lv2"><a href="#h-slide-11-benchmark-corpus-thật-1m-dòng">Slide 11 — 🔴 Benchmark corpus thật (~1M dòng)</a></li>
+<li class="lv2"><a href="#h-slide-12-loso-zero-shot-thật">Slide 12 — 🔴 LOSO — zero-shot thật</a></li>
+<li class="lv2"><a href="#h-slide-13-prototype-streamlit-mongodb">Slide 13 — Prototype: Streamlit + MongoDB</a></li>
+<li class="lv2"><a href="#h-slide-13b-detector-streaming-rule-model">Slide 13b — 🟡 Detector streaming (rule + model)</a></li>
+<li class="lv2"><a href="#h-slide-13c-môi-trường-tái-lập-cái-gì-tin-được-cái-gì-không">Slide 13c — Môi trường tái lập: cái gì tin được, cái gì không</a></li>
+<li class="lv2"><a href="#h-slide-14-đóng-góp-của-đồ-án">Slide 14 — Đóng góp của đồ án</a></li>
+<li class="lv2"><a href="#h-slide-15-hạn-chế-hướng-mở-rộng">Slide 15 — Hạn chế &amp; hướng mở rộng</a></li>
+<li class="lv2"><a href="#h-slide-16-kết-luận">Slide 16 — Kết luận</a></li>
+<li class="lv2"><a href="#h-phụ-lục-slide-dự-phòng">Phụ lục — Slide dự phòng</a></li>
+<li class="lv3"><a href="#h-a-top-feature-model-học-template">A. Top feature: model học template</a></li>
+<li class="lv3"><a href="#h-b-mongodb-schema-5-index">B. MongoDB schema + 5 index</a></li>
+<li class="lv3"><a href="#h-c-rs-gotcha-đã-sửa">C. R&#x27;s gotcha đã sửa</a></li>
+</ul>
+</nav>
+<section class="chapter">
+<h1 id="chuong-1-ung-dung-du-lieu">Chương 1 — Ứng dụng &amp; dữ liệu</h1>
+<p><strong>Môn:</strong> IT252BIDA — Xử lý dữ liệu lớn · <strong>GV:</strong> PhD. Võ Thị Hồng Tuyết
+<strong>Người thực hiện:</strong> Trần Khôi Nguyên (MIT26004) — nhóm 4</p>
+<hr />
+<h2 id="11-bai-toan">1.1 Bài toán</h2>
+<p><strong>Phát hiện Prompt Injection</strong> trong câu lệnh người dùng gửi tới chatbot/LLM.</p>
+<p>Prompt Injection là kỹ thuật khiến mô hình ngôn ngữ bỏ qua chỉ dẫn hệ thống và
+làm theo chỉ dẫn của kẻ tấn công — ví dụ ép bot bỏ qua filter, tiết lộ system
+prompt, hoặc sinh nội dung độc hại.</p>
+<p>Bài toán được hiểu là <strong>phân loại nhị phân ở mức văn bản</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Nhãn</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code> (benign)</td>
+<td>Câu lệnh bình thường, không có ý đồ chiếm quyền chỉ dẫn</td>
+</tr>
+<tr>
+<td><code>1</code> (attack)</td>
+<td>Có ý đồ chỉ đạt/lệch chỉ dẫn hệ thống</td>
+</tr>
+</tbody>
+</table>
+<p>Không chạy đua SOTA. Mục tiêu là <strong>đo trung thực</strong> khả năng tổng quát hóa trên
+corpus đa nguồn, bằng công cụ Big Data theo đúng đề cương môn.</p>
+<h3 id="ba-cau-hoi-nghien-cuu">Ba câu hỏi nghiên cứu</h3>
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Câu hỏi</th>
+<th>Cách đo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RQ1</strong></td>
+<td>Khi train và test cùng phân bố, model phân biệt tốt đến đâu?</td>
+<td>F1 trên test split (80/10/10 theo <code>source</code>)</td>
+</tr>
+<tr>
+<td><strong>RQ2</strong></td>
+<td>Đổi nguồn dữ liệu thì hiệu năng mất bao nhiêu?</td>
+<td>F1/AUC theo từng nguồn + <strong>LOSO</strong> (bỏ hẳn nguồn khỏi train)</td>
+</tr>
+<tr>
+<td><strong>RQ3</strong></td>
+<td>Bao nhiêu phần hiệu năng đến từ <strong>độ dài</strong> thay vì <strong>từ vựng</strong>?</td>
+<td>Ablation unigram + AUC của riêng độ dài (R, pROC)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-nguon-du-lieu-10-nguon-3-ho-nguon">1.2 Nguồn dữ liệu — 10 nguồn, 3 họ nguồn</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Nguồn</th>
+<th style="text-align: right;">Dòng (sau dedupe)</th>
+<th>Họ</th>
+<th>Vai trò</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>allenai/wildguardmix</code></td>
+<td style="text-align: right;">47,547</td>
+<td>adversarial</td>
+<td>Nguồn attack lớn nhất + benign đi kèm</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>reshabhs/SPML_Chatbot_Prompt_Injection</code></td>
+<td style="text-align: right;">16,012</td>
+<td>roleplay</td>
+<td>Persona/instruction override</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>allenai/WildChat-1M</code></td>
+<td style="text-align: right;">15,382</td>
+<td>benign stream</td>
+<td>Hội thoại thật, <strong>chỉ benign</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>S-Labs/prompt-injection-dataset</code></td>
+<td style="text-align: right;">15,108</td>
+<td>direct</td>
+<td>Prompt injection trực tiếp</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>xTRam1/safe-guard-prompt-injection</code></td>
+<td style="text-align: right;">10,108</td>
+<td>mixed</td>
+<td>An toàn + tấn công</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>lmsys/toxic-chat</code></td>
+<td style="text-align: right;">9,586</td>
+<td>jailbreak</td>
+<td>Hội thoại thật có nội dung độc hại</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">6,583</td>
+<td>indirect</td>
+<td>Injection qua tài liệu, không trực tiếp</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>lmsys/lmsys-chat-1m</code></td>
+<td style="text-align: right;">18,531</td>
+<td>benign stream</td>
+<td>Hội thoại thật, <strong>chỉ benign</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>allenai/wildjailbreak</code></td>
+<td style="text-align: right;">2,206</td>
+<td>jailbreak</td>
+<td>Adversarial có nhãn mức độc hại</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">662</td>
+<td>classic</td>
+<td>Template injection cổ điển</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Tổng</strong></td>
+<td style="text-align: right;"><strong>141,725</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Điểm quan trọng:</strong> 2 nguồn <strong>chỉ có benign</strong> (WildChat, lmsys) và 1 nguồn
+<strong>chỉ có attack</strong> (wildjailbreak). Vì vậy <em>cross-dataset</em> phải đo FPR (tỉ lệ
+bắt nhầm benign) chứ không chỉ F1.</p>
+<h3 id="121-ba-ca-hieu-sai-nhan-cung-mot-dang-loi">1.2.1 Ba ca hiểu sai nhãn — cùng một dạng lỗi</h3>
+<p>Đây là phần em muốn nhấn mạnh nhất trong báo cáo, vì nó quyết định chất lượng
+toàn bộ kết quả phía sau.</p>
+<p><strong>Cách chung:</strong> cột tên nghe như nhãn phân loại, nhưng thực chất đo một thứ khác.
+Ba ca đều bị phát hiện bằng <strong>kiểm tra bằng chứng</strong>, không phải bằng cảm tính.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Cột</th>
+<th>Nghĩa thật</th>
+<th>Hậu quả nếu dùng sai</th>
+<th>Cách phát hiện</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HackAPrompt</strong></td>
+<td><code>labels</code></td>
+<td><em>prompt đã thắng model mục tiêu</em> (đạt <code>PWNED</code>)</td>
+<td>Toàn bộ nhãn đảo nghĩa</td>
+<td>715 text có nhiều nhãn khác nhau; 86.21% chứa <code>PWNED</code></td>
+</tr>
+<tr>
+<td><strong>WildJailbreak</strong></td>
+<td><code>label</code></td>
+<td><em>mức độc hại</em> của prompt</td>
+<td>FPR = <strong>1.0</strong> (17/17 benign bị bắt nhầm)</td>
+<td><code>data_type</code> = <code>adversarial_harmful</code> / <code>adversarial_benign</code> — cả hai đều adversarial</td>
+</tr>
+<tr>
+<td><strong>SPML</strong></td>
+<td><code>Degree</code></td>
+<td><em>mức gắn kết với persona</em></td>
+<td>Suy ra sai ý đồ tấn công</td>
+<td><code>Degree=10</code> ứng với roleplay lành mạnh ("You are a knowledgeable and reliable HealthAI…")</td>
+</tr>
+</tbody>
+</table>
+<p>→ <strong>HackAPrompt bị loại khỏi corpus</strong> (mất 227K dòng nhưng tránh được việc model
+học "prompt đã thắng model khác" thay vì "prompt có ý đồ xấu").
+→ <strong>WildJailbreak</strong>: đặt <code>label=1</code> cho toàn bộ, <code>label</code> cũ chuyển thành <code>severity</code>.
+→ <strong>SPML</strong>: dùng cho hồi quy severity, không dùng làm nguồn nhãn phân loại.</p>
+<blockquote>
+<p><strong>Quy tắc rút ra:</strong> trước khi tin một metric bất thường, kiểm tra nhãn trước.
+FPR = 1.0 là dấu hiệu chắc chắn nhãn bị hiểu sai, không phải model dở.</p>
+</blockquote>
+<p>Chi tiết đầy đủ: <code>docs/Project/Main/MetErrors/datasets.md</code>.</p>
+<hr />
+<h2 id="13-dung-corpus-3-buoc-chong-ro-ri">1.3 Dựng corpus — 3 bước chống rò rỉ</h2>
+<h3 id="131-dedupe-toan-cuc">1.3.1 Dedupe toàn cục</h3>
+<p>188,366 dòng thô → <strong>141,725</strong> dòng sau dedupe (loại 24.7%).
+Khóa dedupe: chuẩn hoá whitespace + lowercase + hash nội dung.</p>
+<h3 id="132-chong-leakage-3-lop">1.3.2 Chống leakage — 3 lớp</h3>
+<table>
+<thead>
+<tr>
+<th>Lớp</th>
+<th>Cơ chế</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Dedupe toàn cục trên text chuẩn hoá</td>
+<td>0 trùng giữa train/val/test</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Split theo <strong>nhóm</strong>, không theo dòng</td>
+<td><code>guychuk</code>: <code>crc32(task_type\|normal_input)</code> → 1,397 nhóm</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Giới hạn 1 benign + tối đa 4 attack mỗi nhóm</td>
+<td>Không còn "cặp attack/benign" cùng nhóm ở 2 split</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vì sao cần lớp 3:</strong> nếu một benign và attack của cùng nhóm nằm ở 2 split khác
+nhau, model có thể học "biết cặp này" thay vì học đặc trưng của injection.</p>
+<p><strong>Kiểm chứng:</strong> <code>verification/verify_split.py</code> → <strong>0 rò rỉ</strong> trên 3 lớp.</p>
+<h3 id="133-quy-tac-nhan-theo-nguon">1.3.3 Quy tắc nhãn theo nguồn</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th><code>split</code></th>
+<th>Lý do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td><strong><code>unassigned</code></strong></td>
+<td>662 dòng → giữ ngoài mọi split để làm <strong>hold-out ngoài</strong></td>
+</tr>
+<tr>
+<td><code>allenai/WildChat-1M</code>, <code>lmsys/lmsys-chat-1m</code></td>
+<td><code>unassigned</code></td>
+<td>Chỉ benign → dùng đo FPR, không train</td>
+</tr>
+<tr>
+<td><code>allenai/wildjailbreak</code></td>
+<td><code>unassigned</code></td>
+<td>Chỉ attack → dùng đo recall, không train</td>
+</tr>
+<tr>
+<td>7 nguồn còn lại</td>
+<td>train/val/test 80/10/10</td>
+<td>Theo <code>source</code></td>
+</tr>
+</tbody>
+</table>
+<p>Kết quả split: <strong>train 109,543 · validation 12,808 · test 19,374</strong>.</p>
+<hr />
+<h2 id="14-ac-trung-phan-bo-va-bay-o-dai">1.4 Đặc trưng phân bố — và bẫy độ dài</h2>
+<table>
+<thead>
+<tr>
+<th>Lớp</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">median</th>
+<th>IQR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>benign (<code>label=0</code>)</td>
+<td style="text-align: right;">88,655</td>
+<td style="text-align: right;">406.2</td>
+<td style="text-align: right;"><strong>95</strong></td>
+<td>[50, 249]</td>
+</tr>
+<tr>
+<td>attack (<code>label=1</code>)</td>
+<td style="text-align: right;">53,070</td>
+<td style="text-align: right;">982.8</td>
+<td style="text-align: right;"><strong>773</strong></td>
+<td>[462, 1403]</td>
+</tr>
+</tbody>
+</table>
+<p>Attack dài hơn gấp <strong>8.1×</strong> ở median. Đây là điểm khởi đầu của RQ3, và cũng là
+cảnh báo lớn nhất về phương pháp (xem Chương 2, mục đo lường).</p>
+<p>Theo family: <code>jailbreak</code> dài <strong>6.4×</strong> benign, <code>direct</code> <strong>3.0×</strong>, <code>indirect</code> <strong>1.7×</strong>.
+Family nào càng "bọc ngoài" (roleplay, kịch bản dài) thì càng dài — đây là lý do
+mô hình bag-of-words dễ học "template" thay vì "cơ chế".</p>
+<hr />
+<h2 id="15-kiem-chung-du-lieu-au-vao">1.5 Kiểm chứng dữ liệu đầu vào</h2>
+<table>
+<thead>
+<tr>
+<th>Script kiểm chứng</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verification/verify_split.py</code></td>
+<td>0 rò rỉ 3 lớp</td>
+</tr>
+<tr>
+<td><code>verification/verify_spml.py</code></td>
+<td>16,012 dòng, 0 trùng</td>
+</tr>
+<tr>
+<td><code>verification/verify_hackaprompt.py</code></td>
+<td>227,042 dòng — <strong>loại</strong> vì nhãn sai nghĩa</td>
+</tr>
+<tr>
+<td><code>verification/verify_attack_sets.py</code></td>
+<td>OK</td>
+</tr>
+<tr>
+<td><code>verification/list_wildjailbreak.py</code></td>
+<td>2,206 dòng, <code>data_type</code> 2 giá trị</td>
+</tr>
+</tbody>
+</table>
+<p>Tổng 39 file Python trong repo đều pass <strong>syntax + import</strong> (<code>tools/patches/smoke_test.py</code>).</p>
+<hr />
+<p><em>Chương 1 — xem tiếp Chương 2 (phương pháp) và Chương 3 (kết quả).</em></p>
+</section><section class="chapter">
+<h1 id="chuong-2-phuong-phap-kien-truc-cong-nghe">Chương 2 — Phương pháp (kiến trúc &amp; công nghệ)</h1>
+<p><strong>Môn:</strong> IT252BIDA — Xử lý dữ liệu lớn · <strong>GV:</strong> PhD. Võ Thị Hồng Tuyết
+<strong>Người thực hiện:</strong> Trần Khôi Nguyên (MIT26004) — nhóm 4</p>
+<hr />
+<h2 id="21-yeu-cau-e-cuong-va-cach-anh-xa">2.1 Yêu cầu đề cương và cách ánh xạ</h2>
+<p>Đề cương môn yêu cầu chuỗi công nghệ cụ thể. Bảng dưới ánh xạ từng yêu cầu
+→ thành phần đã triển khai → bằng chứng đo được.</p>
+<table>
+<thead>
+<tr>
+<th>Yêu cầu đề cương</th>
+<th>Thành phần</th>
+<th>File</th>
+<th>Bằng chứng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Connect and query by PySpark</em></td>
+<td>EDA + MLlib trên PySpark 4.2.0</td>
+<td><code>src/eda_spark.py</code>, <code>src/train_spark_ml.py</code></td>
+<td>Phân bố khớp pandas 100%; F1 0.8702</td>
+</tr>
+<tr>
+<td><em>Database with MongoDB</em></td>
+<td>MongoDB 8.0.12, 5 index, aggregation</td>
+<td><code>src/mongo_store.py</code></td>
+<td>141,725 doc · 6,917 docs/s · agg 0.72s</td>
+</tr>
+<tr>
+<td><em>Statistical with R Language</em></td>
+<td>Kiểm định Mann-Whitney, AUC (pROC)</td>
+<td><code>r/analysis.R</code></td>
+<td>p = 0 · AUC(độ dài) 0.8032 · 5 biểu đồ</td>
+</tr>
+<tr>
+<td><em>Build prototype and repair data</em></td>
+<td>App Streamlit đọc MongoDB</td>
+<td><code>app/streamlit_app.py</code></td>
+<td>5 tab, 0 exception, metric khớp Spark</td>
+</tr>
+<tr>
+<td><em>Build source code and evaluation</em></td>
+<td>Baseline sklearn + ablation + LOSO</td>
+<td><code>src/train_baseline.py</code>, <code>src/loso_eval.py</code></td>
+<td>F1 0.9521, ablation −2.13 điểm</td>
+</tr>
+<tr>
+<td><em>Experiments and results</em></td>
+<td>Đo chi phí scale + benchmark 1M</td>
+<td><code>src/benchmark_scale.py</code></td>
+<td>827,422 dòng, ~970k dòng train</td>
+</tr>
+<tr>
+<td><em>Final project = document + source code</em></td>
+<td>Repo + báo cáo này</td>
+<td>—</td>
+<td>40 file Python, 16 tài liệu</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="22-kien-truc-tong-the-2-uong-du-lieu">2.2 Kiến trúc tổng thể — 2 đường dữ liệu</h2>
+<pre><code>                    ┌──────────────────────────────────────────┐
+                    │         NGUỒN GỐC (HuggingFace)         │
+                    │  wildguardmix · SPML · S-Labs · xTRam1   │
+                    │  toxic-chat · guychuk · wildjailbreak    │
+                    │  deepset · WildChat-1M · lmsys-chat-1m   │
+                    └───────────────┬──────────────────────────┘
+                                    │ 10 loader (src/prepare_data.py)
+                                    ▼
+                    ┌──────────────────────────────────────────┐
+                    │  CHUỖI XỬ LÝ: dedupe → chống leakage   │
+                    │  → split theo nhóm → 4 parquet            │
+                    └───────┬──────────────────────┬───────────┘
+                            │                      │
+              BATCH PATH    │                      │   OPERATIONAL PATH
+              (đào dữ liệu, │                      │   (truy vấn tương tác,
+               huấn luyện)  │                      │    dashboard, ghi log)
+                            ▼                      ▼
+        ┌───────────────────────────┐   ┌────────────────────────────┐
+        │  all/train/val/test      │   │  MongoDB 8.0.12            │
+        │  .parquet  (columnar)    │   │  prompt_injection.prompts  │
+        └────────┬──────────────────┘   │  5 index                   │
+                 │                      │  141,725 doc                │
+                 ▼                      └──────┬─────────────────────┘
+   ┌──────────────────────────────┐               │
+   │  PySpark 4.2.0 (local[4])   │◄──────────────┘  đọc lại bằng PySpark
+   │  ├─ EDA: Spark SQL           │
+   │  ├─ MLlib pipeline           │
+   │  └─ Đo chi phí scale         │
+   └────────┬─────────────────────┘
+            │
+     ┌──────┴───────┬──────────────┐
+     ▼              ▼              ▼
+┌─────────┐  ┌──────────┐  ┌──────────────────┐
+│  R 4.6.1│  │ Streamlit│  │  sklearn baseline│
+│ thống kê │  │ 1.66.0  │  │  (đối chứng)    │
+│ + 5 PNG  │  │ 5 tab   │  │  F1 0.9521       │
+└─────────┘  └──────────┘  └──────────────────┘
+</code></pre>
+<h3 id="221-vi-sao-tach-2-uong-ay-la-luan-iem-chinh">2.2.1 Vì sao tách 2 đường — đây là luận điểm chính</h3>
+<p>Nếu chỉ dùng MongoDB thì không train được (không có Spark ML trên Mongo).
+Nếu chỉ dùng parquet thì mất khả năng truy vấn tương tác, không có prototype,
+và không đáp ứng yêu cầu <em>"Database with MongoDB"</em> của đề cương.</p>
+<table>
+<thead>
+<tr>
+<th>Đường</th>
+<th>Công nghệ</th>
+<th>Dữ liệu</th>
+<th>Phù hợp với</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Batch</strong></td>
+<td>parquet → PySpark</td>
+<td>141,725 dòng, 9 cột</td>
+<td>Huấn luyện, đào dữ liệu, thống kê toàn bảng</td>
+</tr>
+<tr>
+<td><strong>Operational</strong></td>
+<td>MongoDB</td>
+<td>141,725 doc, +<code>text_len</code>, +<code>inserted_at</code></td>
+<td>Truy vấn có index, dashboard, ghi log sự kiện</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bằng chứng phân định:</strong> MongoDB nhanh hơn Spark ở phép aggregation <em>có index</em>
+(0.72s vs 2.7s) vì quét index, không quét toàn bảng. Nhưng khi scan toàn bảng
+thì Spark mạnh hơn (đọc song song + columnar). Hai engine <strong>bổ trợ nhau</strong>, không
+thay thế.</p>
+<hr />
+<h2 id="23-lop-pyspark-batch-path">2.3 Lớp PySpark (batch path)</h2>
+<h3 id="231-eda-bang-spark-sql-srceda_sparkpy">2.3.1 EDA bằng Spark SQL — <code>src/eda_spark.py</code></h3>
+<p>Dùng <code>groupBy</code> + <code>count</code> + <code>avg</code> + <code>length</code> + <code>crosstab</code> thuần Spark SQL.
+Kết quả so với pandas:</p>
+<table>
+<thead>
+<tr>
+<th>Phép</th>
+<th style="text-align: right;">Spark</th>
+<th style="text-align: right;">pandas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>groupBy(source)</code></td>
+<td style="text-align: right;">5.89s</td>
+<td style="text-align: right;">0.144s</td>
+</tr>
+<tr>
+<td><code>groupBy(label)</code></td>
+<td style="text-align: right;">2.02s</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td><code>crosstab(source, label)</code></td>
+<td style="text-align: right;">2.74s</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td><code>length_by_label</code></td>
+<td style="text-align: right;">3.88s</td>
+<td style="text-align: right;">0.447s</td>
+</tr>
+<tr>
+<td><strong>Tổng</strong></td>
+<td style="text-align: right;"><strong>80.67s</strong></td>
+<td style="text-align: right;"><strong>2.69s</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Spark <strong>chậm hơn pandas ~30×</strong> ở 141k dòng. <strong>Đây là kết quả trung thực,
+không phải lỗi</strong> — ở quy mô này overhead khởi tạo session + JVM chiếm ưu thế.
+Cùng bộ dữ liệu, <strong>5 phân bố khớp 100%</strong> → Spark đọc và tính đúng, chỉ chậm hơn.</p>
+<p>Điểm này được ghi thẳng vào báo cáo, không tô đẹp. Nó cũng là lập luận cho
+mục 2.7: <strong>Spark chỉ bắt đầu thắng khi vượt ngưỡng dữ liệu</strong>.</p>
+<h3 id="232-pipeline-mllib-srctrain_spark_mlpy">2.3.2 Pipeline MLlib — <code>src/train_spark_ml.py</code></h3>
+<pre><code>Tokenizer(text → words) → HashingTF(words → features, 2^18) → IDF → LogisticRegression(50 iter, regParam 0.1)
+</code></pre>
+<p>Chọn <code>HashingTF</code> thay vì <code>CountVectorizer</code> vì không cần vocabulary (tránh rò rỉ
+từ vectorizer) và chịu được corpus lớn hơn.</p>
+<p><strong>So sánh với baseline sklearn (TF-IDF word 1-2 + char_wb 3-5, 120k chiều):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th style="text-align: right;">MLlib</th>
+<th style="text-align: right;">sklearn</th>
+<th style="text-align: right;">Δ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1 (test)</td>
+<td style="text-align: right;">0.8702</td>
+<td style="text-align: right;"><strong>0.9521</strong></td>
+<td style="text-align: right;"><strong>−0.0819</strong></td>
+</tr>
+<tr>
+<td>AUC</td>
+<td style="text-align: right;">0.9801</td>
+<td style="text-align: right;"><strong>0.9922</strong></td>
+<td style="text-align: right;">−0.0121</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td style="text-align: right;">0.9270</td>
+<td style="text-align: right;">0.9708</td>
+<td style="text-align: right;">−0.0438</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td style="text-align: right;">0.9662</td>
+<td style="text-align: right;">0.9614</td>
+<td style="text-align: right;">+0.0048</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td style="text-align: right;">0.7915</td>
+<td style="text-align: right;">0.9430</td>
+<td style="text-align: right;"><strong>−0.1515</strong></td>
+</tr>
+</tbody>
+</table>
+<p>MLlib <strong>thua về recall</strong> (0.7915 vs 0.9430) — bỏ sót nhiều attack hơn.</p>
+<h3 id="233-chi-phi-scale-o-khong-oan">2.3.3 Chi phí scale — đo, không đoán</h3>
+<p><strong>Cấu hình partition</strong> (109,543 dòng train, <code>spark.sql.shuffle.partitions</code> thay đổi):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Partition</th>
+<th style="text-align: right;">Fit</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">201.59s</td>
+<td style="text-align: right;">184.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">211.60s</td>
+<td style="text-align: right;">193.2</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">263.70s</td>
+<td style="text-align: right;">240.7</td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Tăng partition <strong>làm chậm hơn</strong>. Ở 32 partition, mỗi task chỉ ~3,400 dòng
+— thấp hơn nhiều so với ngưỡng 100k–200k dòng/task mà Spark khuyến nghị.
+Overhead scheduler + mỗi task đọc lại vocabulary của HashingTF.</p>
+<p><strong>Nhân bản dữ liệu</strong> (<code>unionByName</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Bản sao</th>
+<th style="text-align: right;">Dòng</th>
+<th style="text-align: right;">Fit</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>×1</td>
+<td style="text-align: right;">109,543</td>
+<td style="text-align: right;">192.27s</td>
+<td style="text-align: right;">175.5</td>
+</tr>
+<tr>
+<td><strong>×2</strong></td>
+<td style="text-align: right;">219,086</td>
+<td style="text-align: right;">166.91s</td>
+<td style="text-align: right;"><strong>76.2 (−57%)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Nhân bản ×2 <strong>nhanh hơn 57%</strong> vì tăng số partition → task nhỏ hơn → phân
+song song hoá tốt hơn.</p>
+<p><strong>Kết luận then chốt:</strong> ở 141k dòng, pipeline chỉ có <strong>1 job</strong> — chưa tách được
+song song. Bắt đầu tách từ 219k dòng. Đó là lý do phải đo trên corpus ~1M
+(mục 2.7).</p>
+<hr />
+<h2 id="24-lop-mongodb-operational-path-srcmongo_storepy">2.4 Lớp MongoDB (operational path) — <code>src/mongo_store.py</code></h2>
+<p>MongoDB 8.0.12, collection <code>prompts</code>, database <code>prompt_injection</code>.</p>
+<h3 id="241-schema-index">2.4.1 Schema &amp; index</h3>
+<p>9 cột gốc (chuẩn hoá từ parquet) + 2 cột dẫn xuất:</p>
+<table>
+<thead>
+<tr>
+<th>Cột dẫn xuất</th>
+<th>Kiểu</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text_len</code></td>
+<td>int</td>
+<td>độ dài ký tự — dùng bucket, không phải đo lại mỗi lần</td>
+</tr>
+<tr>
+<td><code>inserted_at</code></td>
+<td>datetime (UTC)</td>
+<td>thời điểm nạp — truy vết batch</td>
+</tr>
+</tbody>
+</table>
+<p>5 index, <strong>tạo trước khi insert</strong> (đo được: <code>index_build_sec</code> 0.13s):</p>
+<pre><code>label_1_source_1   source_1_split_1   family_1_label_1   text_len_1   pair_id_1
+</code></pre>
+<p>Index phục vụ đúng 3 truy vấn dashboard: lọc theo nhãn+nguồn, theo nguồn+split,
+theo family+nhãn, và duyệt theo độ dài.</p>
+<h3 id="242-ket-qua">2.4.2 Kết quả</h3>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th>Giá trị</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Số doc nạp</td>
+<td>141,725</td>
+</tr>
+<tr>
+<td>Thời gian nạp</td>
+<td>20.49s (batch 5,000)</td>
+</tr>
+<tr>
+<td>Tốc độ</td>
+<td><strong>6,917 docs/s</strong></td>
+</tr>
+<tr>
+<td><code>dataSize</code></td>
+<td>124,850,603 B (≈2.6× parquet 47.6 MB)</td>
+</tr>
+<tr>
+<td>Aggregation <code>$group</code> source×label</td>
+<td><strong>0.72s</strong> (17 nhóm)</td>
+</tr>
+<tr>
+<td>Đọc lại bằng PySpark</td>
+<td>50,000 doc / 23.29s, +groupBy = 32.86s (12 nhóm)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kiểm chứng chéo:</strong> <code>mongo_matches_parquet = true</code> — số dòng, số nhãn và
+phân phối độ dài khớp 100%.</p>
+<blockquote>
+<p><strong>Ghi chú kỹ thuật:</strong> <code>coll.drop()</code> xoá <strong>cả index</strong> → phải tạo lại index sau
+khi drop. Và <code>$percentile</code> ở MongoDB 8.0 <strong>bắt buộc</strong> có <code>method</code>
+(<code>"approximate"</code>) với <code>p</code> là số <strong>0..1</strong> (không phải 0..100).</p>
+</blockquote>
+<hr />
+<h2 id="25-lop-r-thong-ke-ranalysisr">2.5 Lớp R — thống kê — <code>r/analysis.R</code></h2>
+<p>R không đọc parquet → <code>src/export_for_r.py</code> export từ MongoDB ra CSV:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th style="text-align: right;">Dung lượng</th>
+<th>Nội dung</th>
+<th style="text-align: right;">Thời gian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>out/r_corpus.csv</code></td>
+<td style="text-align: right;">102.6 MB</td>
+<td>141,725 dòng × 10 cột</td>
+<td style="text-align: right;">7.1s</td>
+</tr>
+<tr>
+<td><code>out/r_summary.csv</code></td>
+<td style="text-align: right;">2,989 B</td>
+<td>47 dòng — source×label×family×split</td>
+<td style="text-align: right;">2.0s</td>
+</tr>
+<tr>
+<td><code>out/r_length_stats.csv</code></td>
+<td style="text-align: right;">1,176 B</td>
+<td>17 dòng — phân phối độ dài</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table>
+<p>R 4.6.1, package <code>jsonlite</code> + <code>pROC</code>.</p>
+<h3 id="251-kiem-inh-gia-thuyet">2.5.1 Kiểm định giả thuyết</h3>
+<table>
+<thead>
+<tr>
+<th>Kiểm định</th>
+<th>Giả thuyết</th>
+<th>Kết quả</th>
+<th>Quyết định</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mann-Whitney U</strong> (độ dài)</td>
+<td>H₀: phân phối độ dài benign = attack</td>
+<td><strong>W = 925,758,320, p = 0.0</strong></td>
+<td><strong>Bác bỏ H₀</strong></td>
+</tr>
+<tr>
+<td><strong>AUC (pROC)</strong> của riêng độ dài</td>
+<td>—</td>
+<td><strong>0.8032</strong></td>
+<td>Tín hiệu mạnh, <strong>chưa đủ phân loại</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Lỗi đã phát hiện và sửa:</strong> công thức AUC viết tay bằng rank-sum ban đầu cho
+<strong>0.3675</strong> (sai). Công thức đúng là <code>1 − W/maxU</code>; đã <strong>verify lại bằng pROC</strong>
+→ 0.8032 khớp. Đây là bài học: số "trông hợp lý" vẫn có thể sai, phải kiểm
+chứng bằng công cụ độc lập.</p>
+</blockquote>
+<h3 id="252-5-bieu-o-sinh-ra">2.5.2 5 biểu đồ sinh ra</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Nội dung</th>
+<th>Dùng ở</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r01_length_by_label.png</code></td>
+<td>Histogram độ dài benign vs attack (log y)</td>
+<td>Chương 3, mục độ dài</td>
+</tr>
+<tr>
+<td><code>r02_label_by_source.png</code></td>
+<td>Stacked bar nhãn theo 10 nguồn</td>
+<td>Chương 1, mục phân bố nguồn</td>
+</tr>
+<tr>
+<td><code>r03_boxplot_by_source.png</code></td>
+<td>Boxplot độ dài theo nguồn (log x)</td>
+<td>Chương 3, mục độ dài</td>
+</tr>
+<tr>
+<td><code>r04_family_label.png</code></td>
+<td>Family × nhãn</td>
+<td>Chương 3, mục family</td>
+</tr>
+<tr>
+<td><code>r05_attack_ratio.png</code></td>
+<td>Tỉ lệ % attack theo nguồn</td>
+<td>Chương 1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="26-prototype-app-streamlit-appstreamlit_apppy">2.6 Prototype — App Streamlit — <code>app/streamlit_app.py</code></h2>
+<p><strong>Quyết định thiết kế quan trọng: 1 process, không tách frontend/backend.</strong>
+Streamlit đã gộp server + client → <strong>không cần viết API FastAPI/Flask riêng</strong>.
+Viết full-stack sẽ tốn thời gian cho phần không mang giá trị nghiên cứu.</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Chức năng</th>
+<th>Nguồn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tổng quan</td>
+<td>4 metric + bảng source×nhãn + family×nhãn</td>
+<td>MongoDB aggregation</td>
+</tr>
+<tr>
+<td>Tra cứu</td>
+<td>Lọc nguồn/family/nhãn + tìm regex trong text</td>
+<td>MongoDB <code>find</code> + <code>$regex</code></td>
+</tr>
+<tr>
+<td>Phân bố độ dài</td>
+<td>Bar chart 5 bucket × 2 nhãn</td>
+<td>MongoDB <code>$switch</code></td>
+</tr>
+<tr>
+<td>Benchmark scale</td>
+<td>Bảng partition/replication + MLlib vs sklearn</td>
+<td><code>out/*.json</code></td>
+</tr>
+<tr>
+<td>Dữ liệu thô</td>
+<td>1 document BSON mẫu + mô tả schema</td>
+<td>MongoDB <code>find_one</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kiểm chứng</strong> (<code>streamlit.testing.v1.AppTest</code>): 0 exception, 5 tab, 5 dataframe,
+metric <strong>141,725 / 88,655 / 53,070 / 37.45%</strong> → khớp Spark SQL 100%.</p>
+<blockquote>
+<p>Metric dashboard lấy <strong>trực tiếp từ MongoDB</strong>, không đọc file metric → nếu
+MongoDB lệch parquet thì dashboard hiện ngay. Đây là kiểm tra chéo độc lập.</p>
+<p><strong>Gotcha:</strong> <code>st.cache_data</code> <strong>không hash được</strong> <code>pymongo Collection</code> → phải
+đặt tiều tố <code>_</code> cho tham số (<code>def agg_source_label(_coll)</code>).</p>
+</blockquote>
+<hr />
+<h2 id="27-o-tren-corpus-that-1m-dong-srcbenchmark_scalepy">2.7 Đo trên corpus thật (~1M dòng) — <code>src/benchmark_scale.py</code></h2>
+<h3 id="271-van-e-phat-hien-uoc-912-shard-wildchat-bi-cat-do">2.7.1 Vấn đề phát hiện được: 9/12 shard WildChat bị cắt dở</h3>
+<p>Script tải cũ dùng <code>curl -C -</code> với <code>--max-time</code>. Khi timeout, <strong>file dở vẫn được
+giữ lại</strong> và lần chạy sau coi như "đã tải xong" → file hỏng <strong>không bị phát hiện</strong>.</p>
+<p>Phát hiện bằng magic bytes (<code>PAR1</code> ở đầu <strong>và</strong> cuối file):</p>
+<pre><code class="language-python">pq.ParquetFile(p).metadata.num_rows   # ArrowInvalid: Parquet magic bytes not found in footer
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Shard</th>
+<th style="text-align: right;">Local (trước)</th>
+<th style="text-align: right;">Remote</th>
+<th>Trạng thái</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td style="text-align: right;">35.2 MB</td>
+<td style="text-align: right;">230.8 MB</td>
+<td>CẮT 15%</td>
+</tr>
+<tr>
+<td>02</td>
+<td style="text-align: right;">106.6 MB</td>
+<td style="text-align: right;">205.7 MB</td>
+<td>CẮT 52%</td>
+</tr>
+<tr>
+<td>04</td>
+<td style="text-align: right;">114.5 MB</td>
+<td style="text-align: right;">208.3 MB</td>
+<td>CẮT 55%</td>
+</tr>
+<tr>
+<td>05</td>
+<td style="text-align: right;">17.6 MB</td>
+<td style="text-align: right;">200.9 MB</td>
+<td>CẮT 9%</td>
+</tr>
+<tr>
+<td>06</td>
+<td style="text-align: right;">19.6 MB</td>
+<td style="text-align: right;">189.5 MB</td>
+<td>CẮT 10%</td>
+</tr>
+<tr>
+<td>07</td>
+<td style="text-align: right;">4.6 MB</td>
+<td style="text-align: right;">188.4 MB</td>
+<td>CẮT 2.5%</td>
+</tr>
+<tr>
+<td>09</td>
+<td style="text-align: right;">105.9 MB</td>
+<td style="text-align: right;">269.0 MB</td>
+<td>CẮT 39%</td>
+</tr>
+<tr>
+<td>10</td>
+<td style="text-align: right;">57.5 MB</td>
+<td style="text-align: right;">336.5 MB</td>
+<td>CẮT 17%</td>
+</tr>
+<tr>
+<td>01, 11, 12, 13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">215–336 MB</td>
+<td>THIẾU</td>
+</tr>
+<tr>
+<td>03, 08</td>
+<td style="text-align: right;">216.9 / 181.0 MB</td>
+<td style="text-align: right;">khớp</td>
+<td>OK</td>
+</tr>
+</tbody>
+</table>
+<p>Sau khi sửa (HEAD Content-Length → <code>curl -C -</code> resume → <strong>verify magic bytes</strong> →
+tối đa 10 lần thử): <strong>14/14 shard đọc được, 837,989 dòng, 3.36 GB</strong>.</p>
+<blockquote>
+<p><strong>Bài học chung:</strong> script tải phải <strong>verify magic bytes</strong>. Coi "file tồn tại" là
+"file đúng" là lỗi âm thầm đắt nhất — nó làm hỏng mọi phép đo phía sau mà
+không có dấu hiệu nào báo lỗi.</p>
+</blockquote>
+<h3 id="272-thiet-ke-benchmark">2.7.2 Thiết kế benchmark</h3>
+<p>Lấy <strong>first user turn</strong> của mỗi hội thoại bằng <strong>Spark SQL thuần</strong> (không Python
+UDF, để tránh bottleneck serialize):</p>
+<pre><code class="language-python">users  = F.filter(col, lambda m: m[&quot;role&quot;] == &quot;user&quot;)
+text   = F.element_at(F.transform(users, lambda m: m[&quot;content&quot;]), 1)
+</code></pre>
+<p>Lọc <code>length(text) &gt; 20</code>, bỏ dòng <code>redacted</code>, gán <code>label=0</code>, <code>split=unassigned</code>,
+<code>family=benign_stream</code> — vì đây là benign <strong>hữu cơ</strong>, không phải benign được
+dán nhãn thủ công.</p>
+<hr />
+<h2 id="27b-detector-streaming-srcstream_detectorpy">2.7b Detector streaming — <code>src/stream_detector.py</code></h2>
+<p>Kiến trúc 2 tầng trong <strong>một</strong> pipeline Spark:</p>
+<pre><code>JSON files / thư mục
+   └─&gt; Spark Structured Streaming (foreachBatch)
+         ├─&gt; Rule layer  : 8 regex theo kỹ thuật tấn công  (Spark SQL `rlike`)
+         └─&gt; Model layer : MLlib LogisticRegression        (Python UDF cho probability)
+               └─&gt; hợp nhất: rule_score &gt; 0 → attack, ngược lại model_pred
+                     ├─&gt; out/stream_out/detections.jsonl
+                     └─&gt; MongoDB `prompt_injection.detections`
+</code></pre>
+<p><strong>Vì sao tách 2 tầng:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tầng</th>
+<th>Đặc điểm</th>
+<th>Vai trò</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rule</td>
+<td>Regex cố định theo kỹ thuật tấn công</td>
+<td>Bắt mẫu công khai, <strong>giải thích được</strong> (kèm kỹ thuật + đoạn text khớp) → false positive thấp</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Học từ dữ liệu</td>
+<td>Bắt mẫu biến thiên, không giải thích được → bổ sung recall</td>
+</tr>
+</tbody>
+</table>
+<p>Kết quả replay trên 12 dòng tự viết tay: <strong>rule bắt 7/7 attack · 0/5 false
+positive</strong>, model layer flag 4/7 với 0 false positive.</p>
+<p><strong>Ràng buộc kỹ thuật đã phát hiện:</strong>
+- Rule layer dùng <strong>Spark SQL native</strong> (<code>rlike</code>, <code>regexp_extract</code>) thay vì Python
+  UDF, vì <code>sparkContext.addPyFile()</code> trên Windows cần <code>HADOOP_HOME</code>
+  (winutils.exe). Native → chạy trong JVM, không ship file, chạy được ở cluster mode.
+- Cột <code>probability</code> của MLlib là <strong>VectorUDT</strong> → SQL không trích được
+  (<code>probability[1]</code>, <code>element_at</code>, <code>vector_to_array</code> đều fail) → model layer phải
+  dùng Python UDF, chỉ chạy được khi driver và executor cùng môi trường.
+- <code>PipelineModel.write().save()</code> cũng cần winutils → model được train <strong>inline</strong>
+  trong bộ nhớ thay vì load từ đĩa.</p>
+<hr />
+<h2 id="28-anh-gia-3-muc">2.8 Đánh giá — 3 mức</h2>
+<table>
+<thead>
+<tr>
+<th>Mức</th>
+<th>Cách đo</th>
+<th>Trả lời RQ nào</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>In-domain</strong></td>
+<td>Test split 19,374 dòng (80/10/10 theo <code>source</code>)</td>
+<td>RQ1</td>
+</tr>
+<tr>
+<td><strong>Cross-dataset (in-train)</strong></td>
+<td>F1 theo từng nguồn, nhưng nguồn <strong>có trong train</strong></td>
+<td>RQ2 (mức yếu)</td>
+</tr>
+<tr>
+<td><strong>LOSO (zero-shot thật)</strong></td>
+<td>Bỏ hẳn 1 nguồn khỏi train, đánh giá trên nguồn đó</td>
+<td>RQ2 (mức mạnh)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vì sao cần LOSO:</strong> per-source breakdown ở Chương 3 <strong>không</strong> trả lời được
+"model có tổng quát hóa không", vì cả 10 nguồn đều nằm trong tập train. LOSO
+mới là đo zero-shot thật. Chi phí: 10 lần train.</p>
+<p><strong>Ablation RQ3:</strong> train lại chỉ với unigram → so sánh F1. Đo được: F1 tụt
+<strong>2.13 điểm</strong> (0.9670 → 0.9308 trên validation). ⇒ phần lớn hiệu năng đến từ
+<strong>từ vựng</strong>, không phải chỉ độ dài — nhưng độ dài vẫn đóng góp đáng kể, và
+AUC(độ dài) = 0.8032 cho thấy nếu chỉ dùng độ dài thì vẫn có tín hiệu thật.</p>
+<hr />
+<hr />
+<h2 id="29-moi-truong-tai-lap-cai-gi-tai-lap-uoc-cai-gi-khong">2.9 Môi trường tái lập — cái gì tái lập được, cái gì không</h2>
+<p>Yêu cầu chung khi chạy thí nghiệm là <strong>thống nhất môi trường, ghim version, cùng
+nền tảng</strong>. Mục này ghi rõ đồ án đã làm được đến đâu và <strong>phần nào không thể đồng
+nhất</strong> — vì che phần không đồng nhất đi sẽ là báo cáo sai.</p>
+<h3 id="291-ghim-version-a-lam">2.9.1 Ghim version — đã làm</h3>
+<p><code>requirements.txt</code> pin <strong>toàn bộ</strong> dependency (21 package), không dùng <code>&gt;=</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Nhóm</th>
+<th>Package</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core</td>
+<td><code>pandas==3.0.3</code> · <code>numpy==2.5.1</code> · <code>pyarrow==26.0.0</code> · <code>scikit-learn==1.9.0</code> · <code>scipy==1.18.0</code></td>
+</tr>
+<tr>
+<td>Big Data</td>
+<td><code>pyspark==4.2.0</code></td>
+</tr>
+<tr>
+<td>Tải dữ liệu</td>
+<td><code>datasets==5.1.0</code> · <code>huggingface-hub==2.2.0</code> · <code>duckdb==1.5.6</code></td>
+</tr>
+<tr>
+<td>NoSQL</td>
+<td><code>pymongo==4.19.0</code></td>
+</tr>
+<tr>
+<td>App + báo cáo</td>
+<td><code>streamlit==1.66.0</code> · <code>python-pptx==1.0.2</code> · <code>matplotlib==3.11.2</code></td>
+</tr>
+</tbody>
+</table>
+<p>Runtime cũng được ghim: <strong>Python 3.14.5</strong>, <strong>Java 24.0.2</strong> (Spark cần Java 17+).
+Toàn bộ giá trị trên được sinh tự động bằng <code>tools/capture_env.py</code> → <code>Environment.md</code>,
+nên không phải gõ tay (gõ tay sẽ lệch sau mỗi lần <code>pip install</code>).</p>
+<h3 id="292-so-lieu-nao-tai-lap-uoc">2.9.2 Số liệu nào tái lập được</h3>
+<table>
+<thead>
+<tr>
+<th>Loại số liệu</th>
+<th>Tái lập?</th>
+<th>Vì sao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1 / AUC / precision / recall / FPR / confusion matrix (sklearn)</td>
+<td>✅ <strong>Có</strong></td>
+<td><code>train_test_split(random_state=42)</code>, <code>LogisticRegression(solver="liblinear")</code> là <strong>deterministic</strong> (không random khởi tạo), TF-IDF không có yếu tố ngẫu nhiên. Lệch tối đa ở chữ số thập phân thứ 4 do thứ tự cộng dồn float của BLAS</td>
+</tr>
+<tr>
+<td>Số dòng corpus (141,725 / 109,543 / 12,808 / 19,374)</td>
+<td>✅ <strong>Có</strong></td>
+<td>Dedupe bằng hash chuỗi, split bằng seed cố định</td>
+</tr>
+<tr>
+<td>Phân bố EDA</td>
+<td>✅ <strong>Có</strong></td>
+<td>Spark SQL thuần, đã đối chiếu pandas <strong>khớp 100%</strong></td>
+</tr>
+<tr>
+<td>F1 / AUC của MLlib</td>
+<td>⚠️ <strong>Gần đúng</strong></td>
+<td>Kết quả Spark phụ thuộc <strong>số partition + số core</strong> (thứ tự aggregation khác nhau). Đã cố định <code>local[4]</code> + <code>spark.sql.shuffle.partitions=8</code> trong code, nhưng đổi số core vẫn lệch chữ số thứ 4</td>
+</tr>
+<tr>
+<td>Thời gian (fit_sec, s/100k dòng, docs/s, Spark 80.7s)</td>
+<td>❌ <strong>Không</strong></td>
+<td>Phụ thuộc CPU/RAM/ổ đĩa. Đây là <strong>số của một máy</strong>, không phải hằng số</td>
+</tr>
+</tbody>
+</table>
+<h3 id="293-ghim-moi-truong-khac-voi-ghim-nen-tang">2.9.3 Ghim môi trường khác với ghim nền tảng</h3>
+<p>Đây là chỗ dễ hiểu sai nhất:</p>
+<ul>
+<li><strong>Ghim version</strong> = cùng thư viện, cùng phiên bản → đảm bảo <strong>hành vi code</strong> giống nhau.</li>
+<li><strong>Cùng nền tảng</strong> (Colab / VM / máy local) → đảm bảo <strong>số đo thời gian</strong> so sánh được.</li>
+</ul>
+<p>Đồ án chạy <strong>máy local</strong> (Windows 11, i7-13620H, 32 GB, CPU only, Python 3.14.5,
+Java 24.0.2, Spark 4.2.0). Điều này <strong>không</strong> ảnh hưởng tới tính đúng đắn của
+F1/AUC — vì đó là phép tính số học trên cùng dữ liệu, cùng version thư viện.
+Nó chỉ ảnh hưởng tới <strong>số giây</strong>, và báo cáo đã ghi rõ mọi số thời gian đều kèm
+cấu hình máy đo.</p>
+<p>Chạy lại trên Colab sẽ <strong>không</strong> cho ra 56.79s/100k dòng — có thể nhanh hoặc chậm
+hơn 2–3× tuỳ GPU/CPU runtime. Nhưng <strong>F1 0.9521 và AUC 0.9922 vẫn phải ra đúng</strong>,
+và đó chính là phép kiểm tra tái lập: nếu F1 lệch, là do version, không phải do máy.</p>
+<h3 id="294-vi-sao-chon-may-local-thay-vi-colab">2.9.4 Vì sao chọn máy local thay vì Colab</h3>
+<table>
+<thead>
+<tr>
+<th>Tiêu chí</th>
+<th>Local (đã dùng)</th>
+<th>Colab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dung lượng</td>
+<td>Ổ D: đủ cho 19 file / 1.19 GB dataset + 3.36 GB shard WildChat</td>
+<td>Giới hạn ~100 GB, nhưng phiên bị ngắt sau 12h</td>
+</tr>
+<tr>
+<td>Cài MongoDB</td>
+<td>✅ Server 8.0.12 native</td>
+<td>❌ Không có service, phải <code>apt install</code> mỗi phiên</td>
+</tr>
+<tr>
+<td>Cài R</td>
+<td>✅ R 4.6.1 native</td>
+<td>✅ Có sẵn trong runtime</td>
+</tr>
+<tr>
+<td>Driver memory</td>
+<td>✅ Set được <code>--driver-memory 10g</code></td>
+<td>❌ RAM runtime cố định, OOM ở 969k dòng</td>
+</tr>
+<tr>
+<td>Tái lập</td>
+<td>✅ Máy của người nộp, ghim được</td>
+<td>⚠️ Runtime Colab đổi version liên tục</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kết luận:</strong> local là lựa chọn <strong>đúng cho đồ án này</strong> vì đề cương bắt buộc
+MongoDB + R native, và benchmark 1M dòng cần &gt;8 GB driver memory — Colab free
+không đáp ứng. Rủi ro duy nhất là số thời gian không so sánh trực tiếp được với
+nhóm chạy Colab, và báo cáo đã xử lý bằng cách <strong>luôn ghi kèm cấu hình máy</strong>.</p>
+<h3 id="295-cach-tai-lap-tren-may-khac">2.9.5 Cách tái lập trên máy khác</h3>
+<pre><code class="language-powershell">git clone &lt;repo&gt; ; cd Prompt_Injection
+pip install -r requirements.txt          # ghim sẵn toàn bộ version
+$env:PI_DATA_BASE = &quot;D:\...\datasets\llm_security&quot;
+python tools\capture_env.py              # ghi lại môi trường THỰC TẾ của máy mới
+python src\prepare_data.py               # phải ra đúng 141,725 dòng
+python src\train_baseline.py             # phải ra F1 0.9521 / AUC 0.9922
+</code></pre>
+<p>Nếu <code>prepare_data.py</code> ra số dòng khác → <strong>dữ liệu nguồn khác</strong>, không phải môi trường.
+Nếu số dòng đúng mà F1 lệch &gt; 0.001 → <strong>version thư viện khác</strong>, so <code>Environment.md</code>
+giữa 2 máy. Đây là 2 nguyên nhân tách biệt, đừng gộp.</p>
+<hr />
+<p><em>Chương 2 — xem Chương 3 (kết quả &amp; đánh giá).</em></p>
+</section><section class="chapter">
+<h1 id="chuong-3-ket-qua-anh-gia">Chương 3 — Kết quả &amp; đánh giá</h1>
+<p><strong>Môn:</strong> IT252BIDA — Xử lý dữ liệu lớn · <strong>GV:</strong> PhD. Võ Thị Hồng Tuyết
+<strong>Người thực hiện:</strong> Trần Khôi Nguyên (MIT26004) — nhóm 4</p>
+<blockquote>
+<p>Mọi con số trong chương này đều <strong>đo được</strong> từ file metric trong <code>out/</code>
+(<code>baseline_metrics.json</code>, <code>spark_ml_metrics.json</code>, <code>mongo_metrics.json</code>,
+<code>r_metrics.json</code>, <code>scale_benchmark.json</code>, <code>loso_metrics.json</code>).
+Không có số nào ước lượng.</p>
+</blockquote>
+<hr />
+<h2 id="31-rq1-hieu-nang-in-domain">3.1 RQ1 — Hiệu năng in-domain</h2>
+<h3 id="311-baseline-sklearn-tf-idf-word-1-2-char_wb-3-5-120k-chieu-lr-balanced">3.1.1 Baseline sklearn (TF-IDF word 1-2 + char_wb 3-5, 120k chiều, LR balanced)</h3>
+<table>
+<thead>
+<tr>
+<th>Tập</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;"><strong>F1</strong></th>
+<th style="text-align: right;">AUC</th>
+<th style="text-align: right;">FPR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validation</td>
+<td style="text-align: right;">12,808</td>
+<td style="text-align: right;">0.9724</td>
+<td style="text-align: right;">0.9697</td>
+<td style="text-align: right;">0.9643</td>
+<td style="text-align: right;"><strong>0.9670</strong></td>
+<td style="text-align: right;">0.9940</td>
+<td style="text-align: right;">0.0218</td>
+</tr>
+<tr>
+<td><strong>Test</strong></td>
+<td style="text-align: right;">19,374</td>
+<td style="text-align: right;">0.9708</td>
+<td style="text-align: right;">0.9614</td>
+<td style="text-align: right;">0.9430</td>
+<td style="text-align: right;"><strong>0.9521</strong></td>
+<td style="text-align: right;">0.9922</td>
+<td style="text-align: right;">0.0169</td>
+</tr>
+</tbody>
+</table>
+<h3 id="312-pipeline-mllib-token-hashingtf-218-idf-lr">3.1.2 Pipeline MLlib (Token → HashingTF 2^18 → IDF → LR)</h3>
+<table>
+<thead>
+<tr>
+<th>Tập</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;"><strong>F1</strong></th>
+<th style="text-align: right;">AUC</th>
+<th style="text-align: right;">Fit</th>
+<th style="text-align: right;">Predict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test</td>
+<td style="text-align: right;">19,374</td>
+<td style="text-align: right;">0.9270</td>
+<td style="text-align: right;">0.9662</td>
+<td style="text-align: right;">0.7915</td>
+<td style="text-align: right;"><strong>0.8702</strong></td>
+<td style="text-align: right;">0.9801</td>
+<td style="text-align: right;">228.08s</td>
+<td style="text-align: right;">11.58s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="313-so-sanh">3.1.3 So sánh</h3>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th style="text-align: right;">MLlib</th>
+<th style="text-align: right;">sklearn</th>
+<th style="text-align: right;">Δ</th>
+<th>Nhận xét</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1</td>
+<td style="text-align: right;">0.8702</td>
+<td style="text-align: right;">0.9521</td>
+<td style="text-align: right;"><strong>−0.0819</strong></td>
+<td>MLlib thua</td>
+</tr>
+<tr>
+<td>AUC</td>
+<td style="text-align: right;">0.9801</td>
+<td style="text-align: right;">0.9922</td>
+<td style="text-align: right;">−0.0121</td>
+<td>Gần nhau</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td style="text-align: right;">0.9662</td>
+<td style="text-align: right;">0.9614</td>
+<td style="text-align: right;">+0.0048</td>
+<td>MLlib hơn nhẹ</td>
+</tr>
+<tr>
+<td><strong>Recall</strong></td>
+<td style="text-align: right;">0.7915</td>
+<td style="text-align: right;">0.9430</td>
+<td style="text-align: right;"><strong>−0.1515</strong></td>
+<td><strong>MLlib bỏ sót nhiều attack</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ <strong>Cú pháp thất bại của MLlib là recall, không phải precision.</strong> Nó "dè" trong
+chuyển nhãn attack: chỉ 1,248/5,978 attack bị bỏ sót so với 340/5,970 của sklearn.</p>
+<hr />
+<h2 id="32-rq2-oi-nguon-du-lieu-thi-mat-bao-nhieu">3.2 RQ2 — Đổi nguồn dữ liệu thì mất bao nhiêu?</h2>
+<h3 id="321-per-source-sklearn-baseline-nguon-co-trong-tap-train">3.2.1 Per-source — sklearn baseline (nguồn <strong>có trong</strong> tập train)</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">F1</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">AUC</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">689</td>
+<td style="text-align: right;"><strong>0.9991</strong></td>
+<td style="text-align: right;">0.9982</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td>Hoàn hảo — template lặp lại</td>
+</tr>
+<tr>
+<td><code>allenai/wildguardmix</code></td>
+<td style="text-align: right;">4,754</td>
+<td style="text-align: right;">0.9858</td>
+<td style="text-align: right;">0.9835</td>
+<td style="text-align: right;">0.9882</td>
+<td style="text-align: right;">0.9990</td>
+<td>Mạnh</td>
+</tr>
+<tr>
+<td><code>reshabhs/SPML_Chatbot_Prompt_Injection</code></td>
+<td style="text-align: right;">1,601</td>
+<td style="text-align: right;">0.9727</td>
+<td style="text-align: right;">0.9568</td>
+<td style="text-align: right;">0.9890</td>
+<td style="text-align: right;">0.9927</td>
+<td>FPR cao 0.1759</td>
+</tr>
+<tr>
+<td><code>xTRam1/safe-guard-prompt-injection</code></td>
+<td style="text-align: right;">2,006</td>
+<td style="text-align: right;">0.9621</td>
+<td style="text-align: right;">0.9915</td>
+<td style="text-align: right;">0.9344</td>
+<td style="text-align: right;">0.9968</td>
+<td>Tốt</td>
+</tr>
+<tr>
+<td><code>allenai/wildjailbreak</code></td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">0.9499</td>
+<td style="text-align: right;">0.9213</td>
+<td style="text-align: right;">0.9803</td>
+<td style="text-align: right;"><strong>0.5085</strong></td>
+<td><strong>AUC ≈ 0.5</strong> — không phân biệt được (chỉ attack)</td>
+</tr>
+<tr>
+<td><code>S-Labs/prompt-injection-dataset</code></td>
+<td style="text-align: right;">1,983</td>
+<td style="text-align: right;">0.8624</td>
+<td style="text-align: right;">0.9824</td>
+<td style="text-align: right;">0.7686</td>
+<td style="text-align: right;">0.9727</td>
+<td>Khó</td>
+</tr>
+<tr>
+<td><code>lmsys/toxic-chat</code></td>
+<td style="text-align: right;">4,664</td>
+<td style="text-align: right;"><strong>0.5114</strong></td>
+<td style="text-align: right;">0.4206</td>
+<td style="text-align: right;">0.6522</td>
+<td style="text-align: right;">0.9328</td>
+<td><strong>Yếu nhất</strong></td>
+</tr>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">0.6250</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.4545</td>
+<td style="text-align: right;">0.9039</td>
+<td>n nhỏ, hold-out ngoài</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nguồn chỉ có benign → đo FPR:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">FPR@0.5</th>
+<th style="text-align: right;">Mean prob</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lmsys/lmsys-chat-1m</code></td>
+<td style="text-align: right;">1,853</td>
+<td style="text-align: right;"><strong>0.0076</strong></td>
+<td style="text-align: right;">0.0242</td>
+</tr>
+<tr>
+<td><code>allenai/WildChat-1M</code></td>
+<td style="text-align: right;">1,538</td>
+<td style="text-align: right;"><strong>0.0124</strong></td>
+<td style="text-align: right;">0.0298</td>
+</tr>
+</tbody>
+</table>
+<h3 id="322-per-source-mllib-cung-tap-e-so-sanh-truc-tiep">3.2.2 Per-source — MLlib (cùng tập, để so sánh trực tiếp)</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">F1 sklearn</th>
+<th style="text-align: right;"><strong>F1 MLlib</strong></th>
+<th style="text-align: right;">Recall MLlib</th>
+<th style="text-align: right;">Chênh lệch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">0.9991</td>
+<td style="text-align: right;">0.9916</td>
+<td style="text-align: right;">0.9871</td>
+<td style="text-align: right;">−0.0075</td>
+</tr>
+<tr>
+<td><code>allenai/wildguardmix</code></td>
+<td style="text-align: right;">0.9858</td>
+<td style="text-align: right;">0.9787</td>
+<td style="text-align: right;">0.9638</td>
+<td style="text-align: right;">−0.0071</td>
+</tr>
+<tr>
+<td><code>reshabhs/SPML_Chatbot_Prompt_Injection</code></td>
+<td style="text-align: right;">0.9727</td>
+<td style="text-align: right;">0.9633</td>
+<td style="text-align: right;">0.9765</td>
+<td style="text-align: right;">−0.0094</td>
+</tr>
+<tr>
+<td><code>xTRam1/safe-guard-prompt-injection</code></td>
+<td style="text-align: right;">0.9621</td>
+<td style="text-align: right;">0.7418</td>
+<td style="text-align: right;">0.5952</td>
+<td style="text-align: right;"><strong>−0.2203</strong></td>
+</tr>
+<tr>
+<td><code>allenai/wildjailbreak</code></td>
+<td style="text-align: right;">0.9499</td>
+<td style="text-align: right;">0.9696</td>
+<td style="text-align: right;">0.9409</td>
+<td style="text-align: right;">+0.0197</td>
+</tr>
+<tr>
+<td><strong><code>S-Labs/prompt-injection-dataset</code></strong></td>
+<td style="text-align: right;"><strong>0.8624</strong></td>
+<td style="text-align: right;"><strong>0.2386</strong></td>
+<td style="text-align: right;"><strong>0.1359</strong></td>
+<td style="text-align: right;"><strong>−0.6238</strong></td>
+</tr>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">0.6250</td>
+<td style="text-align: right;">0.8030</td>
+<td style="text-align: right;">0.6212</td>
+<td style="text-align: right;">+0.1780</td>
+</tr>
+</tbody>
+</table>
+<h3 id="323-phat-hien-quan-trong-nhat-cua-o-an">3.2.3 Phát hiện quan trọng nhất của đồ án</h3>
+<blockquote>
+<p><strong>Ở <code>S-Labs/prompt-injection-dataset</code>: F1 sklearn 0.8624 vs MLlib 0.2386.</strong>
+Recall MLlib chỉ <strong>0.1359</strong> → bỏ sót <strong>814/942</strong> attack.</p>
+</blockquote>
+<p>Cùng một nguồn dữ liệu, cùng một tập train, nhưng:
+- sklearn (word 1-2 gram + char 3-5 gram) học được đặc trưng <strong>từ vựng</strong> → F1 0.86
+- MLlib (HashingTF unigram + IDF) <strong>không</strong> học được → F1 0.24</p>
+<p>⇒ <strong>Bằng chứng đo được rằng model học được "template", không học được "cơ chế".</strong>
+Unigram băm (HashingTF) giữ được tần suất từ đơn, nhưng mất thứ tự từ — mà
+prompt injection phần lớn là <strong>mệnh lệnh có cấu trúc</strong> ("ignore previous
+instructions…"), tức là thứ cần bigram/trigram.</p>
+<p><strong>Hệ quả thiết kế:</strong> với bài toán này, <strong>char n-gram là thành phần không thể
+thiếu</strong>, không phải tuỳ chọn. Đó là lý do ablation unigram tụt 2.13 điểm
+(xem 3.3).</p>
+<h3 id="324-iem-yeu-lmsystoxic-chat-f1-05114">3.2.4 Điểm yếu: <code>lmsys/toxic-chat</code> F1 0.5114</h3>
+<p>Precision 0.4206 — model bắt nhầm nhiều hội thoại thường. Nguyên nhân có thể
+đo được: toxic-chat chỉ có 160/9,586 dòng được gán nhãn attack (1.7%), còn lại là
+hội thoại bình thường nhưng <strong>chứa từ ngữ nhạy cảm</strong> (nguy hiểm về mặt nội
+dung, không phải về mặt chỉ đạt). Mô hình nhị phân gộp 2 khái niệm khác nhau
+→ khó tách.</p>
+<p><strong>Hướng xử lý (chưa làm):</strong> thêm đặc trưng "mệnh lệnh chiếm quyền" (imperative
++ override verb: <code>ignore</code>, <code>disregard</code>, <code>instead</code>, <code>you are now</code>) thay vì chỉ
+bag-of-words. Đây là hướng dùng embedding (mục 3.6).</p>
+<hr />
+<h2 id="33-rq3-ong-gop-cua-o-dai-vs-tu-vung">3.3 RQ3 — Đóng góp của độ dài vs từ vựng</h2>
+<h3 id="331-ablation-tren-test-19374-dong">3.3.1 Ablation (trên test, 19,374 dòng)</h3>
+<table>
+<thead>
+<tr>
+<th>Cấu hình</th>
+<th style="text-align: right;">F1</th>
+<th style="text-align: right;">Δ</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>word (1-2) + char_wb (3-5) — đầy đủ</td>
+<td style="text-align: right;"><strong>0.9521</strong></td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">0.9614</td>
+<td style="text-align: right;">0.9430</td>
+<td style="text-align: right;">0.9922</td>
+</tr>
+<tr>
+<td>unigram chỉ — bỏ bigram/trigram</td>
+<td style="text-align: right;">0.9308</td>
+<td style="text-align: right;"><strong>−0.0213</strong></td>
+<td style="text-align: right;">0.9285</td>
+<td style="text-align: right;">0.9332</td>
+<td style="text-align: right;">0.9875</td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Bỏ bigram/trigram làm F1 tụt <strong>2.13 điểm</strong>. Phần lớn hiệu năng đến từ <strong>từ vựng
+nhiều từ</strong>, không phải chỉ độ dài.</p>
+<h3 id="332-o-dai-mot-minh-kiem-inh-bang-r">3.3.2 Độ dài một mình — kiểm định bằng R</h3>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th>Giá trị</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mann-Whitney U</td>
+<td><strong>W = 925,758,320, p = 0.0</strong></td>
+</tr>
+<tr>
+<td><strong>AUC của riêng độ dài</strong> (pROC)</td>
+<td><strong>0.8032</strong></td>
+</tr>
+<tr>
+<td>Median benign → attack</td>
+<td>95 → 773 (×8.1)</td>
+</tr>
+<tr>
+<td>mean benign → attack</td>
+<td>406.2 → 982.8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="333-ket-luan-rq3-dien-giai-ung">3.3.3 Kết luận RQ3 — diễn giải đúng</h3>
+<p>Độ dài <strong>có</strong> tín hiệu thật (p = 0, AUC 0.80) nhưng <strong>không đủ</strong> để thay thế mô hình:</p>
+<ul>
+<li>AUC 0.8032 nghĩa là xác suất một attack ngẫu nhiên dài hơn một benign ngẫu nhiên
+  chỉ ~80%. Với ngưỡng đơn giản "dài hơn X → attack", sẽ bỏ sót phần lớn attack
+  ngắn (P50 attack = 773 nhưng P25 = 462, và 37.45% corpus là attack).</li>
+<li>Nếu chỉ dùng độ dài, FPR trên benign stream sẽ rất cao vì benign hội thoại
+  thật (WildChat) cũng dài.</li>
+</ul>
+<p>⇒ <strong>Độ dài là tín hiệu phụ trợ, không phải đặc trưng quyết định.</strong> Đây cũng là
+lập luận chống lại cách làm heuristic thuần (chỉ so khớp mẫu/keyword) — vốn
+dễ bị bypass và không học được gì.</p>
+<hr />
+<h2 id="34-lop-nosql-mongodb">3.4 Lớp NoSQL — MongoDB</h2>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th>Giá trị</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Số doc</td>
+<td>141,725</td>
+<td>khớp parquet <strong>100%</strong></td>
+</tr>
+<tr>
+<td>Tốc độ nạp</td>
+<td>6,917 docs/s (20.49s)</td>
+<td>batch 5,000</td>
+</tr>
+<tr>
+<td><code>dataSize</code></td>
+<td>124.85 MB</td>
+<td>≈2.6× parquet (47.6 MB) — BSON + index</td>
+</tr>
+<tr>
+<td>Index build</td>
+<td>0.13s</td>
+<td>5 index, tạo <strong>trước</strong> insert</td>
+</tr>
+<tr>
+<td>Aggregation source×label</td>
+<td><strong>0.72s</strong> (17 nhóm)</td>
+<td>quét index</td>
+</tr>
+<tr>
+<td>PySpark đọc lại</td>
+<td>50,000 doc / 23.29s</td>
+<td>+groupBy = 32.86s (12 nhóm)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>So sánh 4 engine trên cùng bài toán tổng hợp:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Phép</th>
+<th style="text-align: right;">Quy mô</th>
+<th style="text-align: right;">Thời gian</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pandas</td>
+<td>groupBy + length</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;"><strong>2.69s</strong></td>
+<td>nhanh nhất ở quy mô này</td>
+</tr>
+<tr>
+<td>Spark SQL</td>
+<td>groupBy + length</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;"><strong>80.67s</strong></td>
+<td>chậm hơn 30× do overhead JVM</td>
+</tr>
+<tr>
+<td>MongoDB</td>
+<td><code>$group</code> + <code>$percentile</code></td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;"><strong>0.72s</strong></td>
+<td>nhanh nhất — có index</td>
+</tr>
+<tr>
+<td>R</td>
+<td>Mann-Whitney + AUC</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;">~60s</td>
+<td>tính thống kê, không phải scan</td>
+</tr>
+</tbody>
+</table>
+<p>⇒ <strong>Không engine nào "thắng" tuyệt đối.</strong> pandas thắng ở scan nhỏ; MongoDB thắng
+ở truy vấn có index; Spark thắng khi cần song song hoá và dữ liệu vượt RAM;
+R thắng ở kiểm định thống kê. Đó là lý do kiến trúc 2 đường ở Chương 2.</p>
+<hr />
+<h2 id="35-lop-r-thong-ke">3.5 Lớp R — thống kê</h2>
+<table>
+<thead>
+<tr>
+<th>Phép</th>
+<th>Kết quả</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phân phối độ dài theo nhãn</td>
+<td>benign n=88,655 (median 95) vs attack n=53,070 (median 773)</td>
+<td><code>r_plots/r01</code></td>
+</tr>
+<tr>
+<td>Nhãn theo nguồn</td>
+<td>10 nguồn, 2 chỉ-benign, 1 chỉ-attack</td>
+<td><code>r_plots/r02</code></td>
+</tr>
+<tr>
+<td>Boxplot độ dài theo nguồn</td>
+<td>Phân bố lệch phải mạnh ở WildChat</td>
+<td><code>r_plots/r03</code></td>
+</tr>
+<tr>
+<td>Family × nhãn</td>
+<td>jailbreak 59,339 · direct 41,890 · benign 33,913 · indirect 6,583</td>
+<td><code>r_plots/r04</code></td>
+</tr>
+<tr>
+<td>% attack theo nguồn</td>
+<td>0% (WildChat, lmsys) → 100% (wildjailbreak)</td>
+<td><code>r_plots/r05</code></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Hình 3.1 — Phân phối độ dài prompt theo nhãn (benign median 95 ký tự vs attack median 773 ký tự)" src="figures/r01_length_by_label.png" /></p>
+<p><em>Hình 3.1 — Phân phối độ dài prompt theo nhãn (benign median 95 ký tự vs attack median 773 ký tự)</em></p>
+<p><img alt="Hình 3.2 — Phân bố nhãn theo 10 nguồn dữ liệu" src="figures/r02_label_by_source.png" /></p>
+<p><em>Hình 3.2 — Phân bố nhãn theo 10 nguồn dữ liệu</em></p>
+<p><img alt="Hình 3.3 — Boxplot độ dài theo nguồn (WildChat lệch phải mạnh)" src="figures/r03_boxplot_by_source.png" /></p>
+<p><em>Hình 3.3 — Boxplot độ dài theo nguồn (WildChat lệch phải mạnh)</em></p>
+<p><img alt="Hình 3.4 — Phân bố family tấn công × nhãn" src="figures/r04_family_label.png" /></p>
+<p><em>Hình 3.4 — Phân bố family tấn công × nhãn</em></p>
+<p><img alt="Hình 3.5 — Tị lệ attack theo nguồn (0% WildChat/lmsys → 100% wildjailbreak)" src="figures/r05_attack_ratio.png" /></p>
+<p><em>Hình 3.5 — Tị lệ attack theo nguồn (0% WildChat/lmsys → 100% wildjailbreak)</em></p>
+<p><strong>Kiểm định:</strong> Mann-Whitney p = 0.0, AUC(độ dài) = 0.8032 (pROC).</p>
+<blockquote>
+<p><strong>Ghi chú phương pháp:</strong> AUC ban đầu tính tay bằng công thức rank-sum cho
+<strong>0.3675 — sai</strong>. Công thức đúng <code>1 − W/maxU</code> cho <strong>0.8032</strong>, đã verify lại
+bằng <code>pROC</code> (package độc lập). Kết quả cuối dùng giá trị pROC.</p>
+</blockquote>
+<hr />
+<h2 id="36-han-che-huong-mo-rong">3.6 Hạn chế &amp; hướng mở rộng</h2>
+<h3 id="361-han-che-a-o-uoc">3.6.1 Hạn chế đã đo được</h3>
+<table>
+<thead>
+<tr>
+<th>Hạn chế</th>
+<th>Bằng chứng</th>
+<th>Hướng xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model học template, không học cơ chế</td>
+<td>S-Labs: MLlib F1 0.2386 vs sklearn 0.8624</td>
+<td>Thêm char n-gram bắt buộc; embedding</td>
+</tr>
+<tr>
+<td><code>toxic-chat</code> yếu</td>
+<td>F1 0.5114, precision 0.4206</td>
+<td>Đặc trưng imperative + override verb; embedding</td>
+</tr>
+<tr>
+<td><code>wildjailbreak</code> AUC ≈ 0.5</td>
+<td>AUC 0.5085 (chỉ 220 dòng, chỉ attack)</td>
+<td>Nhóm nhãn riêng cho "adversarial-but-harmless"</td>
+</tr>
+<tr>
+<td>Per-source là in-train</td>
+<td>Cả 10 nguồn đều trong train</td>
+<td><strong>LOSO</strong> (mục 3.7)</td>
+</tr>
+<tr>
+<td>Spark chậm hơn pandas 30× ở 141k</td>
+<td>80.67s vs 2.69s</td>
+<td>Chỉ dùng Spark khi dữ liệu vượt RAM; đo ở ~1M (mục 3.8)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="362-huong-mo-rong">3.6.2 Hướng mở rộng</h3>
+<ol>
+<li><strong>Embedding (Sentence-BERT / MPNet)</strong> — thay bag-of-words để xử lý <code>toxic-chat</code>
+   và S-Labs. Đây là hướng có giá trị học thuật cao nhất.</li>
+<li><strong>Đa nhãn (multi-label)</strong> — tách "adversarial-but-harmless" khỏi "injection".</li>
+<li><strong>Streaming</strong> — <code>src/stream_detector.py</code>: Spark Structured Streaming + rule + model
+   để phát hiện tấn công theo thời gian thực trên luồng hội thoại.</li>
+<li><strong>Chi phí vận hành</strong> — so sánh chi phí chạy local vs cluster (YARN/K8s).</li>
+</ol>
+<hr />
+<h2 id="37-loso-zero-shot-that">3.7 LOSO — Zero-shot thật</h2>
+<p><strong>Vì sao cần.</strong> Bảng per-source ở mục 3.4 <strong>không</strong> trả lời được câu "model có
+tổng quát hóa không", vì cả 10 nguồn đều nằm trong tập train — đó chỉ là đo
+in-sample. LOSO (Leave-One-Source-Out) bỏ hẳn 1 nguồn khỏi train rồi đánh giá
+trên nguồn đó: mô phỏng đúng tình huống model gặp nguồn dữ liệu mới.</p>
+<p><strong>Cấu hình:</strong> mỗi fold train trên 9 nguồn, test trên nguồn bị loại; pipeline
+giống hệt mục 3.3 (HashingTF 2^16 + LogisticRegression); corpus
+141,725 dòng, <strong>10 fold</strong>, tổng thời gian
+fit <strong>1437.9s</strong> (~24 phút).</p>
+<h3 id="371-ket-qua-tung-fold-threshold-mac-inh-05">3.7.1 Kết quả từng fold — threshold mặc định 0.5</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn bị loại</th>
+<th style="text-align: right;">n test</th>
+<th style="text-align: right;">tỉ lệ attack thật</th>
+<th style="text-align: right;">F1</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">AUC</th>
+<th style="text-align: right;">FPR</th>
+<th style="text-align: right;">F1@thr tốt</th>
+<th style="text-align: right;">Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S-Labs/prompt-injection-dataset</code></td>
+<td style="text-align: right;">15,108</td>
+<td style="text-align: right;">0.448</td>
+<td style="text-align: right;"><strong>0.0038</strong></td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.0019</td>
+<td style="text-align: right;">0.8084</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;"><strong>0.7205</strong></td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr>
+<td><code>allenai/WildChat-1M</code></td>
+<td style="text-align: right;">15,382</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;"><strong>0.0000</strong></td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.5000</td>
+<td style="text-align: right;">0.0559</td>
+<td style="text-align: right;"><strong>0.0000</strong></td>
+<td style="text-align: right;">None</td>
+</tr>
+<tr>
+<td><code>allenai/wildguardmix</code></td>
+<td style="text-align: right;">47,547</td>
+<td style="text-align: right;">0.481</td>
+<td style="text-align: right;"><strong>0.8730</strong></td>
+<td style="text-align: right;">0.9691</td>
+<td style="text-align: right;">0.7943</td>
+<td style="text-align: right;">0.9520</td>
+<td style="text-align: right;">0.0235</td>
+<td style="text-align: right;"><strong>0.9088</strong></td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td><code>allenai/wildjailbreak</code></td>
+<td style="text-align: right;">2,206</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;"><strong>0.9488</strong></td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.9025</td>
+<td style="text-align: right;">0.5000</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;"><strong>1.0000</strong></td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">662</td>
+<td style="text-align: right;">0.397</td>
+<td style="text-align: right;"><strong>0.0300</strong></td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.0152</td>
+<td style="text-align: right;">0.5725</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;"><strong>0.5580</strong></td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">6,583</td>
+<td style="text-align: right;">0.788</td>
+<td style="text-align: right;"><strong>0.0749</strong></td>
+<td style="text-align: right;">0.9712</td>
+<td style="text-align: right;">0.0389</td>
+<td style="text-align: right;">0.6230</td>
+<td style="text-align: right;">0.0043</td>
+<td style="text-align: right;"><strong>0.8691</strong></td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr>
+<td><code>lmsys/lmsys-chat-1m</code></td>
+<td style="text-align: right;">18,531</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;"><strong>0.0000</strong></td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.5000</td>
+<td style="text-align: right;">0.0260</td>
+<td style="text-align: right;"><strong>0.0000</strong></td>
+<td style="text-align: right;">None</td>
+</tr>
+<tr>
+<td><code>lmsys/toxic-chat</code></td>
+<td style="text-align: right;">9,586</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;"><strong>0.3733</strong></td>
+<td style="text-align: right;">0.4000</td>
+<td style="text-align: right;">0.3500</td>
+<td style="text-align: right;">0.8572</td>
+<td style="text-align: right;">0.0089</td>
+<td style="text-align: right;"><strong>0.4151</strong></td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td><code>reshabhs/SPML_Chatbot_Prompt_Injection</code></td>
+<td style="text-align: right;">16,012</td>
+<td style="text-align: right;">0.783</td>
+<td style="text-align: right;"><strong>0.8797</strong></td>
+<td style="text-align: right;">0.7870</td>
+<td style="text-align: right;">0.9971</td>
+<td style="text-align: right;">0.8069</td>
+<td style="text-align: right;">0.9755</td>
+<td style="text-align: right;"><strong>0.8812</strong></td>
+<td style="text-align: right;">0.79</td>
+</tr>
+<tr>
+<td><code>xTRam1/safe-guard-prompt-injection</code></td>
+<td style="text-align: right;">10,108</td>
+<td style="text-align: right;">0.302</td>
+<td style="text-align: right;"><strong>0.1749</strong></td>
+<td style="text-align: right;">0.8559</td>
+<td style="text-align: right;">0.0974</td>
+<td style="text-align: right;">0.8889</td>
+<td style="text-align: right;">0.0071</td>
+<td style="text-align: right;"><strong>0.7405</strong></td>
+<td style="text-align: right;">0.11</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Lưu ý đọc bảng:</strong> <code>allenai/WildChat-1M</code> và <code>lmsys/lmsys-chat-1m</code> là nguồn
+<strong>chỉ có benign</strong> (tỉ lệ attack thật = 0.000). Ở đó F1 = 0 và AUC = 0.5 là
+<strong>hiện tượng toán học bắt buộc</strong>, không phải model hỏng — không có mẫu
+positive nào để dò. Hai nguồn này <strong>không tính vào mean</strong>. Mọi phép so sánh
+bên dưới đều trên <strong>8 nguồn có cả attack</strong>.</p>
+</blockquote>
+<p><img alt="Hình 3.6 — LOSO 10 fold: F1 theo ngưỡng quyết định so với F1 tại ngưỡng tối ưu và AUC theo nguồn" src="figures/l01_loso.png" /></p>
+<p><em>Hình 3.6 — LOSO 10 fold: F1 theo ngưỡng quyết định so với F1 tại ngưỡng tối ưu và AUC theo nguồn</em></p>
+<h3 id="372-tong-hop">3.7.2 Tổng hợp</h3>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th style="text-align: right;">10 nguồn</th>
+<th style="text-align: right;">8 nguồn có attack</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean F1 (threshold 0.5)</td>
+<td style="text-align: right;">0.3358</td>
+<td style="text-align: right;"><strong>0.4198</strong></td>
+</tr>
+<tr>
+<td><strong>Mean F1 (threshold tối ưu theo fold)</strong></td>
+<td style="text-align: right;">0.6093</td>
+<td style="text-align: right;"><strong>0.7617</strong></td>
+</tr>
+<tr>
+<td>Mean AUC</td>
+<td style="text-align: right;">0.7009</td>
+<td style="text-align: right;"><strong>0.7511</strong></td>
+</tr>
+<tr>
+<td>Min F1</td>
+<td style="text-align: right;">0.0 (<code>allenai/WildChat-1M</code>)</td>
+<td style="text-align: right;">0.0038 (<code>S-Labs/prompt-injection-dataset</code>)</td>
+</tr>
+<tr>
+<td>Max F1</td>
+<td style="text-align: right;">0.9488 (<code>allenai/wildjailbreak</code>)</td>
+<td style="text-align: right;">0.9488 (<code>allenai/wildjailbreak</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="373-phat-hien-quan-trong-auc-kha-cao-nhung-f105-thap">3.7.3 Phát hiện quan trọng: AUC khá cao nhưng F1@0.5 thấp</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn bị loại</th>
+<th style="text-align: right;">F1@thr tốt</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">Threshold tốt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allenai/wildjailbreak</code></td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr>
+<td><code>allenai/wildguardmix</code></td>
+<td style="text-align: right;">0.9088</td>
+<td style="text-align: right;">0.9160</td>
+<td style="text-align: right;">0.9017</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td><code>reshabhs/SPML_Chatbot_Prompt_Injection</code></td>
+<td style="text-align: right;">0.8812</td>
+<td style="text-align: right;">0.7980</td>
+<td style="text-align: right;">0.9837</td>
+<td style="text-align: right;">0.79</td>
+</tr>
+<tr>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">0.8691</td>
+<td style="text-align: right;">0.7857</td>
+<td style="text-align: right;">0.9722</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr>
+<td><code>xTRam1/safe-guard-prompt-injection</code></td>
+<td style="text-align: right;">0.7405</td>
+<td style="text-align: right;">0.6351</td>
+<td style="text-align: right;">0.8879</td>
+<td style="text-align: right;">0.11</td>
+</tr>
+<tr>
+<td><code>S-Labs/prompt-injection-dataset</code></td>
+<td style="text-align: right;">0.7205</td>
+<td style="text-align: right;">0.6552</td>
+<td style="text-align: right;">0.8003</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">0.5580</td>
+<td style="text-align: right;">0.3917</td>
+<td style="text-align: right;">0.9696</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr>
+<td><code>lmsys/toxic-chat</code></td>
+<td style="text-align: right;">0.4151</td>
+<td style="text-align: right;">0.3333</td>
+<td style="text-align: right;">0.5500</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Chẩn đoán.</strong> Mean AUC = 0.7511 nghĩa là model <strong>vẫn xếp hạng đúng</strong> trên
+nguồn chưa từng thấy — khả năng phân biệt attack/benign là có thật, không phải
+ngẫu nhiên. Nhưng F1 tại threshold cố định 0.5 lại thấp (mean 0.4198),
+và nguyên nhân <strong>không phải model hỏng</strong> mà là <strong>ngưỡng quyết định không di
+chuyển theo phân bố dữ liệu</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">Tỉ lệ dự đoán dương</th>
+<th style="text-align: right;">Tỉ lệ attack thật</th>
+<th style="text-align: right;">Độ lệch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S-Labs/prompt-injection-dataset</code></td>
+<td style="text-align: right;">0.0009</td>
+<td style="text-align: right;">0.4478</td>
+<td style="text-align: right;">model gần như <strong>không dự đoán gì</strong></td>
+</tr>
+<tr>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">0.0316</td>
+<td style="text-align: right;">0.7881</td>
+<td style="text-align: right;">model <strong>bỏ sót gần hết</strong> attack</td>
+</tr>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">0.0060</td>
+<td style="text-align: right;">0.3973</td>
+<td style="text-align: right;">tương tự</td>
+</tr>
+<tr>
+<td><code>reshabhs/SPML_...</code></td>
+<td style="text-align: right;">0.9924</td>
+<td style="text-align: right;">0.7833</td>
+<td style="text-align: right;">model <strong>gọi attack cho gần hết</strong> benign (FPR 0.9755)</td>
+</tr>
+<tr>
+<td><code>allenai/wildjailbreak</code></td>
+<td style="text-align: right;">0.9025</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">gần đúng</td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Mỗi nguồn có một "điểm hoạt động" (operating point) khác nhau trên cùng một
+mô hình. Threshold 0.5 chỉ hợp với <strong>phân bố của tập train</strong>; khi đổi nguồn,
+nó lệch.</p>
+<p>Khi dùng threshold tối ưu theo từng fold, mean F1 nhảy từ 0.4198 lên
+<strong>0.7617</strong> — tức phần lớn "sai" ở F1@0.5 là do <strong>calibration</strong>, không
+phải do mất khả năng tổng quát hóa.</p>
+<p><strong>Hai hệ quả thực tế:</strong>
+1. Với dữ liệu nhiều nguồn, phải <strong>calibrate threshold trên tập validation</strong>
+   thay vì dùng 0.5 mặc định. Đây là lỗi cấu hình phổ biến, không phải lỗi mô hình.
+2. <strong>AUC là chỉ số phải báo cáo chính</strong> khi so sánh ngoài phân bố — F1 đơn lẻ
+   phụ thuộc threshold và dễ dẫn tới kết luận sai.</p>
+<h3 id="374-nguon-kho-nhat-va-vi-sao-ay-la-bang-chung-manh">3.7.4 Nguồn khó nhất — và vì sao đây là bằng chứng mạnh</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">F1@0.5</th>
+<th style="text-align: right;">F1@thr tốt</th>
+<th style="text-align: right;">AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deepset/prompt-injections</code></td>
+<td style="text-align: right;">0.0300</td>
+<td style="text-align: right;">0.5580</td>
+<td style="text-align: right;">0.5725</td>
+</tr>
+<tr>
+<td><code>guychuk/open-prompt-injection</code></td>
+<td style="text-align: right;">0.0749</td>
+<td style="text-align: right;">0.8691</td>
+<td style="text-align: right;">0.6230</td>
+</tr>
+<tr>
+<td><code>xTRam1/safe-guard-prompt-injection</code></td>
+<td style="text-align: right;">0.1749</td>
+<td style="text-align: right;">0.7405</td>
+<td style="text-align: right;">0.8889</td>
+</tr>
+<tr>
+<td><code>lmsys/toxic-chat</code></td>
+<td style="text-align: right;">0.3733</td>
+<td style="text-align: right;">0.4151</td>
+<td style="text-align: right;">0.8572</td>
+</tr>
+</tbody>
+</table>
+<p>Nguồn <code>deepset</code> và <code>guychuk</code> là hai nguồn mà ở mục 3.4 (per-source in-sample) đã
+thấy yếu. Ba phép đo độc lập — per-source in-sample (mục 3.4), LOSO zero-shot
+(mục này), và ablation unigram (mục 3.5) — cùng chỉ một kết luận:</p>
+<blockquote>
+<p><strong>Model học được template của các nguồn đã thấy, không học được cơ chế tấn
+công chung.</strong> Với <code>guychuk</code>, AUC chỉ 0.6230 dù đổi threshold lên 0.8691 F1 —
+tức khả năng xếp hạng thật sự yếu, không chỉ lệch ngưỡng. Với <code>deepset</code>,
+AUC 0.5725 gần như ngẫu nhiên.</p>
+</blockquote>
+<p>Riêng <code>S-Labs</code> là ngoại lệ đáng chú ý: AUC 0.8084 và F1@0.05 = 0.7205, tức
+model <strong>hoàn toàn có thể</strong> phân biệt được S-Labs — chỉ là điểm hoạt động của nó
+nằm ở 0.05 thay vì 0.5.</p>
+<h3 id="375-ket-luan-rq3">3.7.5 Kết luận RQ3</h3>
+<blockquote>
+<p><strong>Ở ngưỡng quyết định mặc định, model KHÔNG generalize tốt sang nguồn chưa
+thấy (mean F1 0.4198 trên 8 nguồn có attack). Nhưng khả năng
+xếp hạng VẪN được giữ (mean AUC 0.7511), và phần lớn khoảng cách là
+do calibration chứ không phải do mô hình hỏng (F1@thr tốt = 0.7617).</strong></p>
+</blockquote>
+<p>⇒ Hệ quả triển khai: (a) calibrate threshold trên tập validation đa nguồn,
+(b) dùng embedding / char n-gram thay bag-of-words để vượt rào "template"
+(mục 3.6.2), (c) theo dõi FPR riêng theo nguồn — ở <code>SPML</code> FPR lên tới 0.9755,
+nghĩa là một threshold duy nhất không thể phục vụ mọi nguồn.</p>
+<hr />
+<h2 id="38-benchmark-tren-corpus-that-827422-dong">3.8 Benchmark trên corpus thật — 827,422 dòng</h2>
+<p><strong>Vì sao phải đo.</strong> Ở 141k dòng, Spark còn chậm hơn pandas 30× (mục 3.2) và
+pipeline chỉ có <strong>1 job</strong> — chưa tách được song song (mục 7.6). Muốn biết
+Spark thắng ở quy mô nào thì phải đo trên dữ liệu thật, không phải nhân bản
+dòng. Nên phần này đọc <strong>nguyên bản</strong> WildChat + LMSYS từ HuggingFace.</p>
+<h3 id="381-quy-mo-du-lieu">3.8.1 Quy mô dữ liệu</h3>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">Shard</th>
+<th style="text-align: right;">Dòng đọc được</th>
+<th style="text-align: right;">mean len</th>
+<th style="text-align: right;">p50</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allenai/WildChat-1M</code></td>
+<td style="text-align: right;">14/14</td>
+<td style="text-align: right;">727,073</td>
+<td style="text-align: right;">1767.8</td>
+<td style="text-align: right;">241</td>
+</tr>
+<tr>
+<td><code>lmsys/lmsys-chat-1m</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100,349</td>
+<td style="text-align: right;">292.3</td>
+<td style="text-align: right;">112</td>
+</tr>
+<tr>
+<td><strong>Tổng</strong></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;"><strong>827,422</strong></td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table>
+<p>So với corpus 141,725 dòng của báo cáo chính → <strong>×5.84</strong>.</p>
+<p>Hai nguồn này <strong>chỉ chứa benign</strong> (first user turn của hội thoại thật), nên
+corpus scale là dữ liệu đầu vào để đo <strong>chi phí xử lý</strong>, không phải để đo độ
+chính xác. Nhãn attack vẫn lấy từ corpus 141k (đã kiểm chứng nhãn ở Chương 1).</p>
+<h3 id="382-thoi-gian-xu-ly">3.8.2 Thời gian xử lý</h3>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th style="text-align: right;">Dòng</th>
+<th style="text-align: right;">Thời gian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spark <code>count()</code> — đọc + đếm toàn bộ corpus</td>
+<td style="text-align: right;">827,422</td>
+<td style="text-align: right;">144.46s</td>
+</tr>
+<tr>
+<td>Spark SQL <code>groupBy(source)</code> + <code>percentile_approx</code></td>
+<td style="text-align: right;">827,422</td>
+<td style="text-align: right;">16.59s</td>
+</tr>
+<tr>
+<td>Corpus gốc (đối chiếu)</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;">1.31s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="383-train-mllib-tren-969147-dong">3.8.3 Train MLlib trên 969,147 dòng</h3>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th style="text-align: right;">Giá trị</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Số dòng train</td>
+<td style="text-align: right;"><strong>969,147</strong></td>
+</tr>
+<tr>
+<td>Transform (Tokenizer → HashingTF 2^16)</td>
+<td style="text-align: right;">322.44s</td>
+</tr>
+<tr>
+<td>Fit LogisticRegression</td>
+<td style="text-align: right;">227.96s</td>
+</tr>
+<tr>
+<td><strong>Tổng</strong></td>
+<td style="text-align: right;"><strong>550.4s</strong></td>
+</tr>
+<tr>
+<td><strong>Tốc độ</strong></td>
+<td style="text-align: right;"><strong>56.79s / 100k dòng</strong></td>
+</tr>
+<tr>
+<td>Pipeline</td>
+<td style="text-align: right;"><code>Tokenizer -&gt; HashingTF(2^16) -&gt; LR(maxIter=20, reg=0.1)</code></td>
+</tr>
+<tr>
+<td>Storage</td>
+<td style="text-align: right;"><code>DISK_ONLY</code> (text cắt còn 1500 ký tự)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>So sánh với corpus 141k (mục 7.6):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Quy mô</th>
+<th style="text-align: right;">Dòng</th>
+<th style="text-align: right;">Fit</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>141k</td>
+<td style="text-align: right;">109,543</td>
+<td style="text-align: right;">228.08s</td>
+<td style="text-align: right;">208.2</td>
+</tr>
+<tr>
+<td><strong>969k</strong></td>
+<td style="text-align: right;">969,147</td>
+<td style="text-align: right;">227.96s</td>
+<td style="text-align: right;"><strong>56.79</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Tăng quy mô <strong>×8.8</strong> → thời gian fit tăng <strong>×1.0</strong>,
+gần tuyến tính. Ở 141k chỉ có 1 job; ở 969k đã tách được nhiều job
+song song — đây mới là điểm Spark bắt đầu tận dụng được phần cứng.</p>
+<p><strong>Đối chiếu tổng thể (cùng 1 máy, 16 core, local[4]):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Quy mô</th>
+<th style="text-align: right;">Tổng thời gian pipeline</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>141k (mục 7.6)</td>
+<td style="text-align: right;">228.08s</td>
+<td style="text-align: right;">208.2</td>
+</tr>
+<tr>
+<td><strong>969k (mục này)</strong></td>
+<td style="text-align: right;"><strong>550.4s</strong></td>
+<td style="text-align: right;"><strong>56.79</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ <strong>Chi phí trên mỗi 100k dòng giảm 3.7×</strong> khi
+tăng quy mô. Đây là bằng chứng định lượng cho luận điểm "Spark chỉ đáng dùng khi
+dữ liệu vượt khả năng RAM của pandas".</p>
+<p><img alt="Hình 3.7 — Chi phí xữ lý mỗi 100k dòng và phân bố thỗi gian train trên 969,147 dòng" src="figures/l02_scale.png" /></p>
+<p><em>Hình 3.7 — Chi phí xữ lý mỗi 100k dòng và phân bố thỗi gian train trên 969,147 dòng</em></p>
+<h3 id="384-hai-bai-hoc-ky-thuat">3.8.4 Hai bài học kỹ thuật</h3>
+<p><strong>(1) Shard tải dở không tự báo lỗi.</strong> 9/12 shard WildChat ban đầu có header
+<code>PAR1</code> nhưng footer hỏng → <code>ArrowInvalid</code>. Script tải cũ dùng <code>curl -C -</code> kèm
+<code>--max-time</code>; timeout giữ lại file dở, lần sau coi như "đã tải xong". Phải
+<strong>verify magic bytes đầu + cuối</strong> mới coi là hợp lệ. Coi "file tồn tại" là
+"file đúng" là lỗi âm thầm đắt nhất: nó làm hỏng mọi phép đo phía sau mà
+không báo lỗi cho tới khi đọc.</p>
+<p><strong>(2) OOM ở quy mô 1M.</strong> Lần đầu train 969k dòng bị SIGKILL. Nguyên nhân:
+<code>Pipeline.fit</code> cache trung gian <strong>MEMORY_ONLY</strong> (text mean 1,767 ký tự + mảng
+<code>words</code>). Cách sửa: tách 2 bước — <code>transform</code> trước rồi <code>persist(DISK_ONLY)</code>
+để cache features sparse xuống đĩa, rồi mới <code>fit</code>. Cũng phải đặt
+<code>spark.local.dir</code> sang ổ D: vì <code>%TEMP%</code> ở C: chỉ còn ~5 GB.</p>
+<h3 id="385-phat-hien-them-pipelinefit-idf-khong-scale">3.8.5 Phát hiện thêm: <code>Pipeline.fit</code> + <code>IDF</code> không scale</h3>
+<p>Bản đầu dùng pipeline đầy đủ <code>Tokenizer → HashingTF → IDF → LR</code>. Ở 969k dòng,
+<code>IDF</code> giữ thêm một ma trận sparse 2^16 × n_docs trong RAM → driver OOM. Bản
+đo cuối bỏ <code>IDF</code> (giữ <code>HashingTF → LR</code>) và đo lại được. Đây là quan sát
+thực tế đáng ghi lại: <strong>mỗi stage thêm vào pipeline đều tăng bộ nhớ theo
+bậc hai</strong> ở quy mô lớn — nên phải đo, không đoán.</p>
+<hr />
+<p><em>Chương 3 — hết. Tài liệu kèm theo: <code>Metrics.md</code> (số liệu đầy đủ), <code>RUNBOOK.md</code>
+(cách tái lập), <code>api/</code> + <code>r/</code> + <code>app/</code> (mã nguồn).</em></p>
+</section><section class="chapter appendix">
+<h1>Phụ lục — Dàn ý slide thuyết trình</h1>
+<h1 id="slide-thuyet-trinh-it252bida">Slide thuyết trình — IT252BIDA</h1>
+<p><strong>Tên đề tài:</strong> Xây dựng pipeline Big Data phát hiện Prompt Injection
+<strong>SV:</strong> Trần Khôi Nguyên (MIT26004) — nhóm 4
+<strong>GV:</strong> PhD. Võ Thị Hồng Tuyết</p>
+<blockquote>
+<p>Gợi ý trình bày: 12–15 slide, mỗi slide 1 ý chính.
+Slide đánh dấu <code>🔴</code> là bắt buộc — đó là phần "đo được" khác biệt với bài nhóm khác.</p>
+</blockquote>
+<hr />
+<h2 id="slide-1-bia">Slide 1 — Bìa</h2>
+<pre><code>XÂY DỰNG PIPELINE BIG DATA PHÁT HIỆN PROMPT INJECTION
+Trần Khôi Nguyên — MIT26004 — nhóm 4
+IT252BIDA · Xử lý dữ liệu lớn · GV: PhD. Võ Thị Hồng Tuyết
+</code></pre>
+<hr />
+<h2 id="slide-2-bai-toan-3-cau-hoi-nghien-cuu">Slide 2 — Bài toán &amp; 3 câu hỏi nghiên cứu</h2>
+<p>Prompt Injection = khiến LLM bỏ qua chỉ dẫn hệ thống, làm theo kẻ tấn công.</p>
+<table>
+<thead>
+<tr>
+<th>RQ</th>
+<th>Câu hỏi</th>
+<th>Đo bằng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RQ1</td>
+<td>Phân biệt tốt đến đâu khi train/test cùng phân bố?</td>
+<td>F1 test split</td>
+</tr>
+<tr>
+<td>RQ2</td>
+<td>Đổi nguồn dữ liệu thì mất bao nhiêu?</td>
+<td>F1 per-source + <strong>LOSO</strong></td>
+</tr>
+<tr>
+<td>RQ3</td>
+<td>Bao nhiêu phần hiệu năng đến từ <strong>độ dài</strong> vs <strong>từ vựng</strong>?</td>
+<td>Ablation + AUC</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Không chạy đua SOTA. Mục tiêu: <strong>đo trung thực</strong> khả năng tổng quát hóa.</p>
+</blockquote>
+<hr />
+<h2 id="slide-3-du-lieu-10-nguon-141725-dong">Slide 3 — Dữ liệu: 10 nguồn, 141,725 dòng</h2>
+<ul>
+<li>3 họ: adversarial · roleplay · <strong>benign hữu cơ</strong> (hội thoại thật)</li>
+<li>188,366 dòng thô → dedupe → <strong>141,725</strong></li>
+<li>2 nguồn <strong>chỉ benign</strong> (WildChat, lmsys) · 1 nguồn <strong>chỉ attack</strong> (wildjailbreak)</li>
+<li>Split 80/10/10 <strong>theo <code>source</code></strong>: train 109,543 · val 12,808 · test 19,374</li>
+</ul>
+<p>📊 <strong>Biểu đồ:</strong> <code>out/r_plots/r02_label_by_source.png</code></p>
+<hr />
+<h2 id="slide-4-ba-ca-hieu-sai-nhan-phan-em-tu-hao-nhat">Slide 4 — 🔴 Ba ca hiểu sai nhãn (phần em tự hào nhất)</h2>
+<p>Cột tên nghe như nhãn phân loại, nhưng thực chất đo thứ khác. <strong>Phát hiện bằng bằng chứng, không phải cảm tính.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Nghĩa thật</th>
+<th>Hậu quả nếu dùng sai</th>
+<th>Cách phát hiện</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HackAPrompt</td>
+<td>prompt <strong>đã thắng</strong> model</td>
+<td>nhãn đảo nghĩa</td>
+<td>715 text có nhiều nhãn</td>
+</tr>
+<tr>
+<td>WildJailbreak</td>
+<td><strong>mức độc hại</strong></td>
+<td>FPR = <strong>1.0</strong></td>
+<td><code>data_type</code> = adversarial_harmful/benign</td>
+</tr>
+<tr>
+<td>SPML</td>
+<td><strong>mức gắn persona</strong></td>
+<td>suy sai ý đồ</td>
+<td><code>Degree=10</code> ↔ roleplay lành mạnh</td>
+</tr>
+</tbody>
+</table>
+<p>→ HackAPrompt <strong>loại khỏi corpus</strong> (mất 227K dòng, tránh học sai bài toán)</p>
+<blockquote>
+<p>Quy tắc: <strong>FPR = 1.0 là dấu hiệu nhãn sai, không phải model dở.</strong></p>
+</blockquote>
+<hr />
+<h2 id="slide-5-chong-ro-ri-3-lop">Slide 5 — Chống rò rỉ 3 lớp</h2>
+<table>
+<thead>
+<tr>
+<th>Lớp</th>
+<th>Cơ chế</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Dedupe toàn cục trên text chuẩn hoá</td>
+<td>0 trùng giữa split</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Split <strong>theo nhóm</strong> (<code>crc32(task_type\|normal_input)</code>)</td>
+<td>1,397 nhóm guychuk</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1 benign + ≤4 attack mỗi nhóm</td>
+<td>không cặp attack/benign cùng nhóm ở 2 split</td>
+</tr>
+</tbody>
+</table>
+<p>✅ Kiểm chứng: <code>verify_split.py</code> → <strong>0 rò rỉ</strong></p>
+<hr />
+<h2 id="slide-6-kien-truc-2-uong-du-lieu">Slide 6 — Kiến trúc: 2 đường dữ liệu</h2>
+<pre><code>10 loader → dedupe → chống leakage → split
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+   BATCH PATH            OPERATIONAL PATH
+   parquet               MongoDB 8.0.12
+   → PySpark MLlib       → truy vấn, dashboard
+   → R thống kê           → Streamlit
+</code></pre>
+<p><strong>Vì sao tách?</strong> MongoDB không train được; chỉ parquet thì mất prototype + mất
+yêu cầu <em>"Database with MongoDB"</em> của đề cương.</p>
+<hr />
+<h2 id="slide-7-so-sanh-4-engine-so-o-that">Slide 7 — 🔴 So sánh 4 engine (số đo thật)</h2>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Phép</th>
+<th style="text-align: right;">Quy mô</th>
+<th style="text-align: right;">Thời gian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pandas</td>
+<td>groupBy + length</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;"><strong>2.69s</strong></td>
+</tr>
+<tr>
+<td>Spark SQL</td>
+<td>groupBy + length</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;"><strong>80.67s</strong></td>
+</tr>
+<tr>
+<td>MongoDB</td>
+<td><code>$group</code> + <code>$percentile</code></td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;"><strong>0.72s</strong></td>
+</tr>
+<tr>
+<td>R</td>
+<td>Mann-Whitney + AUC</td>
+<td style="text-align: right;">141,725</td>
+<td style="text-align: right;">~60s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Không engine nào thắng tuyệt đối</strong> → đây là lý do kiến trúc 2 đường.
+Và: <strong>Spark chậm hơn pandas 30×</strong> ở 141k dòng — ghi thẳng, không tô đẹp.</p>
+<hr />
+<h2 id="slide-8-phat-hien-quan-trong-nhat-model-hoc-template-khong-hoc-co-che">Slide 8 — 🔴 Phát hiện quan trọng nhất: model học template, không học cơ chế</h2>
+<p>Cùng nguồn, cùng tập train:</p>
+<table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th style="text-align: right;">F1 sklearn (word 1-2 + char 3-5)</th>
+<th style="text-align: right;">F1 MLlib (HashingTF unigram)</th>
+<th style="text-align: right;">Δ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S-Labs</strong></td>
+<td style="text-align: right;"><strong>0.8624</strong></td>
+<td style="text-align: right;"><strong>0.2386</strong></td>
+<td style="text-align: right;"><strong>−0.6238</strong></td>
+</tr>
+<tr>
+<td>xTRam1</td>
+<td style="text-align: right;">0.9621</td>
+<td style="text-align: right;">0.7418</td>
+<td style="text-align: right;">−0.2203</td>
+</tr>
+<tr>
+<td>guychuk</td>
+<td style="text-align: right;">0.9991</td>
+<td style="text-align: right;">0.9916</td>
+<td style="text-align: right;">−0.0075</td>
+</tr>
+</tbody>
+</table>
+<p>Recall MLlib ở S-Labs chỉ <strong>0.1359</strong> → bỏ sót <strong>814/942</strong> attack.</p>
+<p>⇒ Prompt injection là <strong>mệnh lệnh có cấu trúc</strong> → cần n-gram, không chỉ unigram.
+⇒ <strong>char n-gram là thành phần bắt buộc</strong>, không phải tuỳ chọn.</p>
+<hr />
+<h2 id="slide-9-rq3-o-dai-vs-tu-vung">Slide 9 — 🔴 RQ3: độ dài vs từ vựng</h2>
+<table>
+<thead>
+<tr>
+<th>Kiểm định</th>
+<th>Kết quả</th>
+<th>Kết luận</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ablation unigram</td>
+<td>F1 0.9521 → 0.9308 (<strong>−2.13 điểm</strong>)</td>
+<td>Phần lớn hiệu năng từ <strong>từ vựng</strong></td>
+</tr>
+<tr>
+<td>Mann-Whitney (R)</td>
+<td><strong>W = 925,758,320, p = 0.0</strong></td>
+<td>Độ dài <strong>có</strong> tín hiệu thật</td>
+</tr>
+<tr>
+<td>AUC riêng độ dài (pROC)</td>
+<td><strong>0.8032</strong></td>
+<td>Nhưng <strong>chưa đủ</strong> phân loại</td>
+</tr>
+</tbody>
+</table>
+<p>Median benign 95 → attack 773 (×8.1).</p>
+<p>⇒ Độ dài là <strong>tín hiệu phụ trợ</strong>, không phải đặc trưng quyết định.
+⇒ Đây là lập luận chống lại <strong>heuristic thuần</strong> (dễ bypass, không học được gì).</p>
+<hr />
+<h2 id="slide-10-chi-phi-scale-o-khong-oan">Slide 10 — 🔴 Chi phí scale — đo, không đoán</h2>
+<p><strong>Tăng partition → chậm hơn:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Partition</th>
+<th style="text-align: right;">Fit</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">201.59s</td>
+<td style="text-align: right;">184.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">211.60s</td>
+<td style="text-align: right;">193.2</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">263.70s</td>
+<td style="text-align: right;">240.7</td>
+</tr>
+</tbody>
+</table>
+<p>(ở 32 partition: ~3,400 dòng/task — thấp hơn nhiều ngưỡng 100k–200k/task)</p>
+<p><strong>Nhân bản dữ liệu:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Bản sao</th>
+<th style="text-align: right;">Dòng</th>
+<th style="text-align: right;">Fit</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>×1</td>
+<td style="text-align: right;">109,543</td>
+<td style="text-align: right;">192.27s</td>
+<td style="text-align: right;">175.5</td>
+</tr>
+<tr>
+<td><strong>×2</strong></td>
+<td style="text-align: right;">219,086</td>
+<td style="text-align: right;">166.91s</td>
+<td style="text-align: right;"><strong>76.2 (−57%)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Ở 141k dòng pipeline chỉ có <strong>1 job</strong> — chưa tách song song được.
+⇒ <strong>Đó là lý do phải đo ở ~1M dòng.</strong></p>
+<hr />
+<h2 id="slide-11-benchmark-corpus-that-1m-dong">Slide 11 — 🔴 Benchmark corpus thật (~1M dòng)</h2>
+<ul>
+<li><code>allenai/WildChat-1M</code>: <strong>14/14 shard</strong> · 837,989 dòng · 3.36 GB</li>
+<li><code>lmsys/lmsys-chat-1m</code>: 100,349 dòng</li>
+<li><strong>Tổng 827,422 dòng</strong> (×5.84 corpus gốc)</li>
+</ul>
+<p><strong>Kết quả train MLlib trên 969,147 dòng:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Quy mô</th>
+<th style="text-align: right;">Tổng thời gian</th>
+<th style="text-align: right;">s/100k dòng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>141k (giai đoạn 4)</td>
+<td style="text-align: right;">228.08s</td>
+<td style="text-align: right;">208.2</td>
+</tr>
+<tr>
+<td><strong>969k</strong></td>
+<td style="text-align: right;"><strong>550.4s</strong></td>
+<td style="text-align: right;"><strong>56.79</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⇒ Chi phí mỗi 100k dòng <strong>giảm 3.7×</strong> khi scale.
+Đây là câu trả lời định lượng cho "Spark thắng ở quy mô nào".</p>
+<p>⚠️ <strong>Bài học phát hiện được:</strong> 9/12 shard bị tải <strong>CẮT DỞ</strong> — có header <code>PAR1</code>
+nhưng footer hỏng. Script cũ dùng <code>curl -C -</code> + <code>--max-time</code>, timeout giữ lại
+file dở và lần sau coi như "đã tải xong" → <strong>file hỏng không bị phát hiện</strong>.</p>
+<p>⇒ Phải <strong>verify magic bytes đầu + cuối</strong>. Coi "file tồn tại" là "file đúng" là
+lỗi âm thầm đắt nhất — nó làm hỏng mọi phép đo phía sau mà không báo lỗi.</p>
+<hr />
+<h2 id="slide-12-loso-zero-shot-that">Slide 12 — 🔴 LOSO — zero-shot thật</h2>
+<p><strong>10 fold</strong> · train trên 9 nguồn, test trên nguồn bị loại · 141,725 dòng</p>
+<table>
+<thead>
+<tr>
+<th>Chỉ số (8 nguồn có attack)</th>
+<th style="text-align: right;">Giá trị</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mean AUC</strong></td>
+<td style="text-align: right;"><strong>0.7511</strong></td>
+</tr>
+<tr>
+<td>Mean F1 @ threshold 0.5</td>
+<td style="text-align: right;">0.4198</td>
+</tr>
+<tr>
+<td><strong>Mean F1 @ threshold tối ưu</strong></td>
+<td style="text-align: right;"><strong>0.7617</strong></td>
+</tr>
+<tr>
+<td>Min F1 (<code>S-Labs/prompt-injection-dataset</code>)</td>
+<td style="text-align: right;">0.0038</td>
+</tr>
+<tr>
+<td>Max F1 (<code>allenai/wildjailbreak</code>)</td>
+<td style="text-align: right;">0.9488</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>2 nguồn còn lại (<code>allenai/WildChat-1M</code>, <code>lmsys/lmsys-chat-1m</code>) <strong>chỉ có
+benign</strong> → không có mẫu positive để dò, F1 = 0 và AUC = 0.5 là hiện tượng
+toán học, <strong>không tính vào mean</strong>.</p>
+</blockquote>
+<p><strong>Bảng chi tiết 10 fold</strong> (<code>Metrics.md</code> mục 14):</p>
+<p><strong>Phát hiện quan trọng:</strong> AUC cao (0.7511) nhưng F1@0.5 thấp (0.4198)
+→ model <strong>vẫn phân biệt được</strong>, chỉ là <strong>ngưỡng quyết định không di chuyển theo
+phân bố dữ liệu</strong>. Sửa threshold → F1 nhảy lên <strong>0.7617</strong>.</p>
+<p>⇒ Bài học: so sánh ngoài phân bố phải dùng <strong>AUC</strong>; triển khai thật phải
+<strong>calibrate threshold</strong> trên tập validation đa nguồn.</p>
+<p><strong>Nguồn khó nhất:</strong> <code>deepset/prompt-injections</code> (AUC 0.5725, F1 0.0038)
+và <code>guychuk/open-prompt-injection</code> (AUC 0.6230, F1 0.0749) — ở đây <strong>ngưỡng không
+phải nguyên nhân chính</strong> (AUC gần ngẫu nhiên). Trùng với per-source in-sample
+(mục 3.4) → 2 phép đo độc lập, 1 kết luận: <strong>model học template, không học cơ chế</strong>.</p>
+<p>Ngoại lệ: <code>S-Labs</code> AUC 0.8084, F1@0.05 = 0.7205 → model <strong>hoàn toàn phân biệt
+được</strong> S-Labs, chỉ là điểm hoạt động nằm ở 0.05 thay vì 0.5.</p>
+<hr />
+<h2 id="slide-13-prototype-streamlit-mongodb">Slide 13 — Prototype: Streamlit + MongoDB</h2>
+<p><strong>1 process, không tách frontend/backend</strong> — Streamlit đã gộp server+client
+→ không cần FastAPI/Flask.</p>
+<p>5 tab: Tổng quan · Tra cứu ($regex) · Phân bố độ dài · Benchmark scale · Dữ liệu thô</p>
+<p>✅ Smoke test (<code>AppTest</code>): 0 exception · metric <strong>141,725 / 88,655 / 53,070 / 37.45%</strong>
+→ khớp Spark SQL 100%, và đọc <strong>trực tiếp từ MongoDB</strong> (kiểm chéo độc lập)</p>
+<hr />
+<h2 id="slide-13b-detector-streaming-rule-model">Slide 13b — 🟡 Detector streaming (rule + model)</h2>
+<p><strong>2 tầng, cùng một pipeline Spark:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tầng</th>
+<th>Cơ chế</th>
+<th>Vai trò</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rule</strong></td>
+<td>8 regex theo kỹ thuật tấn công, chạy bằng Spark SQL <code>rlike</code></td>
+<td>Bắt mẫu công khai, <strong>giải thích được</strong> (kèm kỹ thuật + đoạn text khớp)</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>MLlib LR đã train</td>
+<td>Bắt mẫu biến thiên, không giải thích được → bổ sung recall</td>
+</tr>
+</tbody>
+</table>
+<p>8 kỹ thuật: <code>override_instruction</code> · <code>role_reassignment</code> · <code>system_prompt_leak</code> ·
+<code>guardrail_bypass</code> · <code>dan_injection</code> · <code>encoding_evasion</code> · <code>urgency_emotional</code> ·
+<code>exfil_secret</code></p>
+<p><strong>Kết quả replay (12 dòng tự viết tay):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th style="text-align: right;">Giá trị</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attack phát hiện (rule)</td>
+<td style="text-align: right;"><strong>7 / 7 (recall 100%)</strong></td>
+</tr>
+<tr>
+<td>Benign bị bắt nhầm (rule + model)</td>
+<td style="text-align: right;"><strong>0 / 5 (FPR 0%)</strong></td>
+</tr>
+<tr>
+<td>Model layer flag attack</td>
+<td style="text-align: right;">4 / 7 (train 30k dòng)</td>
+</tr>
+<tr>
+<td>Số lần kỹ thuật được ghi nhận</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr>
+<td>Ghi vào MongoDB</td>
+<td style="text-align: right;">12 doc (<code>prompt_injection.detections</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vì sao rule layer dùng Spark SQL native, không dùng Python UDF:</strong> <code>addPyFile()</code>
+trên Windows cần <code>HADOOP_HOME</code> (winutils.exe) → lỗi. <code>rlike</code>/<code>regexp_extract</code>
+chạy thẳng trong JVM, không ship file, và <strong>chạy được cả ở cluster mode</strong>.</p>
+<p><em>(Ngược lại: cột <code>probability</code> của MLlib là VectorUDT — SQL không trích được,
+phải dùng Python UDF. Nên model layer chỉ dùng được ở local mode, còn rule layer
+thì portable.)</em></p>
+<hr />
+<h2 id="slide-13c-moi-truong-tai-lap-cai-gi-tin-uoc-cai-gi-khong">Slide 13c — Môi trường tái lập: cái gì tin được, cái gì không</h2>
+<p><strong>Ghim version (đã làm, <code>requirements.txt</code> pin toàn bộ 21 package):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Nhóm</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runtime</td>
+<td>Python <strong>3.14.5</strong> · Java <strong>24.0.2</strong></td>
+</tr>
+<tr>
+<td>Core</td>
+<td><code>pandas 3.0.3</code> · <code>numpy 2.5.1</code> · <code>scikit-learn 1.9.0</code> · <code>pyarrow 26.0.0</code></td>
+</tr>
+<tr>
+<td>Big Data</td>
+<td><code>pyspark 4.2.0</code></td>
+</tr>
+<tr>
+<td>NoSQL / App</td>
+<td><code>pymongo 4.19.0</code> · <code>streamlit 1.66.0</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Số liệu nào tái lập được:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>Tái lập?</th>
+<th>Lý do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1 / AUC / P / R / FPR (sklearn)</td>
+<td>✅ <strong>Có</strong></td>
+<td><code>random_state=42</code> + <code>liblinear</code> deterministic</td>
+</tr>
+<tr>
+<td>Số dòng corpus (141,725 …)</td>
+<td>✅ <strong>Có</strong></td>
+<td>dedupe hash + split seed cố định</td>
+</tr>
+<tr>
+<td>F1 / AUC của MLlib</td>
+<td>⚠️ <strong>Gần đúng</strong></td>
+<td>lệch chữ số 4 do thứ tự aggregation phụ thuộc số core</td>
+</tr>
+<tr>
+<td>Thời gian (s/100k, docs/s)</td>
+<td>❌ <strong>Không</strong></td>
+<td>phụ thuộc CPU/RAM/ổ — <strong>số của một máy</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phân biệt hai khái niệm dễ nhầm:</strong></p>
+<ul>
+<li><strong>Ghim version</strong> → cùng thư viện → <strong>hành vi code</strong> giống nhau → F1/AUC phải khớp.</li>
+<li><strong>Cùng nền tảng</strong> (Colab / VM / local) → <strong>số giây</strong> so sánh được.</li>
+</ul>
+<p>⇒ Chạy lại trên Colab: <strong>F1 0.9521 phải ra đúng</strong>, còn 56.79s/100k <strong>sẽ khác</strong>.
+Lệch F1 = lỗi version. Lệch giây = khác máy. <strong>Đừng gộp hai nguyên nhân.</strong></p>
+<p><strong>Vì sao chọn local, không Colab:</strong> đề cương bắt buộc <strong>MongoDB + R native</strong>
+(Colab không có service MongoDB), và benchmark 969k dòng cần <code>--driver-memory 10g</code>
+(Colab free OOM). Báo cáo xử lý bằng cách <strong>luôn ghi kèm cấu hình máy</strong> —
+chi tiết ở <code>Environment.md</code> do <code>tools/capture_env.py</code> sinh tự động.</p>
+<hr />
+<h2 id="slide-14-ong-gop-cua-o-an">Slide 14 — Đóng góp của đồ án</h2>
+<table>
+<thead>
+<tr>
+<th>Yêu cầu đề cương</th>
+<th>Hiện thực</th>
+<th>Bằng chứng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connect &amp; query by PySpark</td>
+<td>✅</td>
+<td>5 phân bố khớp pandas 100%</td>
+</tr>
+<tr>
+<td>Database with MongoDB</td>
+<td>✅</td>
+<td>141,725 doc, 6,917 docs/s</td>
+</tr>
+<tr>
+<td>Statistical with R Language</td>
+<td>✅</td>
+<td>p = 0, AUC 0.8032, 5 biểu đồ</td>
+</tr>
+<tr>
+<td>Build prototype &amp; repair data</td>
+<td>✅</td>
+<td>Streamlit 5 tab, 0 exception</td>
+</tr>
+<tr>
+<td>Source code &amp; evaluation</td>
+<td>✅</td>
+<td>LOSO 10 fold (AUC 0.7511) + ablation + per-source</td>
+</tr>
+<tr>
+<td>Experiments &amp; results</td>
+<td>✅</td>
+<td>141,725 dòng LOSO + 827k dòng benchmark</td>
+</tr>
+<tr>
+<td>Document + source code</td>
+<td>✅</td>
+<td>3 chương + 40 file Python</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="slide-15-han-che-huong-mo-rong">Slide 15 — Hạn chế &amp; hướng mở rộng</h2>
+<p><strong>Hạn chế đã đo được:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Hạn chế</th>
+<th>Bằng chứng</th>
+<th>Hướng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Học template, không học cơ chế</td>
+<td>S-Labs: 0.2386 vs 0.8624</td>
+<td>char n-gram + embedding</td>
+</tr>
+<tr>
+<td>toxic-chat yếu</td>
+<td>F1 0.5114, P 0.4206</td>
+<td>đặc trưng imperative + override verb</td>
+</tr>
+<tr>
+<td>Spark chậm hơn pandas 30×</td>
+<td>80.67s vs 2.69s</td>
+<td>đo ở ~1M dòng (đã làm)</td>
+</tr>
+<tr>
+<td>per-source là in-train</td>
+<td>cả 10 nguồn trong train</td>
+<td><strong>LOSO (đã làm)</strong> → AUC 0.7511</td>
+</tr>
+<tr>
+<td>threshold không portable</td>
+<td>F1@0.5 0.4198 vs F1@thr tốt 0.7617</td>
+<td>calibrate threshold trên validation đa nguồn</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hướng mở rộng:</strong> Sentence-BERT/embedding · đa nhãn (adversarial-but-harmless ≠
+injection) · <strong>streaming detection (<code>stream_detector.py</code> — đã làm)</strong> · chi phí
+cluster (YARN/K8s)</p>
+<hr />
+<h2 id="slide-16-ket-luan">Slide 16 — Kết luận</h2>
+<ol>
+<li><strong>Đo trung thực quan trọng hơn con số đẹp</strong> — "Spark chậm hơn pandas 30×" và
+   "FPR = 1.0 do nhãn sai" đều là kết quả đáng trình bày.</li>
+<li><strong>Ba ca nhãn sai đáng giá hơn 100K dòng dữ liệu thêm</strong> — loại HackAPrompt
+   mất 227K dòng nhưng tránh học sai bài toán.</li>
+<li><strong>Model học template, không học cơ chế</strong> — bằng chứng mạnh nhất từ S-Labs.</li>
+<li><strong>Kiến trúc 2 đường</strong> (parquet↔Spark cho batch, MongoDB cho operational)
+   là câu trả lời cho bài toán đa yêu cầu của đề cương.</li>
+</ol>
+<hr />
+<h2 id="phu-luc-slide-du-phong">Phụ lục — Slide dự phòng</h2>
+<h3 id="a-top-feature-model-hoc-template">A. Top feature: model học template</h3>
+<p><em>(trích từ <code>Metrics.md</code> mục 6 — top feature theo hướng attack/benign)</em></p>
+<h3 id="b-mongodb-schema-5-index">B. MongoDB schema + 5 index</h3>
+<pre><code>label_1_source_1   source_1_split_1   family_1_label_1   text_len_1   pair_id_1
+</code></pre>
+<h3 id="c-rs-gotcha-a-sua">C. R's gotcha đã sửa</h3>
+<p>AUC viết tay bằng rank-sum cho <strong>0.3675 — sai</strong>. Công thức đúng <code>1 − W/maxU</code> →
+<strong>0.8032</strong>, verify lại bằng <strong>pROC</strong> (package độc lập).</p>
+<p>⇒ Số "trông hợp lý" vẫn có thể sai. Phải kiểm chứng bằng công cụ độc lập.</p>
+</section>
+</body>
+</html>

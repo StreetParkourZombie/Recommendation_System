@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760" font-family="Times New Roman, serif">
+<rect width="1180" height="760" fill="#ffffff"/>
+<text x="590" y="30" font-size="19" font-weight="bold" text-anchor="middle">PRISMA 2020 flow diagram - literature screening for the data-splitting and popularity-bias gap</text>
+<rect x="60" y="46" width="520" height="62" fill="#f2f6fb" stroke="#33518a" stroke-width="1.6" rx="3"/>
+<text x="74" y="71" font-size="15" font-weight="bold">Records identified</text>
+<text x="74" y="91" font-size="12.5" fill="#333">databases: OpenAlex, arXiv, Unpaywall, ACM DL, CWI-IR, DR-NTU</text>
+<text x="606" y="82" font-size="15" text-anchor="middle">n = 9</text>
+<rect x="60" y="142" width="520" height="62" fill="#f2f6fb" stroke="#33518a" stroke-width="1.6" rx="3"/>
+<text x="74" y="167" font-size="15" font-weight="bold">Records screened</text>
+<text x="74" y="187" font-size="12.5" fill="#333">title/abstract screened against inclusion criteria</text>
+<text x="606" y="178" font-size="15" text-anchor="middle">n = 9</text>
+<rect x="60" y="238" width="520" height="62" fill="#f2f6fb" stroke="#33518a" stroke-width="1.6" rx="3"/>
+<text x="74" y="263" font-size="15" font-weight="bold">Records excluded</text>
+<text x="74" y="283" font-size="12.5" fill="#333">no record excluded at title/abstract stage</text>
+<text x="606" y="274" font-size="15" text-anchor="middle">n = 0</text>
+<rect x="60" y="334" width="520" height="62" fill="#f2f6fb" stroke="#33518a" stroke-width="1.6" rx="3"/>
+<text x="74" y="359" font-size="15" font-weight="bold">Reports assessed for eligibility</text>
+<text x="74" y="379" font-size="12.5" fill="#333">full text retrieved; inclusion criteria: (i) offline evaluation of RS, (ii) data-split / leakage / popularity-bias focus</text>
+<text x="606" y="370" font-size="15" text-anchor="middle">n = 9</text>
+<rect x="60" y="430" width="520" height="62" fill="#f2f6fb" stroke="#33518a" stroke-width="1.6" rx="3"/>
+<text x="74" y="455" font-size="15" font-weight="bold">Reports excluded</text>
+<text x="74" y="475" font-size="12.5" fill="#333">full text reviewed; all 9 met all four criteria</text>
+<text x="606" y="466" font-size="15" text-anchor="middle">n = 0</text>
+<rect x="60" y="526" width="520" height="62" fill="#f2f6fb" stroke="#33518a" stroke-width="1.6" rx="3"/>
+<text x="74" y="551" font-size="15" font-weight="bold">Studies included in the review</text>
+<text x="74" y="571" font-size="12.5" fill="#333">9 primary studies (5 conference, 3 journal, 1 survey)</text>
+<text x="606" y="562" font-size="15" text-anchor="middle">n = 9</text>
+<line x1="320" y1="108" x2="320" y2="139" stroke="#33518a" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="320" y1="204" x2="320" y2="235" stroke="#33518a" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="490" y1="204" x2="490" y2="235" stroke="#a33" stroke-width="1.4" marker-end="url(#ahr)"/>
+<text x="490" y="217" font-size="11.5" fill="#a33" text-anchor="middle">excluded</text>
+<line x1="320" y1="300" x2="320" y2="331" stroke="#33518a" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="320" y1="396" x2="320" y2="427" stroke="#33518a" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="490" y1="396" x2="490" y2="427" stroke="#a33" stroke-width="1.4" marker-end="url(#ahr)"/>
+<text x="490" y="409" font-size="11.5" fill="#a33" text-anchor="middle">excluded</text>
+<line x1="320" y1="492" x2="320" y2="523" stroke="#33518a" stroke-width="1.6" marker-end="url(#ah)"/>
+<defs>
+<marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#33518a"/></marker>
+<marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#a33"/></marker>
+</defs>
+<text x="60" y="676" font-size="12.5" font-weight="bold">Sources queried (2026-11-03):</text>
+<text x="60" y="695" font-size="12.5">OpenAlex API (DOI lookup, all locations) | arXiv API | Unpaywall API | Semantic Scholar Graph API (429) | ACM DL | CWI Institutional Repository | DR-NTU (10356/228380, Cloudflare)</text>
+<text x="60" y="713" font-size="12.5">Inclusion criteria: (i) offline evaluation of recommender systems; (ii) data-splitting strategy, data leakage, or popularity bias as primary object of study; (iii) peer-reviewed conference or journal; (iv) published 2020-2026.</text>
+<text x="60" y="731" font-size="12.5" fill="#666">Generated 2026-11-04 02:41 by scripts/13_prisma_flow.py - counts are auditable against docs/References/Papers/_manifest.json.</text>
+</svg>

@@ -1,0 +1,85 @@
+# Tài liệu riêng
+docs/References
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ---- Môi trường ảo / env ----
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+
+# ---- Test / Coverage ----
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Dữ liệu lớn (raw/interim/processed) ----
+data/raw/
+data/interim/
+data/processed/
+data/mongodb/
+*.parquet
+*.csv.gz
+*.zip
+*.tar.gz
+!data/**/*.sha256
+
+# ---- Model & artifacts ----
+models/*
+!models/.gitkeep
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+*.bin
+
+# ---- Logs ----
+logs/
+*.log
+*.err
+
+# ---- Hệ thống / services ----
+mongod.lock
+*.pid

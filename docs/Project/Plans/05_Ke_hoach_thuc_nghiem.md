@@ -56,10 +56,37 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
 
 **Vì sao không dùng `recommendForAllUsers`:** 162.541 user × 59.047 item là cartesian quá lớn → OOM. Thay bằng **top-K bằng numpy** (`U @ V.T` chia chunk 2000 user/lần), trừ item user đã xem. Vẫn là đúng toán học của ALS, chỉ khác cách lấy top-K.
 
-### 1.5 Tầng 4 — Mô hình nền khác (giai đoạn 05–06/11)
+### 1.5 Tầng 4 — Ba tầng baseline bắt buộc của Bài 03
 
-- **ItemKNN cosine** — cài đặt bằng Spark: `normalize` → `join` trên item → cosine sim → top-K neighbors → gợi ý.
-- **ALS + time-aware re-rank** — thêm hệ số giảm dần theo `exp(-λ·Δt)` cho item đã xem lâu, để test xem re-rank có **cứu được** tín hiệu đo bị méo bởi split không.
+> Chi tiết đầy đủ: `05C_Baseline_3_tang_DSRM.md`. Đây là **điều kiện bắt buộc** của thầy:
+> phải có 1 baseline truyền thống + 1 kinh điển + 1 SOTA, **cả ba đều tái lập được**.
+
+| Tầng | Mô hình | Code | Seed | Phần cứng | Trạng thái |
+|---|---|---|---|---|---|
+| **Sàn (truyền thống)** | `Random`, `MostPopular` | PySpark built-in + MapReduce Java (đã chạy 04/11, 323.737 key) | 42 | máy anh | ✅ có sẵn |
+| **Kinh điển** | `ALS` (MF), `ItemKNN` cosine, `BPR` | `pyspark.ml.recommendation.ALS`; BPR: `github.com/beta-team/beta-recsys` | 42 + 10 seed | máy anh | ✅ ALS xong · ⏳ ItemKNN |
+| **SOTA (≤2 năm)** | `SASRec+` (full CE) hoặc `EASE` | `github.com/pmixer/SASRec.pytorch` · `github.com/antklen/sasrec-bert4rec-recsys23` · EASE: `rs_metrics` / `MS Recommenders` | 42 | CPU được, GPU nhanh hơn | ⏳ chưa chạy |
+| **Bổ sung (tùy chọn)** | `ALS + time-aware re-rank` | tự viết: `exp(-λ·Δt)` cho item xem lâu | 42 | máy anh | ⏳ nếu còn thời gian |
+
+**Ngân sách tinh chỉnh phải bằng nhau cho mọi mô hình, gồm baseline.** Bắt chước đúng [03] RecSys'25:
+hidden 32–256 · self-attention blocks 1–3 · heads 1–4 · dropout 0.1–0.5 · batch 256 · seq_len 128 ·
+Adam lr 1e-3 · max 300 epoch · early stop patience 10 (BERT4Rec 20).
+
+**Nếu không đủ GPU:** dùng **EASE** — [11] RecSys'21 (CORE A) dùng chính nó trên **ML-20M + global timestamp
+split** để tính metric, nên vừa là SOTA tái lập được trên CPU, vừa đối chuẩn đúng protocol của mình.
+
+**Không dùng [13] và [14] làm mốc so sánh số** — dataset private, không repo, không seed
+(chi tiết `05C_Baseline_3_tang_DSRM.md` §3).
+
+### 1.6 Khai báo bắt buộc trong Chương 3
+
+| Trường | Nội dung |
+|---|---|
+| Mã nguồn | commit hash repo mình + 3 link repo baseline |
+| Seed | `[42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718]` — 10 seed, báo Mean ± Std |
+| CPU / GPU / RAM | `lscpu`, `nproc`, `free -h`, `spark.version`, `java -version` → `logs/hardware.txt` |
+| Thời gian chạy | wall-clock mỗi mô hình × mỗi split (`time.perf_counter()`) |
+| Ngân sách tinh chỉnh | số cấu hình thử cho **mỗi** mô hình, kể cả baseline (vd 30) |
 
 ---
 
@@ -90,6 +117,9 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
 | `scripts/05_store_mongodb.py` | ghi metrics + item profile vào MongoDB |
 | `scripts/06_analysis_r.R` | SparkR: thống kê mô tả, kiểm định, biểu đồ |
 | `scripts/07_dashboard.py` | Streamlit đọc MongoDB |
+| `scripts/17_itemknn.py` | **ItemKNN cosine** bằng RDD (`cartesian` → `topByKey(100)` → `join`) — tầng kinh điển |
+| `scripts/18_hardware_log.py` | **Ghi cấu hình phần cứng** (`nproc`, `free -h`, `lscpu`, `java -version`, `spark.version`) → `logs/hardware.txt` — tiêu chí (6) của Bài 03 |
+| `scripts/19_baseline_3tang.py` | Chạy 3 tầng baseline × 3 split × 10 seed → Mean ± Std |
 
 **PoC đã chốt (file `_poc3_spark.py`)** — sẽ chuyển thành `scripts/04_audit_spark.py` khi pipeline chính thức.
 
@@ -104,6 +134,11 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
    - `<out>/results/manifest.json` — phiên bản Spark, dataset checksum, tham số, thời gian chạy
 3. **Checksum dataset** lưu trong `data/raw/CHECKSUMS.sha256` (chỉ hash, không commit dữ liệu).
 4. Không dùng `F.rand` không seed; không dùng `current_date` trong logic.
+5. **10 seed** cho mọi mô hình (kể cả baseline): `[42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718]` → báo Mean ± Std, không báo 1 lần chạy.
+6. **Khai báo phần cứng** mỗi lần chạy: `scripts/18_hardware_log.py` → `logs/hardware.txt` (tiêu chí 6 của Bài 03).
+7. **Ngân sách tinh chỉnh bằng nhau** giữa mô hình đề xuất và baseline — ghi rõ số cấu hình thử.
+8. **Ba tầng baseline** (sàn / kinh điển / SOTA) — xem §1.5 và `05C_Baseline_3_tang_DSRM.md`.
+9. **Dùng đúng file split công bố** của [12] (`github.com/mengzaiqiao/data_splits`) để so sánh cùng dữ liệu.
 
 ---
 
@@ -128,4 +163,6 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
 | `recommendForAllUsers` OOM | **luôn** dùng numpy top-K (đã sửa trong PoC) |
 | R cài > 30 phút lỗi | bỏ R, dùng Python, ghi rõ trong phụ lục đề cương |
 | Deadline 06/11 tới mà chưa xong Tầng 2+3 | chốt dataset chính, bỏ cross-domain |
-| Deadline 07/11 tới mà chưa xong Tầng 4 | bỏ ItemKNN và time-aware re-rank, giữ Popularity + ALS |
+| Deadline 07/11 tới mà chưa xong Tầng 4 | **vẫn phải giữ đủ 3 tầng baseline** — bỏ time-aware re-rank, giữ Popularity + ALS + EASE |
+| Không chạy được SASRec+ (thiếu GPU/thời gian) | dùng **EASE** làm điểm SOTA — [11] RecSys'21 đã dùng EASE trên ML-20M + global timestamp split |
+| ItemKNN quá chậm trên ml-25m | dùng **BPR** (`beta-team/beta-recsys`) làm tầng kinh điển thay thế |

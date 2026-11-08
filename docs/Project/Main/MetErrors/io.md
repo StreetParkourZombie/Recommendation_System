@@ -372,12 +372,31 @@ Format: `### [YYYY-MM-DD] [Category] Title` → Vấn đề / Nguyên nhân / Gi
 | DR-NTU Handle (browser) | trang `Human Verification` | Cloudflare |
 | OpenAlex | ✅ OK | dùng để tra DOI + `oa_status` |
 
-- **Giải pháp:** Nguồn đáng tin cậy nhất cho bản PDF hợp pháp: **arXiv** (03 bài có bản
-  arXiv), **IR repository của nhà xuất bản** (CWI cho TOIS 2023), và **ACM browser session**
-  cho bài hybrid.
+- **Giải pháp (CŨ, đã bị thay 2026-11-07):** trước đây ưu tiên arXiv. **Sai tiêu chí học thuật** —
+  giảng viên PPNCKH không chấp nhận preprint arXiv.
 
-- **Bài học:** Đừng dựng cả pipeline tải quanh một nguồn. Thiết kế fallback chain
-  `arXiv → publisher IR → ACM browser → OA aggregator` ngay từ đầu.
+- **Giải pháp (MỚI):** nguồn bắt buộc là **bản nhà xuất bản**:
+  `ACM DL → Springer → Elsevier → (thư viện trường)`. arXiv **chỉ** dùng để dò metadata
+  (`arXiv GenPDF` trong `/Creator` là dấu hiệu cần thay bản khác).
+
+- **Bài học:** Đừng dựng cả pipeline tải quanh một nguồn. Nhưng cũng đừng dựng quanh nguồn
+  **sai tiêu chí** — xác nhận tiêu chí tài liệu (peer-reviewed hay không) **trước** khi tải 9 file.
+
+### [2026-11-07] [Tool] Tải bản nhà xuất bản — 3 nhà xuất bản, 3 cơ chế chặn khác nhau
+
+| Nhà xuất bản | Cơ chế chặn | Cách vượt (đã chạy được) |
+|---|---|---|
+| ACM DL (`dl.acm.org`) | Cloudflare `cf_clearance` gắn UA + IP | browser OpenClaw PASS challenge → CDP `Storage.getCookies` → replay `urllib` với `Cookie` + `Referer` + **UA Chrome 156 y hệt** |
+| Springer (`journalofbigdata.springeropen.com`, `link.springer.com`) | "Client Challenge" JS + kiểm tra range | browser PASS → trong page chạy `fetch(pdf, {credentials:'include'})` → base64 → Node ghi file. **KHÔNG gửi `Range`** (nhận 416); bỏ `Range` → 206 + đủ bytes |
+| Elsevier (`sciencedirect.com`) | CAPTCHA "Are you a robot?" cho **cả** browser lẫn HTTP client | **Không tự động hoá được** → tải tay / qua thư viện HUFLIT |
+
+- **Kiểm chứng bản thật:** `pypdf` đọc `/Creator`. `arXiv GenPDF` = preprint. `acmart` /
+  `MiKTeX-pdfTeX` / `Acrobat Distiller` / `Springer` + footer bản quyền ở trang 1 = bản xuất bản.
+  Kích thước file **không** phải bằng chứng (bản arXiv TOIS 2023 = 1.403.320 B,
+  bản ACM = 1.853.836 B; nhưng bản ACM RecSys '25 lại **nhỏ hơn** bản arXiv).
+
+- **Bài học:** `edit` tool fail khi file dùng CRLF + blank-line lệch → patch bằng Python
+  `str.replace` như lần trước.
 
 ### [2026-11-04] [Tool] Browser fetch sang sink HTTP bị chặn mixed-content
 

@@ -17,7 +17,11 @@
 | `03_Tai_lieu_tham_khao.md` | DOI đã verify qua OpenAlex/Crossref, vai trò từng bài trong lập luận gap |
 | `04_Ma_tran_tong_quan_5_cot.md` | Synthesis Matrix 5 cột — cột 5 = hạn chế cốt lõi → sinh ra Critical Gap |
 | `05_Ke_hoach_thuc_nghiem.md` | Ma trận thực nghiệm chi tiết, script inventory, quy trình tái lập, quy trình ghi lưu vết |
+| `05B_Ma_tran_tieu_chi_thiet_ke.md` | **14 bài × 8 tiêu chí thiết kế của Bài 03** (dữ liệu, baseline, tuning budget, code, seed, phần cứng, 3-way split, kiểm định) + kết luận bài nào tái lập được + mục "chạy Spark 1 máy có hợp lệ không" |
+| `05C_Baseline_3_tang_DSRM.md` | **Ba tầng baseline bắt buộc** (sàn truyền thống / kinh điển / SOTA ≤2 năm) + repo, seed, siêu tham số, phần cứng của từng mô hình |
 | `06_Du_phong_va_phuong_an_B.md` | Phương án dự phòng nếu pipeline Big Data trục trặc + các phương án đã loại |
+| `07_Gap_3_phan_Known_CriticalGap_Proposed.md` | Cấu trúc gap 3 phần: Known → Critical Gap → Proposed, kèm bằng chứng từng bài |
+| `08_Tao_tac_SLI_va_giao_thuc_audit.md` | **Tạo tác khoa học**: Split Leakage Index (SLI) đo rò rỉ tương đối theo user + giao thức audit 3 bước + khung GO/SO đã điền SO2 + câu phát biểu tính mới dán thẳng vào đề cương |
 
 ---
 
@@ -107,7 +111,7 @@ Recomendation_System/
 | 7 | R trực quan | ✅ | R 4.6.2 → 7 PNG + 2 CSV (`recsys.audit_metrics_r`) |
 | 8 | Dashboard + screenshot | ✅ | `fig9_dashboard.png` 152.694 B, 1920×1260 (qua CDP) |
 | 9 | PRISMA flow | ✅ SVG | `fig8_prisma_flow.svg` — cần điền số liệu 4 hộp khi nộp |
-| 10 | **Tài liệu tham khảo** | ✅ **9/9 PDF** | `docs/References/Papers/` + `_manifest.json` (sha256) |
+| 10 | **Tài liệu tham khảo** | ✅ **14/14 PDF nhà xuất bản** | `docs/References/Papers/` + `_manifest.json` (doi, bytes, sha256, provenance) |
 | 11 | Benchmark Big Data | 🔄 | `scripts/14_perf_benchmark.py` — Spark ghi file fail do thiếu `winutils.exe` |
 | 12 | **Đề cương** | ⬜ | deadline **2026-11-08** |
 
@@ -121,6 +125,12 @@ Recomendation_System/
 
 **Hiệu ứng co lại theo độ khó split** (dz 0,764 → 0,521 → 0,169) là bằng chứng định lượng cho
 luận điểm trung tâm. Chi tiết: `docs/Project/Main/Metrics.md` §4.4.
+
+| 13 | **Q/CORE của 14 bài** | ✅ | SCImago SJR 2025 — 12 bài Q1, 1 bài Q2, RecSys CORE A, SIGIR CORE A* (`03_Tai_lieu_tham_khao.md` §4) |
+| 14 | **Ma trận 8 tiêu chí thiết kế** | ✅ | `05B_Ma_tran_tieu_chi_thiet_ke.md` — 14 hàng × 8 cột |
+| 15 | **Ba tầng baseline** | ✅ khai báo | `05C_Baseline_3_tang_DSRM.md` — sàn / kinh điển / SOTA, có repo + seed + HW |
+| 16 | **HP tuning công bố** | ✅ | 5/14 bài công bố đủ grid; [03] RecSys'25 đủ nhất (hidden 32-256, blocks 1-3, heads 1-4, dropout 0.1-0.5, batch 256, seq 128, Adam 1e-3, 300 epoch) |
+| 17 | **Tạo tác khoa học (SLI)** | ✅ định nghĩa + ngưỡng | `08_Tao_tac_SLI_va_giao_thuc_audit.md` — dạng 2 (Model) + dạng 3 (Method) theo Bài 03 tr.52 |
 
 ### Ba việc còn lại
 

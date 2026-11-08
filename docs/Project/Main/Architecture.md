@@ -315,25 +315,41 @@ peruser_<split>.csv ──►│ scripts/12_stats_tests.py     │
 
 ## 9. Tầng 7 — Tài liệu tham khảo & quy trình rà soát học thuật (2026-11-04)
 
-### 9.1 Tải paper tự động
+### 9.1 Tải paper tự động — **chỉ bản nhà xuất bản**
 
-`scripts/10_fetch_papers.py` — fallback chain `OpenAlex → Unpaywall → arXiv → OA aggregator`,
-ghi `docs/References/Papers/_manifest.json` (DOI, file, title, source, sha256, bytes).
-**Bảo toàn file tồn tại**: script không ghi đè PDF đã tải.
+Từ **2026-11-07**, tiêu chí tài liệu là: **chỉ bài đã publish bởi ACM / IEEE / Springer / Elsevier**
+(giảng viên PPNCKH không chấp nhận preprint arXiv). Hai script:
 
-### 9.2 Trạng thái 9/9 paper
+- `scripts/10_fetch_papers.py` — phát hiện DOI + lấy PDF open-access (OpenAlex → Unpaywall).
+  **Chỉ dùng để dò metadata**, không dùng để lấy bản cuối cho ACM.
+- `scripts/16_fetch_publisher_versions.py` — tải **published version** từ `dl.acm.org/doi/pdf/<doi>`
+  bằng cookie replay (CDP `Storage.getCookies` + UA Chrome 156 + `cf_clearance` của browser OpenClaw).
 
-| # | File | DOI / nguồn |
-|---|---|---|
-| 01 | `01_TOIS2022_DataLeakage_RS_OfflineEvaluation.pdf` | `10.1145/3539594` (arXiv 2010.11060) |
-| 02 | `02_TOIS2023_Reproducing_PopularityBias_EvaluationStrategies.pdf` | CWI IR (ir.cwi.nl/pub/33989) |
-| 03 | `03_RecSys2025_TimeToSplit.pdf` | arXiv 2507.16289 |
-| 04 | `04_RecSys2026_ConvergentValidity_OfflineEvaluation.pdf` | ACM DL (hybrid) |
-| 05 | `05_TOIS2022_Bias_Debias_Survey.pdf` | ACM DL |
-| 06 | `06_UMAI2024_Survey_PopularityBias.pdf` | — |
-| 07 | `07_SIGIR2023_FreshLook_EvaluationStandpoint.pdf` | ACM DL |
-| 08 | `08_RecSys2023_Challenges_OfflineEvaluation.pdf` | `10.1145/3604915.3609495` — 414.562 B, SHA-256 `FA37C1CD…19F94` |
-| 09 | `09_RecSys2025_InheritedPopularityBias_ColdStart.pdf` | ACM DL |
+Manifest: `docs/References/Papers/_manifest.json` — trường `provenance` ghi rõ venue bản xuất bản.
+
+### 9.2 Trạng thái 13/14 paper (bản nhà xuất bản)
+
+| # | File | DOI | Venue (Crossref) |
+|---|---|---|---|
+| 01 | `01_TOIS2022_DataLeakage_RS_OfflineEvaluation.pdf` | `10.1145/3569930` | ACM TOIS 41(3) Art.75 |
+| 02 | `02_TOIS2023_Reproducing_PopularityBias_EvaluationStrategies.pdf` | `10.1145/3637066` | ACM TORS 2(1) Art.5 |
+| 03 | `03_RecSys2025_TimeToSplit.pdf` | `10.1145/3705328.3748164` | RecSys '25, 874–883 |
+| 04 | `04_RecSys2026_ConvergentValidity_OfflineEvaluation.pdf` | `10.1145/3773078.3831818` | RecSys '26, 410–418 |
+| 05 | `05_TOIS2022_Bias_Debias_Survey.pdf` | `10.1145/3564284` | ACM TOIS 41(3) Art.67 |
+| 06 | `06_UMAI2024_Survey_PopularityBias.pdf` | `10.1007/s11257-024-09406-0` | Springer UMAI 34(5) |
+| 07 | `07_SIGIR2023_FreshLook_EvaluationStandpoint.pdf` | `10.1145/3539618.3591931` | SIGIR '23, 2629–2638 |
+| 08 | `08_RecSys2023_Challenges_OfflineEvaluation.pdf` | `10.1145/3604915.3609495` | RecSys '23 tutorial |
+| 09 | `09_RecSys2025_InheritedPopularityBias_ColdStart.pdf` | `10.1145/3705328.3748035` | RecSys '25 |
+| 10 | `10_TOIS2023_Relieving_PopularityBias_Interactive.pdf` | `10.1145/3618107` | ACM TOIS 42(2) Art.52 |
+| 11 | `11_RecSys2021_QualityMetrics_Consistency.pdf` | `10.1145/3460231.3478848` | RecSys '21, 708–713 |
+| 12 | `12_RecSys2020_DataSplitting_Strategies.pdf` | `10.1145/3383313.3418479` | RecSys '20, 681–686 |
+| 13 | `13_JBigData2019_Elearning_RS_Spark_Hadoop.pdf` | `10.1186/s40537-019-0169-4` | Springer J. Big Data 6(1):2 |
+| 14 | `14_ESWA2023_EvaluationFramework_BigData.pdf` | `10.1016/j.eswa.2023.120659` | Elsevier ESWA 231:120659 — **CHƯA TẢI** |
+
+**Kiểm chứng bản thật:** `pypdf` đọc `/Creator`; bản arXiv là `arXiv GenPDF`, bản xuất bản là
+`acmart` / `MiKTeX-pdfTeX` / `Acrobat Distiller` / `Springer` + footer bản quyền ACM/Springer.
+
+**Đã loại:** `10.48550/arxiv.2011.07931` (arXiv-only, không có bản tạp chí).
 
 ### 9.3 PRISMA
 

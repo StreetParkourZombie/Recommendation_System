@@ -14,12 +14,27 @@
 | Tầng 1 (metrics cấp dữ liệu) | Spark + HDFS | **PySpark local đọc Parquet trên D** | Không mất gì về khoa học — đây là phần bằng chứng mạnh nhất |
 | Tầng 2 (Popularity) | Spark | **Spark** | không |
 | Tầng 3 (ALS) | Spark | **Spark, numpy top-K** | không |
-| Tầng 4 (ItemKNN, re-rank) | Spark | bỏ | bớt 1 hàng bảng kết quả |
+| Tầng 4 (ItemKNN, re-rank) | Spark | **thay bằng BPR** (`beta-team/beta-recsys`) | vẫn đủ tầng kinh điển, không mất hàng bảng |
+| **3 tầng baseline** | Sàn + Kinh điển + SOTA | **không được bỏ tầng nào** — đây là yêu cầu bắt buộc của Bài 03 | nếu thiếu 1 tầng → đề cương bị trả |
+| SOTA (SASRec+) | PyTorch, cần GPU/thời gian | **EASE** (closed-form, CPU vài phút) — [11] RecSys'21 dùng đúng EASE trên ML-20M + global timestamp split | không mất gì: vẫn là SOTA có tiền lệ Q1/CORE A |
 | Lưu trữ | MongoDB | **Parquet + JSON** | mất demo MongoDB → ghi rõ trong phụ lục |
 | Phân tích | R + SparkR | **Python (scipy/pandas/matplotlib)** | mất seminar "R + Spark" → ghi rõ trong phụ lục |
 | Trực quan | Streamlit | **bảng Markdown + biểu đồ tĩnh** | mất demo dashboard |
 
 **Lý do dự phòng này hợp lý:** đề tài là về **đánh giá cách đánh giá**, không phải về hạ tầng. Nếu hạ tầng không kịp, giữ trục khoa học còn hơn làm hỏng cả hai.
+
+### Ranh giới KHÔNG được vượt qua khi dự phòng
+
+Bài 03 PPNCKH yêu cầu **3 tầng baseline** (truyền thống / kinh điển / SOTA) và **khai báo phần cứng + seed + code**.
+Ba thứ này **không phải hạ tầng** — chúng là **thiết kế nghiên cứu**. Dự phòng hạ tầng được, dự phòng thiết kế thì không.
+
+| Thứ được phép cắt | Thứ tuyệt đối không cắt |
+|---|---|
+| MongoDB → Parquet/JSON | 3 tầng baseline |
+| R → Python (scipy/matplotlib) | 10 seed + Mean ± Std |
+| Streamlit → bảng Markdown | Khai báo CPU/GPU/RAM + wall-clock |
+| ItemKNN → BPR | Ngân sách tinh chỉnh bằng nhau |
+| SASRec+ → EASE | File split công bố của [12] |
 
 ---
 

@@ -1,0 +1,474 @@
+=== Rules from docs/References/HUFLIT/Research_Methods/03_Phuong Phap Luan Thiet Ke NC.pdf ===
+
+1. HỌC PHẦN: PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC TRONG CÔNG NGHỆ | THÔNG TIN (CNTT)
+
+2. THÔNG TIN (CNTT) | BÀI 03: PHƯƠNG PHÁP LUẬN & | THIẾT KẾ NGHIÊN CỨU TRONG KHMT
+
+3. BÀI 03: PHƯƠNG PHÁP LUẬN & | THIẾT KẾ NGHIÊN CỨU TRONG KHMT | Giảng viên: TS. Trần Minh Thái
+
+4. Giảng viên: TS. Trần Minh Thái | Khoa CNTT • Trường Đại học Ngoại ngữ - Tin học TP.HCM (HUFLIT) | 01 / 74
+
+5. LỘ TRÌNH 5 TIẾT HỌC LÝ THUYẾT & THỰC HÀNH TẠI LỚP | Nền tảng & mục tiêu Phương pháp & Pipeline | • Tiết 1: Đối chuẩn & Tiêu đề 3 • Tiết 4: DSRM, biến số & Validity
+
+6. Nền tảng & mục tiêu Phương pháp & Pipeline | • Tiết 1: Đối chuẩn & Tiêu đề 3 • Tiết 4: DSRM, biến số & Validity | thành phần
+
+7. thành phần | • Tiết 5: Pipeline 5 giai đoạn & Đề | • Tiết 2: Hệ thống Mục tiêu: cương
+
+8. • Tiết 5: Pipeline 5 giai đoạn & Đề | • Tiết 2: Hệ thống Mục tiêu: cương | General Objective (GO),
+
+9. General Objective (GO), | • Sản phẩm: Bản thuyết minh | Specific Objective (SO), Bloom
+
+10. nộp Hội đồng thạc sĩ | • Tiết 3: Câu hỏi nghiên cứu & | FINER
+
+11. KHỞI ĐỘNG: BÀI HỌC VỀ ĐỐI CHUẨN MÔ HÌNH THỰC NGHIỆM | Tình huống thẩm định Hậu quả & yêu cầu | • Kết quả: Mô hình mới vượt đối • Vi phạm: nguyên tắc so sánh
+
+12. Tình huống thẩm định Hậu quả & yêu cầu | • Kết quả: Mô hình mới vượt đối • Vi phạm: nguyên tắc so sánh | thủ 15% công bằng
+
+13. thủ 15% công bằng | • Bất thường: Baseline chỉ chạy • Hủy kết quả: Hội đồng không | tham số mặc định công nhận, yêu cầu chạy lại
+
+14. • Bất thường: Baseline chỉ chạy • Hủy kết quả: Hội đồng không | tham số mặc định công nhận, yêu cầu chạy lại | • Thiên lệch: Mô hình mới được • Câu hỏi: Đối chuẩn thế nào mới
+
+15. tham số mặc định công nhận, yêu cầu chạy lại | • Thiên lệch: Mô hình mới được • Câu hỏi: Đối chuẩn thế nào mới | tinh chỉnh hàng chục lần trung thực?
+
+16. Sai lệch trong thực nghiệm Chuẩn quốc tế | • Overfitting: Tinh chỉnh siêu • Chia 3 tập: Train, Validation, | tham số trực tiếp trên tập test Test tách biệt
+
+17. tham số trực tiếp trên tập test Test tách biệt | • Chọn lọc kết quả: Chỉ báo cáo • Đối chuẩn SOTA: So sánh với | lần chạy tốt giải pháp tiên tiến nhất
+
+18. lần chạy tốt giải pháp tiên tiến nhất | • Bỏ qua tài nguyên: Không đo • Ý nghĩa thống kê: Kiểm định | GPU, CPU, độ trễ bằng p-value
+
+19. 04 / 74 | NGUYÊN TẮC SO SÁNH CÔNG BẰNG TRONG THỰC NGHIỆM | 1. Cùng dữ liệu 2. Cùng ngân sách 3. Mã nguồn gốc
+
+20. NGUYÊN TẮC SO SÁNH CÔNG BẰNG TRONG THỰC NGHIỆM | 1. Cùng dữ liệu 2. Cùng ngân sách 3. Mã nguồn gốc | • Chia cố định: Mọi • Tinh chỉnh đều: • Official Code: Dùng
+
+21. 1. Cùng dữ liệu 2. Cùng ngân sách 3. Mã nguồn gốc | • Chia cố định: Mọi • Tinh chỉnh đều: • Official Code: Dùng | mô hình dùng chung Baseline cũng được mã chính thức của
+
+22. một phép chia tìm siêu tham số tác giả | • Tiền xử lý: Làm • Tài nguyên: Khai • Random Seed: Cố | sạch, mã hóa đồng báo GPU/CPU và định để tái lập kết
+
+23. Ba nhóm baseline Lợi ích cho luận văn ThS | • Đơn giản (mốc sàn): Thuật • Vượt trội: Tốt hơn cả mốc sàn | toán truyền thống, ví dụ lẫn SOTA
+
+24. Random Forest | • Ablation: Chỉ ra thành phần tạo | • Kinh điển: Mô hình nền tảng nên khác biệt
+
+25. • Ablation: Chỉ ra thành phần tạo | • Kinh điển: Mô hình nền tảng nên khác biệt | được trích dẫn nhiều
+
+26. được trích dẫn nhiều | • Thuyết phục: Giảm nghi ngờ | • SOTA gần đây: Công bố về thiên vị
+
+27. • Thuyết phục: Giảm nghi ngờ | • SOTA gần đây: Công bố về thiên vị | IEEE/ACM trong 2 năm
+
+28. Lỗi straw man Lỗi cherry-picking Bỏ qua SOTA | • Đối thủ yếu: Chỉ so • Lọc kết quả: Chạy • Thiếu cập nhật: | với thuật toán cổ 10 tập dữ liệu, chỉ Không khảo sát
+
+29. Scopus, CORE A* | • Phản biện: Bị nhận • Liêm chính: Báo | xét là né công trình cáo cả kết quả • Khắc phục: Dùng
+
+30. • Phản biện: Bị nhận • Liêm chính: Báo | xét là né công trình cáo cả kết quả • Khắc phục: Dùng | mới không thuận lợi Synthesis Matrix ở
+
+31. Công bố trung thực Khả năng tái lập | • Nêu hạn chế: Báo cáo cả • Mở mã nguồn: Đường dẫn | trường hợp chưa vượt baseline GitHub/GitLab trong phụ lục
+
+32. trường hợp chưa vượt baseline GitHub/GitLab trong phụ lục | • Khai báo tham số: Learning • Random Seed: Người phản | rate, epochs, phần cứng biện chạy lại ra cùng kết quả
+
+33. rate, epochs, phần cứng biện chạy lại ra cùng kết quả | • Chuẩn COPE: Đạo đức xuất • Yêu cầu ThS: Kết quả phải tái | bản [publicationethics.org] lập được
+
+34. VÍ DỤ ĐỐI CHUẨN CÔNG BẰNG: PHÁT HIỆN GIAN LẬN | Bộ baseline đề xuất Điều kiện so sánh công bằng | • Sàn: Random Forest trên đặc • Dữ liệu: Cùng tỷ lệ chia
+
+35. Bộ baseline đề xuất Điều kiện so sánh công bằng | • Sàn: Random Forest trên đặc • Dữ liệu: Cùng tỷ lệ chia | trưng bảng 70/15/15, cùng seed
+
+36. trưng bảng 70/15/15, cùng seed | • Kinh điển: GCN, GraphSAGE • Ngân sách: Mỗi mô hình tinh | chỉnh 30 lần
+
+37. chỉnh 30 lần | • SOTA: GNN công bố trong 2 | năm gần đây • Báo cáo: Mean ± Std của 10
+
+38. • SOTA: GNN công bố trong 2 | năm gần đây • Báo cáo: Mean ± Std của 10 | lần chạy, nêu cả trường hợp
+
+39. CÔNG THỨC 3 THÀNH PHẦN ĐẶT TIÊU ĐỀ ĐỀ TÀI KHOA HỌC | 1. Mục tiêu 2. Phương pháp 3. Bối cảnh | • Bài toán: Mục tiêu • Giải pháp: Thuật • Lĩnh vực: Đối
+
+40. 1. Mục tiêu 2. Phương pháp 3. Bối cảnh | • Bài toán: Mục tiêu • Giải pháp: Thuật • Lĩnh vực: Đối | kỹ thuật rõ ràng toán, mô hình đề tượng áp dụng cụ
+
+41. (Goal) xuất thể | • Động từ: Nâng cao, • Công nghệ: GNN, • Ví dụ: Giao dịch | tối ưu, phát hiện Transformer, Deep ngân hàng, ảnh y tế
+
+42. Cú pháp tiếng Việt Cú pháp tiếng Anh | • Cấu trúc: Mục tiêu + dựa trên + • Cấu trúc: Objective using | Giải pháp + trong + Bối cảnh Method for Domain
+
+43. • Cấu trúc: Mục tiêu + dựa trên + • Cấu trúc: Objective using | Giải pháp + trong + Bối cảnh Method for Domain | • Ví dụ: 'Phát hiện gian lận dựa • Ví dụ: 'Fraud Detection using
+
+44. Giải pháp + trong + Bối cảnh Method for Domain | • Ví dụ: 'Phát hiện gian lận dựa • Ví dụ: 'Fraud Detection using | trên GNN thích ứng trong ngân Adaptive GNN in Digital
+
+45. hàng số' Banking' | • Tránh: 'Nghiên cứu về...', 'Tìm • Chuẩn: Cú pháp bài báo IEEE, | hiểu...' ACM [ieeexplore.ieee.org]
+
+46. Đồ án đại học Luận văn thạc sĩ | • Trọng tâm: Xây dựng phần • Trọng tâm: Giải bài toán kỹ | mềm ứng dụng (web, app) thuật, đề xuất mới
+
+47. mềm ứng dụng (web, app) thuật, đề xuất mới | • Thiếu tính mới: Chỉ tích hợp • Tính mới: Giải thuật cải tiến | thư viện có sẵn hoặc đối chuẩn SOTA
+
+48. thư viện có sẵn hoặc đối chuẩn SOTA | • Kết quả: Sản phẩm chạy được, • Lưu ý: Không chấp nhận tiêu | giao diện đẹp đề 'Xây dựng hệ thống'
+
+49. CÁC DẠNG TIÊU ĐỀ CHƯA ĐẠT CHUẨN TRONG CNTT | 1. Quá mơ hồ 2. Thuần kỹ nghệ 3. Nhồi nhét từ khóa | • Lỗi: 'Ứng dụng AI • Lỗi: 'Xây dựng phần • Lỗi: 'Deep Learning,
+
+50. 1. Quá mơ hồ 2. Thuần kỹ nghệ 3. Nhồi nhét từ khóa | • Lỗi: 'Ứng dụng AI • Lỗi: 'Xây dựng phần • Lỗi: 'Deep Learning, | trong chuyển đổi số' mềm quản lý kho' Big Data, IoT phát
+
+51. hiện tấn công' | • Lý do: Không rõ kỹ • Lý do: Gia công | thuật, dữ liệu, bài phần mềm, thiếu • Lý do: Quá nhiều
+
+52. • Lý do: Không rõ kỹ • Lý do: Gia công | thuật, dữ liệu, bài phần mềm, thiếu • Lý do: Quá nhiều | toán tính khoa học công nghệ, thiếu
+
+53. CÁC MẪU TIÊU ĐỀ ĐẠT CHUẨN KHOA HỌC BẬC THẠC SĨ | Chuyên ngành Cần tránh Nên dùng | Phát hiện tin giả đa phương thức
+
+54. 14 / 74 | QUY TẮC ĐỊNH DẠNG VÀ ĐỘ DÀI TIÊU ĐỀ KHOA HỌC | Độ dài & từ ngữ Điều cần tránh
+
+55. QUY TẮC ĐỊNH DẠNG VÀ ĐỘ DÀI TIÊU ĐỀ KHOA HỌC | Độ dài & từ ngữ Điều cần tránh | • Độ dài: 15-22 từ, đủ 3 thành • Dấu chấm cuối: Không dùng;
+
+56. Độ dài & từ ngữ Điều cần tránh | • Độ dài: 15-22 từ, đủ 3 thành • Dấu chấm cuối: Không dùng; | phần tiêu đề là cụm danh từ
+
+57. phần tiêu đề là cụm danh từ | • Viết tắt: Chỉ dùng từ phổ biến: • Phiên bản: Không nêu 'Python | AI, IoT, GNN, GPU 3.11', 'PyTorch'
+
+58. AI, IoT, GNN, GPU 3.11', 'PyTorch' | • Từ cảm tính: Tránh 'hoàn hảo', • Tính lâu dài: Còn giá trị sau 5- | 'đột phá' 10 năm
+
+59. Mục tiêu: Tiêu đề 3 thành phần & baseline | Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Viết tiêu đề 3 thành • Tiêu đề: Song ngữ Việt - Anh,
+
+60. Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Viết tiêu đề 3 thành • Tiêu đề: Song ngữ Việt - Anh, | phần 15-22 từ
+
+61. phần 15-22 từ | • Bước 2: Loại bỏ cụm từ mang • Baseline: Bảng 2 mô hình đối | tính kỹ nghệ chuẩn
+
+62. tính kỹ nghệ chuẩn | • Bước 3: Chọn 1 baseline kinh • Tính mới: 1 câu nêu điểm cải | điển + 1 SOTA tiến
+
+63. Mục tiêu khoa học Vai trò định hướng | • Khác lập trình: Không chỉ là cài • Xuyên suốt: Mọi thử nghiệm | thư viện, viết mã phục vụ mục tiêu
+
+64. thư viện, viết mã phục vụ mục tiêu | • Đánh đổi: Cơ chế mới cân • Nghiệm thu: Hội đồng đánh giá | bằng chất lượng và chi phí theo mức đạt mục tiêu
+
+65. bằng chất lượng và chi phí theo mức đạt mục tiêu | • Định lượng: Cải thiện F1 hoặc • Tập trung: Tránh sa đà vào | độ trễ chức năng phụ
+
+66. 18 / 74 | NGUYÊN TẮC THIẾT LẬP MỤC TIÊU TỔNG QUÁT (GO) | Cách viết GO Ví dụ mẫu
+
+67. Cách viết GO Ví dụ mẫu | • Động từ: nâng cao, tối ưu hóa, • Ví dụ: 'Nâng cao độ chính xác | phát triển phát hiện gian lận, giảm độ trễ
+
+68. dưới 100ms' | • Đối tượng: Độ chính xác, độ | trễ, tính bền vững • Đạt chuẩn: Nêu rõ bài toán,
+
+69. • Đối tượng: Độ chính xác, độ | trễ, tính bền vững • Đạt chuẩn: Nêu rõ bài toán, | phương pháp, ngưỡng
+
+70. trễ, tính bền vững • Đạt chuẩn: Nêu rõ bài toán, | phương pháp, ngưỡng | • Research Gap: Khắc phục
+
+71. phương pháp, ngưỡng | • Research Gap: Khắc phục | điểm nghẽn từ Bài 2 • Tránh: 'Nghiên cứu về gian lận...'
+
+72. • Research Gap: Khắc phục | điểm nghẽn từ Bài 2 • Tránh: 'Nghiên cứu về gian lận...' | 19 / 74
+
+73. ỨNG DỤNG THANG ĐO BLOOM BẬC CAO TRONG SO | SO của ThS phải Bậc cao (ThS) | dùng động từ bậc
+
+74. DANH MỤC ĐỘNG TỪ DÙNG TRONG SO | Động từ nên dùng Động từ cần tránh | • Phân tích: phân tích, bóc tách, • 'Tìm hiểu...': Chỉ là việc học cá
+
+75. Động từ nên dùng Động từ cần tránh | • Phân tích: phân tích, bóc tách, • 'Tìm hiểu...': Chỉ là việc học cá | khảo sát nhân
+
+76. khảo sát nhân | • Thiết kế: thiết kế, mô hình hóa, • 'Nghiên cứu về...': Quá chung | phát triển chung
+
+77. phát triển chung | • Đánh giá: đối chuẩn, kiểm • 'Cài đặt...': Chỉ là thao tác lập | chứng, tối ưu hóa trình
+
+78. GO đề tài an ninh mạng Bộ 4 SOs tương ứng | • GO: Nâng cao độ chính xác • SO1: Phân tích lưu lượng mạng | phát hiện tấn công zero-day CIC-IDS2017
+
+79. phát hiện tấn công zero-day CIC-IDS2017 | • Chỉ số: Detection Rate ≥ 92%, • SO2: Thiết kế Bi-LSTM + Self- | FAR ≤ 0.1% Attention
+
+80. FAR ≤ 0.1% Attention | • Đặc thù: Phát hiện mối đe dọa • SO3 & SO4: So sánh với | chưa biết Random Forest, đo độ trễ
+
+81. KIỂM TRA TÍNH ĐO LƯỜNG ĐƯỢC (MEASURABLE) CỦA MỤC TIÊU | Gắn với thước đo Tiêu chuẩn nghiệm thu | • SO1, SO2: Tỷ lệ dữ liệu sạch; • Ngưỡng: Chỉ số đạt mức đã đề
+
+82. Gắn với thước đo Tiêu chuẩn nghiệm thu | • SO1, SO2: Tỷ lệ dữ liệu sạch; • Ngưỡng: Chỉ số đạt mức đã đề | độ phức tạp Big-O ra
+
+83. độ phức tạp Big-O ra | • SO3, SO4: F1-score, AUC, • Vượt baseline: Cải thiện có ý | Latency (ms) nghĩa thống kê
+
+84. Latency (ms) nghĩa thống kê | • Lưu ý: Tránh mục tiêu không • Công thức: Nêu rõ trong | thể nghiệm thu Chương 3
+
+85. Nội dung khoa học Khả thi & đo lường | • 1 GO: Bao quát toàn bộ tiêu đề • Đo lường: F1, AUC, Latency, | và bài toán Throughput
+
+86. và bài toán Throughput | • 3-4 SOs: Dữ liệu → Mô hình → • Ánh xạ: Mỗi SO tương ứng nội | Đối chuẩn → Phân tích dung Chương 3-4
+
+87. Đối chuẩn → Phân tích dung Chương 3-4 | • Bloom bậc cao: 100% SOs • Thời gian: Hoàn thành trong 6 | dùng động từ bậc cao tháng
+
+88. Mục tiêu: Xây dựng GO và 4 SOs theo thang Bloom | Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Viết GO bằng động từ • Bản GO: Bao quát trọn tiêu đề
+
+89. Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Viết GO bằng động từ • Bản GO: Bao quát trọn tiêu đề | Bloom bậc cao
+
+90. Bloom bậc cao | • Khung 4 SOs: Động từ Bloom | • Bước 2: Phân rã SO1 Data → bậc cao
+
+91. • Khung 4 SOs: Động từ Bloom | • Bước 2: Phân rã SO1 Data → bậc cao | SO4 Ablation
+
+92. SO4 Ablation | • Bảng chỉ số: Thước đo cho | • Bước 3: Gán chỉ số từng SO
+
+93. • Bảng chỉ số: Thước đo cho | • Bước 3: Gán chỉ số từng SO | F1/AUC/Latency
+
+94. Ý nghĩa của RQs RQ ở mức thạc sĩ | • Cốt lõi đề tài: Khoa học bắt đầu • Quan hệ: Ảnh hưởng của X đến | từ câu hỏi chưa có đáp án Y trong điều kiện Z
+
+95. • Cốt lõi đề tài: Khoa học bắt đầu • Quan hệ: Ảnh hưởng của X đến | từ câu hỏi chưa có đáp án Y trong điều kiện Z | • Định hướng: Câu hỏi rõ dẫn tới • Chưa có đáp án: Không hỏi
+
+96. từ câu hỏi chưa có đáp án Y trong điều kiện Z | • Định hướng: Câu hỏi rõ dẫn tới • Chưa có đáp án: Không hỏi | phương pháp phù hợp điều đã có trong giáo trình
+
+97. • Định hướng: Câu hỏi rõ dẫn tới • Chưa có đáp án: Không hỏi | phương pháp phù hợp điều đã có trong giáo trình | • Tránh mò mẫm: Tập trung thu • Kiểm chứng được: Trả lời
+
+98. phương pháp phù hợp điều đã có trong giáo trình | • Tránh mò mẫm: Tập trung thu • Kiểm chứng được: Trả lời | thập bằng chứng thực nghiệm bằng số liệu khách quan
+
+99. Câu hỏi chính (MRQ) Câu hỏi nhánh (Sub-RQs) | • MRQ: Vấn đề trung tâm, ứng • Sub-RQs: 3-4 câu hỏi hẹp, ứng | với GO với SOs
+
+100. với GO với SOs | • Vai trò: Trả lời MRQ là hoàn • Bằng chứng: Mỗi Sub-RQ có | thành đề tài thực nghiệm riêng
+
+101. thành đề tài thực nghiệm riêng | • Ví dụ: Attention cải thiện đánh • Liên kết: Trả lời đủ Sub-RQs là | đổi trễ - chính xác ra sao? giải quyết MRQ
+
+102. • Ví dụ: Attention cải thiện đánh • Liên kết: Trả lời đủ Sub-RQs là | đổi trễ - chính xác ra sao? giải quyết MRQ | 32 / 74
+
+103. Sai lầm: câu hỏi đóng Chuyển sang câu hỏi mở | • Dạng Có/Không: 'Thuật toán • Về hiệu năng: 'Độ trễ và bộ | mới có nhanh hơn không?' nhớ thay đổi thế nào?'
+
+104. mới có nhanh hơn không?' nhớ thay đổi thế nào?' | • Thiếu chiều sâu: Chỉ có 2 khả • Điều kiện biên: 'Khi dữ liệu | năng trả lời bùng phát, hiệu năng giảm bao
+
+105. nhiêu?' | • Thiên kiến xác nhận: Chỉ tìm | cách chứng minh 'Có' • Chiều sâu: Phân tích cả thành
+
+106. • Thiên kiến xác nhận: Chỉ tìm | cách chứng minh 'Có' • Chiều sâu: Phân tích cả thành | công lẫn thất bại
+
+107. KỸ THUẬT CHUYỂN HÓA SANG CÂU HỎI MỞ ĐA CHIỀU | 1. Mức độ 2. Cơ chế 3. Giới hạn | (Extent) (Mechanism) (Boundary)
+
+108. (Extent) (Mechanism) (Boundary) | • Mở đầu: 'Mức độ • Mở đầu: 'Cơ chế • Mở đầu: 'Trong điều | cải thiện...' nào...', 'How does...' kiện nào...'
+
+109. cải thiện...' nào...', 'How does...' kiện nào...' | • Yêu cầu: Trả lời • Yêu cầu: Giải thích • Yêu cầu: Xác định | bằng % và kiểm nguyên nhân kỹ phạm vi và ngưỡng
+
+110. 35 / 74 | TIÊU CHUẨN FINER QUỐC TẾ ĐÁNH GIÁ CÂU HỎI | Khả thi & hấp dẫn Tính mới Đạo đức & thích đáng
+
+111. tháng nghẽn | Mỗi câu hỏi nghiên cứu cần đạt đủ 5 tiêu chí | 36 / 74
+
+112. 36 / 74 | CHI TIẾT TIÊU CHUẨN FINER: KHẢ THI VÀ TÍNH HẤP DẪN | F - Feasible (Khả thi) I - Interesting (Hấp dẫn)
+
+113. CHI TIẾT TIÊU CHUẨN FINER: KHẢ THI VÀ TÍNH HẤP DẪN | F - Feasible (Khả thi) I - Interesting (Hấp dẫn) | • Dữ liệu: Benchmark có công • Cấp thiết: Doanh nghiệp, xã hội
+
+114. F - Feasible (Khả thi) I - Interesting (Hấp dẫn) | • Dữ liệu: Benchmark có công • Cấp thiết: Doanh nghiệp, xã hội | khai không? đang quan tâm?
+
+115. khai không? đang quan tâm? | • Phần cứng: Đủ GPU (VRAM ≥ • Động lực: Đủ hấp dẫn để theo | 16GB) và RAM? đuổi đến cùng
+
+116. 16GB) và RAM? đuổi đến cùng | • Thời gian: Kịp hoàn tất trong 6 • Trao đổi: Có thể thảo luận tại | tháng? hội thảo
+
+117. CHI TIẾT FINER: TÍNH MỚI, ĐẠO ĐỨC VÀ THÍCH ĐÁNG | N - Novel E - Ethical R - Relevant | • Không lặp lại: Giải • Dữ liệu: Ẩn danh • Chuyên ngành:
+
+118. N - Novel E - Ethical R - Relevant | • Không lặp lại: Giải • Dữ liệu: Ẩn danh • Chuyên ngành: | pháp hoặc bối cảnh hóa đầy đủ Thuộc KHMT hoặc
+
+119. mới phần mềm | • Trách nhiệm AI: | • Mức ThS: Cải tiến Tôn trọng bản • Thực tiễn: Giải
+
+120. • Trách nhiệm AI: | • Mức ThS: Cải tiến Tôn trọng bản • Thực tiễn: Giải | gia tăng, kiểm quyền, liêm chính quyết bài toán của
+
+121. Khả thi, hấp dẫn, mới Đạo đức, thích đáng | • Feasible: Dữ liệu công khai, 1 • Ethical: Dữ liệu giao dịch được | GPU 16GB ẩn danh hóa
+
+122. GPU 16GB ẩn danh hóa | • Interesting: Ngân hàng cần • Relevant: Thuộc KHMT, có thể | phát hiện gian lận nhanh viết bài hội thảo
+
+123. phát hiện gian lận nhanh viết bài hội thảo | • Novel: Khắc phục điểm nghẽn • Kết luận: Đạt đủ 5 tiêu chí, giữ | từ Synthesis Matrix nguyên câu hỏi
+
+124. MA TRẬN ĐÁNH GIÁ CÂU HỎI NGHIÊN CỨU THEO FINER | FINER Câu hỏi thẩm định Tiêu chí đạt chuẩn ThS | Benchmark sẵn có; ≤ 2 tuần/mô
+
+125. Benchmark sẵn có; ≤ 2 tuần/mô | F - Feasible Đủ dữ liệu, GPU, thời gian? | hình
+
+126. Có hấp dẫn, có ý nghĩa thực Cộng đồng quan tâm; giải quyết | I - Interesting | tế? điểm nghẽn thực tế
+
+127. Dẫn tới phát hiện, cải tiến Giải quyết hạn chế chưa có lời | N - Novel | mới? giải trong 3 năm qua
+
+128. Dữ liệu ẩn danh; mã minh bạch; | E - Ethical Có vi phạm liêm chính? | không đạo văn
+
+129. Đúng phân ngành; có thể công | R - Relevant Có đóng góp cho CNTT? | bố bài báo
+
+130. 40 / 74 | TAM GIÁC LIÊN KẾT: TIÊU ĐỀ - MỤC TIÊU - CÂU HỎI | Tiêu đề
+
+131. phạm vi | Phải khớp nhau | Mục tiêu Câu hỏi
+
+132. Mục tiêu Câu hỏi | Các chặng kỹ thuật cần đạt Tri thức mới cần tìm ra | 41 / 74
+
+133. 41 / 74 | NGUYÊN TẮC NHẤT QUÁN KHI BẢO VỆ ĐỀ TÀI | Sự nhất quán Lỗi thường gặp
+
+134. Sự nhất quán Lỗi thường gặp | • Sub-RQ1: Được SO1 trả lời • Lệch phạm vi: Tiêu đề rộng, | trọn vẹn mục tiêu hẹp
+
+135. trọn vẹn mục tiêu hẹp | • SO2: Giải đáp trọn vẹn Sub- • Bỏ quên: Có Sub-RQ3 nhưng | RQ2 Chương 4 không kiểm chứng
+
+136. RQ2 Chương 4 không kiểm chứng | • Không hở: Tam giác khép kín • Lạc đề: SO4 không phục vụ tiêu | nên khó bị bác bỏ đề
+
+137. GO: Nâng cao F1, giảm độ trễ dưới MRQ: Attention cải thiện đánh đổi | 100ms trễ - chính xác ra sao? | SO2: Thiết kế cơ chế Adaptive Sub-RQ2: Cơ chế nào giải điểm
+
+138. Mục tiêu: Xây dựng MRQ, 3 Sub-RQs, thẩm định FINER | Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Viết 1 MRQ dạng mở, • MRQ: Câu hỏi mở 'How / To
+
+139. Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Viết 1 MRQ dạng mở, • MRQ: Câu hỏi mở 'How / To | ứng với GO what extent'
+
+140. ứng với GO what extent' | • Bước 2: Phân rã 3 Sub-RQs • 3 Sub-RQs: Mỗi câu tương ứng | tương ứng SO1-SO3 một mục tiêu
+
+141. tương ứng SO1-SO3 một mục tiêu | • Bước 3: Đối chiếu 5 tiêu chí • Bảng FINER: Tự chấm theo 5 | FINER tiêu chí
+
+142. • Bước 3: Đối chiếu 5 tiêu chí • Bảng FINER: Tự chấm theo 5 | FINER tiêu chí | 44 / 74
+
+143. 3 HƯỚNG TIẾP CẬN NGHIÊN CỨU NỀN TẢNG TRONG CNTT | 1. Lý thuyết 2. Thực nghiệm 3. Thiết kế | • Bản chất: Chứng • Bản chất: Đo • Bản chất: Xây dựng
+
+144. 1. Lý thuyết 2. Thực nghiệm 3. Thiết kế | • Bản chất: Chứng • Bản chất: Đo • Bản chất: Xây dựng | minh toán học, độ lường, kiểm định giả tạo tác (artifact) để
+
+145. phức tạp thuyết giải bài toán thực tế | • Đặc trưng: Tiên đề, • Đặc trưng: Phổ • Đặc trưng: DSRM | định lý, bổ đề biến trong ML, khai phổ biến trong luận
+
+146. 45 / 74 | 5 PHƯƠNG PHÁP NGHIÊN CỨU CỐT LÕI TRONG KHMT | Hình thức & thực nghiệm Xây dựng, quy trình, mô phỏng
+
+147. Hình thức & thực nghiệm Xây dựng, quy trình, mô phỏng | • 1. Hình thức: Chứng minh toán • 3. Xây dựng: Kiến trúc mô hình, | học, Big-O framework
+
+148. học, Big-O framework | • 2. Thực nghiệm: Đo hiệu năng • 4. Quy trình: Cải tiến quy trình | trên benchmark phát triển phần mềm
+
+149. trên benchmark phát triển phần mềm | • Trọng tâm ThS: Kết hợp lý • 5. Mô phỏng: NS-3 (mạng), | thuyết và thực nghiệm CloudSim (đám mây)
+
+150. 46 / 74 | SO SÁNH 5 PHƯƠNG PHÁP NGHIÊN CỨU TRONG KHMT | Phương pháp Đầu ra Tiêu chí nghiệm thu
+
+151. SO SÁNH 5 PHƯƠNG PHÁP NGHIÊN CỨU TRONG KHMT | Phương pháp Đầu ra Tiêu chí nghiệm thu | Hình thức Định lý, phân tích Big-O Đúng logic; không có phản ví dụ
+
+152. KHUNG NGHIÊN CỨU KHOA HỌC THIẾT KẾ | (Design Science Research Methodology - DSRM) | DSRM: Tạo và đánh giá tạo tác mới
+
+153. (Relevance) (Rigor) | Khung 6 bước: | Định hướng cho Chương 3 và 4
+
+154. 48 / 74 | SÁU BƯỚC CỦA QUY TRÌNH DSRM | B1 Nhận diện B2 Mục tiêu B3 Thiết kế
+
+155. B1 Nhận diện B2 Mục tiêu B3 Thiết kế | Vấn đề thực tế, tính Tiêu chí định lượng Kiến trúc, mô hình, | cấp thiết cần đạt giải thuật
+
+156. Vấn đề thực tế, tính Tiêu chí định lượng Kiến trúc, mô hình, | cấp thiết cần đạt giải thuật | BB66 · CCôônngg bbốố BB55 · ĐĐáánnhh ggiiáá B4 Trình diễn
+
+157. BA CHU TRÌNH NGHIÊN CỨU TRONG DSRM (HEVNER 2004) | 1. Relevance 2. Design 3. Rigor | (Thực tế) (Thiết kế) (Học thuật)
+
+158. (Thực tế) (Thiết kế) (Học thuật) | • Kết nối: Yêu cầu từ • Vòng lặp lõi: Xây • Kế thừa: Lý thuyết | doanh nghiệp, xã dựng Đánh giá từ Synthesis Matrix
+
+159. hội | • Tinh chỉnh: Cải tiến • Đóng góp: Tạo tác, | • Môi trường: Tiêu đến khi đạt mục tiêu phát hiện mới
+
+160. • Tinh chỉnh: Cải tiến • Đóng góp: Tạo tác, | • Môi trường: Tiêu đến khi đạt mục tiêu phát hiện mới | chí chấp nhận, kiểm
+
+161. 50 / 74 | VÍ DỤ DSRM 6 BƯỚC CHO ĐỀ TÀI PHÁT HIỆN GIAN LẬN | B1-B2: Bài toán, mục B3-B4: Thiết kế, trình B5-B6: Đánh giá,
+
+162. tiêu diễn công bố | • 1. Nhận diện: Luật • 3. Thiết kế: GNN + • 5. Đánh giá: So với | tĩnh bỏ sót kiểu gian Adaptive Attention RF, GNN chuẩn; 10
+
+163. lận mới seed | • 4. Trình diễn: Chạy | • 2. Mục tiêu: F1 ≥ thử trên dữ liệu giao • 6. Công bố: Bài báo
+
+164. • 4. Trình diễn: Chạy | • 2. Mục tiêu: F1 ≥ thử trên dữ liệu giao • 6. Công bố: Bài báo | 90%, độ trễ < dịch ẩn danh hội thảo và luận văn
+
+165. BỐN DẠNG TẠO TÁC KHOA HỌC (ARTIFACTS) TRONG KHMT | Khái niệm & mô hình Phương pháp & hệ thống | 1. Concepts: Thuật ngữ mới, 3. Methods: Giải thuật, cơ chế,
+
+166. Khái niệm & mô hình Phương pháp & hệ thống | 1. Concepts: Thuật ngữ mới, 3. Methods: Giải thuật, cơ chế, | taxonomy hàm mất mát mới
+
+167. taxonomy hàm mất mát mới | 2. Models: Mô hình toán, không 4. Instantiations: Prototype, thư | gian nhúng đồ thị viện mã nguồn
+
+168. gian nhúng đồ thị viện mã nguồn | • Đặc tính: Trừu tượng, mô tả • Yêu cầu ThS: Đóng góp ít nhất | cấu trúc bài toán dạng 2 và 3
+
+169. VÍ DỤ 4 DẠNG TẠO TÁC TRONG ĐỀ TÀI GNN | Khái niệm & mô hình Phương pháp & hệ thống | • Concept: Phân loại 3 kiểu gian • Method: Adaptive Attention và
+
+170. Khái niệm & mô hình Phương pháp & hệ thống | • Concept: Phân loại 3 kiểu gian • Method: Adaptive Attention và | lận mới hàm mất mát phạt nặng
+
+171. lận mới hàm mất mát phạt nặng | • Model: Đồ thị tài khoản - thiết bị • Instantiation: Prototype | - giao dịch PyTorch trên GitHub
+
+172. • Model: Đồ thị tài khoản - thiết bị • Instantiation: Prototype | - giao dịch PyTorch trên GitHub | • Đặc tính: Mô tả cấu trúc bài • Yêu cầu ThS: Có Model và
+
+173. - giao dịch PyTorch trên GitHub | • Đặc tính: Mô tả cấu trúc bài • Yêu cầu ThS: Có Model và | toán Method
+
+174. • Đặc tính: Mô tả cấu trúc bài • Yêu cầu ThS: Có Model và | toán Method | 53 / 74
+
+175. HỆ THỐNG BIẾN SỐ NGHIÊN CỨU TRONG THỰC NGHIỆM | 1. Biến độc lập 2. Biến phụ thuộc 3. Biến kiểm soát | • Định nghĩa: Yếu tố • Định nghĩa: Kết • Định nghĩa: Giữ cố
+
+176. 1. Biến độc lập 2. Biến phụ thuộc 3. Biến kiểm soát | • Định nghĩa: Yếu tố • Định nghĩa: Kết • Định nghĩa: Giữ cố | được chủ động thay quả đầu ra được đo định để loại bỏ yếu
+
+177. đổi tố gây nhiễu | • Ví dụ: F1, AUC, độ | • Ví dụ: GNN so với trễ (ms), RAM • Ví dụ: Cùng dữ liệu,
+
+178. • Ví dụ: F1, AUC, độ | • Ví dụ: GNN so với trễ (ms), RAM • Ví dụ: Cùng dữ liệu, | CNN, learning rate GPU, random seed
+
+179. KỸ THUẬT THAO TÁC HÓA BIẾN SỐ (OPERATIONALIZATION) | Khái niệm → đại lượng đo Nguyên tắc thao tác hóa | • Độ chính xác: F1-Macro, AUC • Chuẩn quốc tế: Dùng độ đo
+
+180. Khái niệm → đại lượng đo Nguyên tắc thao tác hóa | • Độ chính xác: F1-Macro, AUC • Chuẩn quốc tế: Dùng độ đo | trên tập test phổ biến trong IEEE/ACM
+
+181. trên tập test phổ biến trong IEEE/ACM | • Tốc độ phản hồi: Độ trễ P99 • Không tự đặt: Không tự đặt độ | (ms) đo thiếu cơ sở
+
+182. (ms) đo thiếu cơ sở | • Tài nguyên: VRAM GPU và • Công thức: Nêu rõ trong | CPU (%) Chương 3
+
+183. Giả thuyết không (H0) Giả thuyết đối (H1) | • H0: Mô hình mới không tốt hơn • H1: Mô hình mới tốt hơn | baseline baseline có ý nghĩa thống kê
+
+184. baseline baseline có ý nghĩa thống kê | • Ký hiệu: Mô hình mới ≤ • Ký hiệu: Mô hình mới > | Baseline Baseline (p < 0.05)
+
+185. Baseline Baseline (p < 0.05) | • Mục tiêu: Bác bỏ H0 ở mức ý • Kiểm định: t-test hoặc Wilcoxon | nghĩa α = 0.05 trên nhiều lần chạy
+
+186. Hệ thống biến số Cặp giả thuyết | • Độc lập: Mô hình (GNN thích • H0: F1 của GNN ≤ F1 của | ứng hoặc RF) Random Forest
+
+187. ứng hoặc RF) Random Forest | • Phụ thuộc: F1-Macro, độ trễ • H1: F1 của GNN > Random | P99 (ms) Forest (p < 0.05)
+
+188. P99 (ms) Forest (p < 0.05) | • Kiểm soát: Cùng dữ liệu, GPU, • Kiểm định: Wilcoxon trên 10 | random seed lần chạy
+
+189. F1/AUC có đo đúng mục tiêu? Đủ số lần chạy để tính p-value? | Yêu cầu: phân tích đủ 4 mối đe dọa ở Chương 4 | 58 / 74
+
+190. Mục tiêu: Xác định tạo tác & biến số | Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Xác định dạng tạo tác: • Tạo tác DSRM: Dạng tạo tác
+
+191. Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Xác định dạng tạo tác: • Tạo tác DSRM: Dạng tạo tác | mô hình hay thuật toán đóng góp
+
+192. mô hình hay thuật toán đóng góp | • Bước 2: Liệt kê biến độc lập, • Bảng biến số: Phân loại 3 | phụ thuộc, kiểm soát nhóm biến
+
+193. phụ thuộc, kiểm soát nhóm biến | • Bước 3: Gán công thức và đơn • Bảng độ đo: F1/AUC/Latency | vị đo và đơn vị
+
+194. Mục tiêu: Thiết lập H0/H1, kiểm soát các mối đe dọa | Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Soạn cặp giả thuyết • H0/H1: Phát biểu bằng ký hiệu
+
+195. Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Soạn cặp giả thuyết • H0/H1: Phát biểu bằng ký hiệu | H0, H1 toán
+
+196. H0, H1 toán | • Bước 2: Rà soát 4 mối đe dọa • Ma trận Validity: Bảng rà soát 4 | của đề tài mối đe dọa
+
+197. của đề tài mối đe dọa | • Bước 3: Viết biện pháp giảm • Giảm thiểu: Biện pháp bảo vệ | thiểu cụ thể độ giá trị
+
+198. Vai trò với luận văn ThS Chuẩn quốc tế (IEEE/ACM) | • Tóm tắt: Toàn bộ phương pháp • Phân tầng: Thể hiện rõ luồng | luận trong 1 hình dữ liệu và luồng điều khiển
+
+199. luận trong 1 hình dữ liệu và luồng điều khiển | • Chương 3: Hình then chốt của • Nhấn mạnh: Tô màu module | phần phương pháp cải tiến
+
+200. • Chương 3: Hình then chốt của • Nhấn mạnh: Tô màu module | phần phương pháp cải tiến | • Bảo vệ: Hội đồng nắm nhanh • Triển khai: Mỗi khối ứng với
+
+201. phần phương pháp cải tiến | • Bảo vệ: Hội đồng nắm nhanh • Triển khai: Mỗi khối ứng với | kiến trúc một module mã nguồn
+
+202. 62 / 74 | QUY TRÌNH NGHIÊN CỨU KHMT 5 GIAI ĐOẠN | Dữ liệu & Kiến trúc Thực nghiệm
+
+203. GĐ1: Tiền xử lý GĐ2: Biểu diễn đặc trưng | • Khử nhiễu: Xử lý giá trị thiếu, • Biểu diễn: Đồ thị hoặc vector | ngoại lai đặc trưng
+
+204. ngoại lai đặc trưng | • Cân bằng: SMOTE hoặc • Giảm chiều: PCA hoặc t-SNE | undersampling
+
+205. undersampling | • Đầu ra: Tensor đặc trưng dùng | • Chia tập: Train/Val/Test để huấn luyện
+
+206. • Đầu ra: Tensor đặc trưng dùng | • Chia tập: Train/Val/Test để huấn luyện | 70/15/15 hoặc 80/10/10
+
+207. Google Dataset | Máy tìm kiếm dữ liệu từ nhiều kho datasetsearch.research.google.com | Search
+
+208. Xử lý ngôn ngữ GLUE, SQuAD gluebenchmark.com | Y tế MIMIC-IV (cần đăng ký truy cập) physionet.org | Tiếng Việt Bộ dữ liệu các kỳ đánh giá VLSP vlsp.org.vn
+
+209. 66 / 74 | TIÊU CHÍ LỰA CHỌN VÀ KHAI BÁO TẬP DỮ LIỆU | Tiêu chí lựa chọn Khai báo trong Chương 3
+
+210. TIÊU CHÍ LỰA CHỌN VÀ KHAI BÁO TẬP DỮ LIỆU | Tiêu chí lựa chọn Khai báo trong Chương 3 | • Uy tín: Được dùng trong bài • Thống kê: Số mẫu, số đặc
+
+211. Tiêu chí lựa chọn Khai báo trong Chương 3 | • Uy tín: Được dùng trong bài • Thống kê: Số mẫu, số đặc | báo IEEE/ACM gần đây trưng, tỷ lệ lớp
+
+212. báo IEEE/ACM gần đây trưng, tỷ lệ lớp | • Giấy phép: Kiểm tra license cho • Phiên bản: Ngày tải, phiên bản, | phép nghiên cứu phép chia cố định
+
+213. phép nghiên cứu phép chia cố định | • Phù hợp: Đúng bài toán, đủ • Trích dẫn: Bài báo gốc công bố | mẫu, có nhãn tập dữ liệu
+
+214. GĐ3: Kiến trúc lõi GĐ4: Đối chuẩn GĐ5: Ablation | • Giải thuật mới: Cơ • Tinh chỉnh: Cùng • Bóc tách: Gỡ từng | chế Adaptive ngân sách siêu thành phần để kiểm
+
+215. mô hình | • Hàm mất mát: Phạt • Chi phí: Latency và | nặng các mẫu phân • Đo lường: F1, AUC VRAM tiêu thụ
+
+216. • Hàm mất mát: Phạt • Chi phí: Latency và | nặng các mẫu phân • Đo lường: F1, AUC VRAM tiêu thụ | loại sai trên cùng cấu hình
+
+217. Công cụ & quy cách Màu sắc & cỡ chữ | • Công cụ: draw.io miễn phí • Bảng màu: Xanh đậm/xám | [app.diagrams.net] xanh, mỗi luồng một màu
+
+218. [app.diagrams.net] xanh, mỗi luồng một màu | • Xuất tệp: PDF vector hoặc PNG • Cỡ chữ: Tối thiểu 22pt khi trình | ≥ 300 DPI chiếu
+
+219. ≥ 300 DPI chiếu | • Hình khối: Chữ nhật bo góc: xử • Tệp nguồn: Lưu tệp .drawio để | lý; hình thoi: điều kiện chỉnh sửa
+
+220. • Hình khối: Chữ nhật bo góc: xử • Tệp nguồn: Lưu tệp .drawio để | lý; hình thoi: điều kiện chỉnh sửa | 69 / 74
+
+221. Mục tiêu: Phác thảo Pipeline trên draw.io | Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Mở draw.io • Bản vẽ: Sơ đồ vector hoặc
+
+222. Các bước thực hiện Sản phẩm nghiệm thu | • Bước 1: Mở draw.io • Bản vẽ: Sơ đồ vector hoặc | [app.diagrams.net] PNG ≥ 300 DPI
+
+223. [app.diagrams.net] PNG ≥ 300 DPI | • Bước 2: Vẽ Data → Feature → • Mô tả luồng: Giải thích dữ liệu | Model → Baseline → Eval vào/ra từng khối
+
+224. Model → Baseline → Eval vào/ra từng khối | • Bước 3: Tô màu nổi bật khối • Tệp nguồn: Tệp .drawio để | cải tiến chèn vào Chương 3
+
+225. Mục tiêu: Hoàn thiện bản thuyết minh | Các bước thực hiện Sản phẩm nghiệm thu | • Chặng 1 (20p): Tam giác Logic: • Thuyết minh: Hoàn chỉnh, nộp
+
+226. Các bước thực hiện Sản phẩm nghiệm thu | • Chặng 1 (20p): Tam giác Logic: • Thuyết minh: Hoàn chỉnh, nộp | Tiêu đề, GO/SOs, RQs giảng viên
+
+227. Tiêu đề, GO/SOs, RQs giảng viên | • Chặng 2 (20p): DSRM, biến số, • Pipeline: Bản vẽ chuẩn | H0/H1 IEEE/ACM
+
+228. H0/H1 IEEE/ACM | • Chặng 3 (20p): Pipeline 5 GĐ, • Rubric: Tự chấm ≥ 70/100 điểm | đối chiếu rubric
+
+229. TÀI LIỆU THAM KHẢO CHÍNH | Khung DSRM & nguồn công bố Tiêu chuẩn & đạo đức | • Hevner (2004): Design Science • FINER: Hulley (2013),
+
+230. Khung DSRM & nguồn công bố Tiêu chuẩn & đạo đức | • Hevner (2004): Design Science • FINER: Hulley (2013), | in IS Research (MIS Quarterly) Designing Clinical Research
+
+231. • Hevner (2004): Design Science • FINER: Hulley (2013), | in IS Research (MIS Quarterly) Designing Clinical Research | • Peffers (2007): Phương pháp • Bloom: Anderson & Krathwohl
+
+232. in IS Research (MIS Quarterly) Designing Clinical Research | • Peffers (2007): Phương pháp • Bloom: Anderson & Krathwohl | DSRM 6 bước (JMIS) (2001)
+
+233. • Peffers (2007): Phương pháp • Bloom: Anderson & Krathwohl | DSRM 6 bước (JMIS) (2001) | • Nguồn: IEEE Xplore, ACM • Đạo đức: COPE,
+
+234. DSRM 6 bước (JMIS) (2001) | • Nguồn: IEEE Xplore, ACM • Đạo đức: COPE, | Digital Library publicationethics.org
+
+235. SOs, RQs FINER | Phương pháp luận Trọng tâm | DSRM 6 bước, biến số, Dữ liệu lớn, tiền xử lý, độ
+
+236. Phương pháp luận Trọng tâm | DSRM 6 bước, biến số, Dữ liệu lớn, tiền xử lý, độ | Validity đo
+

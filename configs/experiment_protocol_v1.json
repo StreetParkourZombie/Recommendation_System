@@ -1,0 +1,20 @@
+﻿{
+  "protocol_id": "recsys_split_audit_v1",
+  "study_type": "experimental_evaluative_research",
+  "research_object": "offline evaluation of recommender systems",
+  "dataset": {"name": "MovieLens ml-25m", "required_citation_doi": "10.1145/2827872", "data_policy": "download locally; do not redistribute raw data"},
+  "research_questions": [
+    "RQ1: Do split strategies change recommender-model ranking?",
+    "RQ2: How do popularity-bias metrics change across split strategies?",
+    "RQ3: What operational cost does each split incur on the Big Data pipeline?"
+  ],
+  "splits": [
+    {"id": "random80_20", "definition": "row-level random split using seed 42", "paper_relation": "project implementation inspired by paper [01]"},
+    {"id": "temporal_global", "definition": "latest global 20 percent by timestamp as test", "paper_relation": "project-controlled implementation"},
+    {"id": "leave_one_out", "definition": "latest interaction per user; timestamp then movieId tie-break", "paper_relation": "project implementation inspired by paper [03]"}
+  ],
+  "models": {"floor": ["random", "most_popular"], "classical": ["als"], "sota": [], "phase_1_scope": ["most_popular", "als"]},
+  "metrics": {"ranking": ["ndcg@10", "recall@10", "mrr@10"], "bias": ["catalog_coverage", "gini_exposure", "longtail_coverage", "popularity_bias_ratio"], "validity": ["temporal_violation_global", "temporal_violation_user", "unseen_item_rows", "SLI"], "operations": ["wall_clock_seconds", "shuffle_bytes", "peak_memory_bytes"]},
+  "controls": {"project_seeds": [42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718], "relevance_threshold": 4.0, "minimum_train_interactions_per_user": 5, "cutoff_k": 10, "hardware_log_required": true, "paper_seed_claim_rule": "Never infer paper seed from project seed; use not_reported when absent.", "result_labels": ["paper_replication", "project_controlled_comparison"]},
+  "phase_gates": ["G0: protocol and hardware manifest recorded", "G1: all three split diagnostics reproduced", "G2: MostPopular and ALS run with all project seeds", "G3: statistical tests and effect sizes reported", "G4: ItemKNN or CPU-feasible SOTA added only after G0-G3"]
+}

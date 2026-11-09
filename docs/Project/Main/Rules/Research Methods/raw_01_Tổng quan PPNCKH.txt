@@ -1,0 +1,1293 @@
+Phương pháp nghiên cứu khoa học trong
+Công nghệ thông tin
+TỔNG QUAN NGHIÊN CỨU KHOA HỌC &
+XÁC ĐỊNH BÀI TOÁN
+TS. Trần Minh Thái
+01 / 124
+Tiết 1 / 5 • Nền tảng học phần & Chuẩn
+đầu ra
+PHẦN 1
+GIỚI THIỆU CHUNG HỌC PHẦN &
+BÁO CÁO HỌC PHẦN
+PPNCKH • TS. Trần Minh Thái 02 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Nội dung bài học: Phần 1–4
+Tổng quan học phần Bản chất NCKH
+1 2
+Lộ trình 5 chuyên đề Nghiên cứu trong CNTT
+Báo cáo cuối kỳ Đối chiếu với dự án kỹ thuật
+Tri thức và tư duy Hướng nghiên cứu
+3 4
+Mô hình DIKW Phân loại nghiên cứu
+Ba cách tư duy khoa học Các hướng nghiên cứu CNTT
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 03 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Nội dung bài học: Phần 5–8
+Phân tích bài toán Thiết kế nghiên cứu
+5 6
+What, Who, Where, When, Quy trình 7 bước và mô hình
+Why, How, How Much (W5H2) Feasible, Interesting, Novel,
+Phát biểu vấn đề Ethical, Relevant (FINER)
+Liêm chính học thuật Đề cương và thực hành
+7 8
+Đạo đức nghiên cứu Xây dựng đề cương
+Ẩn danh hóa dữ liệu Thực hành 60 phút
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 04 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Tài liệu tham khảo học phần
+1. Huma Anwar & Ehtiram Raza Khan (2018), Research Methods of
+Computer Science, USP.
+2. Christian W. Dawson (2015), Projects in Computing and Information
+Systems, Pearson.
+3. John W. Creswell (2018), Research Design: Qualitative, Quantitative,
+and Mixed Methods.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 05 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Chuẩn đầu ra học phần (CLO)
+Bản chất NCKH, DIKW, tư duy khoa học và hệ thống xuất bản.
+CLO 1. Hiểu biết
+W5H2, ma trận tài liệu, thiết kế thực nghiệm và viết bài báo.
+CLO 2. Kỹ năng
+Zotero/Mendeley, Overleaf/LaTeX và Draw.io.
+CLO 3. Công cụ
+Liêm chính học thuật, chống đạo văn và bảo mật dữ liệu.
+CLO 4. Đạo đức
+Hình thành tư duy nghiên cứu và hoàn thiện báo cáo học phần.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 06 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Các hoạt động học tập
+Khung lý thuyết, công cụ và tình huống qua thuyết giảng
+1. Tìm hiểu
+tương tác.
+20 phút phân tích tình huống và phản biện.
+2. Khởi động
+45–60 phút hoàn thiện từng phần của báo cáo.
+3. Thực hành
+4. Phản biện, tự Đánh giá chéo theo tiêu chí khoa học, đọc bài báo quốc tế và
+học
+hoàn thiện báo cáo theo mẫu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 07 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Lộ trình năm chuyên đề
+Nền tảng NCKH, DIKW, tư duy và xác lập bài toán.
+Buổi 1
+Tổng quan tài liệu, ma trận tổng hợp và Zotero.
+Buổi 2
+Phương pháp luận, thiết kế và mô hình nghiên cứu.
+Buổi 3
+Dữ liệu, thực nghiệm, độ đo và thống kê suy luận.
+Buổi 4
+Viết theo mẫu, LaTeX và chuẩn bị thuyết trình.
+Buổi 5
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 08 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Đánh giá học phần
+Tỷ trọng Quá trình – 40%: Tham gia thảo luận, phản
+biện và bài tập/ thực hành trên lớp.
+Báo cáo cuối kỳ – 60%: Báo cáo 30–50 trang
+theo mẫu và trình bày.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 09 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Sản phẩm và quy cách
+Sản phẩm: Báo cáo tiểu luận học phần theo mẫu và hướng dẫn (cung cấp sau).
+Quy mô: Khoảng 30–50 trang, định dạng học thuật.
+Trích dẫn: Theo chuẩn của Institute of Electrical and Electronics Engineers (IEEE).
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 10 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Trọng số, bảo vệ và nộp báo cáo
+Trọng số: Chiếm 60% điểm học phần.
+Bảo vệ: Thuyết trình trong Buổi 6 hoặc Buổi 7.
+Nộp báo cáo: Hoàn chỉnh, in và nộp vào Buổi 7.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 11 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Cấu trúc báo cáo tiểu luận học phần
+Chương 1. Hệ thống hóa lý thuyết
+20%. Tri thức, tư duy, quy trình nghiên cứu và đạo đức
+khoa học.
+Chương 2. Xác lập nền tảng và ứng dụng công cụ
+Kết luận
+30%. Bài toán, Mendeley/Zotero, ma trận bài báo và
+khoảng trống nghiên cứu.
+Chương 3
+Chương 3. Xây dựng đề cương nghiên cứu chi tiết
+Chương 2
+45%. Mục tiêu, câu hỏi, FINER, phương pháp, kế
+hoạch và kết quả dự kiến.
+Chương 1
+Kết luận
+5%. Kết quả đạt được, tính khả thi, hạn chế và hướng
+0 20 40 60
+nghiên cứu tiếp theo.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 12 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Chuẩn bị trước Buổi 1
+Ý tưởng: Một bài toán tại doanh nghiệp hoặc chủ đề từ tổng quan tài liệu.
+Bằng chứng: Số liệu về thời gian, chi phí hoặc hạn chế của nghiên cứu
+trước.
+Giải pháp nền: Xác định 1–2 công nghệ hiện dùng hoặc mô hình cơ sở
+(baseline).
+Phương tiện: Laptop để hoàn thiện bảng phân tích bài toán tại lớp.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 13 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Khởi động: Dự án kỹ thuật hay NCKH?
+1. Xây dựng website bán hàng có cổng thanh toán trực tuyến.
+2. Dùng You Only Look Once phiên bản 8 (YOLOv8) để đếm xe ra vào bãi đỗ.
+3. Đề xuất mạng nơ-ron mới để nhận diện tổn thương võng mạc trên dữ liệu nhiễu.
+Thảo luận: Phân loại từng tình huống và giải thích lựa chọn.
+Tiêu chí: Tính mới, đóng góp tri thức và khả năng tổng quát hóa.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 14 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Đối chiếu ba tình huống khởi động
+Website bán hàng có thanh toán: Dự án kỹ thuật nếu chỉ triển khai chức năng theo
+yêu cầu.
+YOLOv8 đếm xe: Dự án kỹ thuật nếu chỉ sử dụng mô hình có sẵn, chưa nêu câu hỏi hay
+đóng góp mới.
+Mạng mới nhận diện tổn thương võng mạc: Có định hướng NCKH. Cần chứng minh
+tính mới và đánh giá trên dữ liệu nhiễu.
+Điểm phân biệt: Sử dụng công nghệ mới chưa đủ. NCKH cần câu hỏi, đóng góp và bằng
+chứng kiểm chứng.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 15 / 124
+PHẦN 2
+1. Dự án và nghiên cứu
+Mục tiêu, triển khai và định danh khách
+hàng điện tử (eKYC).
+Bản chất nghiên cứu
+2. Nền tảng và đặc điểm
+khoa học trong CNTT
+Khái niệm, năng lực và các đặc điểm của
+NCKH.
+3. Tính mới
+Các dạng đóng góp, bằng chứng và bài tập
+đối chiếu.
+PPNCKH • TS. Trần Minh Thái 16 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Dự án kỹ thuật và NCKH: Đầu ra
+Tiêu chí Dự án kỹ thuật Nghiên cứu khoa học
+Mục tiêu Đáp ứng yêu cầu khách hàng Khám phá tri thức, lý giải hiện tượng
+Đóng góp về thuật toán, mô hình
+Tính mới Có thể dùng thư viện sẵn có
+hoặc bài toán
+Thuật toán, mô hình và công bố học
+Đầu ra Phần mềm và tài liệu kỹ thuật
+thuật
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 17 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Dự án kỹ thuật và NCKH: Cách triển khai
+Tiêu chí Dự án kỹ thuật Nghiên cứu khoa học
+Vòng đời phát triển phần mềm
+Quy trình Phương pháp khoa học
+(SDLC): Agile, Scrum, Waterfall
+Bác bỏ giả thuyết, không vượt
+Rủi ro Trễ hạn, vượt ngân sách
+baseline
+Kế thừa Tái sử dụng mã nguồn Tổng quan tài liệu và trích dẫn
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 18 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Ví dụ đối chiếu trong bài toán eKYC
+Kỹ thuật: Tích hợp giao diện lập trình ứng
+Độ chính xác ảnh mờ
+dụng (API) nhận dạng ký tự quang học
+(%)
+(OCR) của Google/Amazon Web Services
+100
+(AWS) vào eKYC.
+80
+Nghiên cứu: Mạng sinh đối kháng (GAN) và
+60
+40 Wavelet Attention khôi phục ảnh căn cước
+20 công dân (CCCD) mờ, chói sáng.
+0
+Minh họa: Từ 74,8% lên 91,5%, tăng 16,7
+Dự án API Baseline Đề xuất
+điểm phần trăm.
+sẵn OCR GAN+Attn
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 19 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Nghiên cứu: Tìm kiếm có hệ thống
+Cách hiểu: Quá trình tìm kiếm có hệ thống, kiên trì và lặp lại.
+Định nghĩa: Điều tra có hệ thống để khám phá tri thức hoặc hiệu chỉnh
+hiểu biết hiện có.
+Theo Sharp và cộng sự: Tìm kiếm tri thức không tầm thường bằng
+phương pháp luận chặt chẽ.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 20 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Nghiên cứu trong CNTT
+Theo Higher Education Funding Council for England (HEFCE): Điều tra nguyên gốc
+nhằm nâng cao hiểu biết.
+Trong CNTT: Kết hợp khám phá lý thuyết toán học với kiểm chứng thực nghiệm hệ
+thống.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 21 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Nền tảng, năng lực và thái độ nghiên cứu
+Mô tả, giải thích hoặc dự báo bằng phương pháp khoa học.
+Phương pháp
+Toán rời rạc, cấu trúc dữ liệu, thuật toán, kiến trúc hệ thống.
+Nền tảng
+Trung thực, minh bạch, không ngụy tạo dữ liệu hay kết quả.
+Đạo đức
+Tự nghiên cứu tài liệu và phối hợp nghiên cứu liên ngành.
+Năng lực
+Hoài nghi khoa học, ham học hỏi, kiên trì khi thử nghiệm thất
+Thái độ
+bại.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 22 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Đặc điểm NCKH: Ba nhóm cần theo dõi
+Tính mới, tính tin cậy, tính tái lập.
+1. Tính mới
+và kiểm chứng Chi tiết ở slide 24.
+ĐẶC ĐIỂM Tính thông tin, tính khách quan.
+2. Thông tin
+NCKH và khách quan Chi tiết ở slide 25.
+Rủi ro, kế thừa, hệ thống, đóng
+3. Quy trình
+góp cộng đồng.
+và đóng góp
+Chi tiết ở slide 26.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 23 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Đặc điểm NCKH: Tính mới và kiểm chứng
+1. Tính mới: Đóng góp về bài toán, thuật toán, kiến trúc hoặc miền ứng
+dụng.
+2. Tính tin cậy: Phương pháp vững chắc, số liệu chính xác và có thể kiểm
+chứng.
+3. Tính tái lập: Người khác chạy lại mã nguồn, dữ liệu và thu được kết quả
+tương tự.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 24 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Đặc điểm NCKH: Thông tin và khách quan
+4. Tính thông tin: Trả lời rõ ràng, định lượng các câu hỏi nghiên cứu.
+5. Tính khách quan: Dựa trên dữ liệu trung thực và kiểm soát thiên kiến
+cá nhân.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 25 / 124
+TIẾT 1 / 5 • NỀN TẢNG NCKH & ĐỊNH HƯỚNG HỌC PHẦN
+Đặc điểm NCKH: Quy trình và đóng góp
+6. Tính rủi ro: Thuật toán cải tiến có thể không đạt hiệu quả kỳ vọng.
+7. Tính kế thừa: Xây dựng trên nghiên cứu trước và trích dẫn đầy đủ.
+8. Tính hệ thống: Có phương pháp, kế hoạch và cơ chế kiểm soát.
+9. Đóng góp cộng đồng: Tạo tri thức mở và giải quyết bài toán của ngành.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 26 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW
+Tính mới: Bài toán và phương pháp
+1. Bài toán mới 2. Phương pháp mới
+Nhận diện thách thức chưa được nghiên Đề xuất thuật toán hoặc kiến trúc mạng
+cứu đầy đủ. mới.
+Ví dụ: Bảo vệ dữ liệu học sâu trên thiết bị Ví dụ: Cải tiến Focal Loss cho dữ liệu mất
+Internet vạn vật (IoT) trong y tế. cân bằng.
+Đóng góp cần có bằng chứng từ tổng Đánh giá bằng thực nghiệm với mô hình
+quan tài liệu. cơ sở.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 27 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW
+Tính mới: Ứng dụng và lý giải
+3. Miền ứng dụng mới 4. Lý giải mới
+Áp dụng mô hình tiên tiến vào lĩnh vực Giải thích cơ chế hoạt động của mô hình.
+đặc thù.
+Ví dụ: Vì sao Attention học được quan hệ
+Ví dụ: Dùng Transformer dự báo giá cà phụ thuộc xa?
+phê Tây Nguyên.
+Đóng góp cần có lập luận hoặc bằng
+Làm rõ đặc điểm dữ liệu và đóng góp so chứng kiểm chứng.
+với nghiên cứu trước.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 28 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Bài tập: Đóng góp mới cần bằng chứng gì?
+A. Bài toán mới B. Phương pháp mới
+Phòng vệ Prompt Injection gián tiếp Mamba-UNet phân đoạn khối u não trên
+trong hệ thống nhiều tác tử trí tuệ nhân ảnh cộng hưởng từ (MRI).
+tạo (AI).
+Mục tiêu minh họa: Giảm 60% bộ nhớ
+Giả định: Thiếu cơ chế phòng vệ tự bộ xử lý đồ họa (GPU) so với
+động. Transformer.
+Câu hỏi: Cần tìm công trình nào để kiểm Câu hỏi: Đối chuẩn nào kiểm chứng bộ
+tra khoảng trống? nhớ và chất lượng?
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 29 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Bài tập: Ứng dụng mới hay lý giải mới?
+A. Dự báo sầu riêng Đắk Lắk B. Ảo giác của mô hình ngôn ngữ lớn
+(LLM)
+Đề xuất: Kết hợp Sentinel-2 với Spatio-
+Temporal Graph. Giả thuyết: Mật độ biểu diễn ở các lớp
+cuối liên quan tới ảo giác.
+Câu hỏi: Đặc thù dữ liệu tạo đóng góp gì
+so với áp dụng mô hình có sẵn? Câu hỏi: Bằng chứng nào phân biệt
+tương quan với lời giải thích cơ chế?
+Đầu ra: Một luận điểm cần kiểm chứng
+bằng tổng quan và thực nghiệm. Đầu ra: Một phép kiểm tra giả thuyết.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 30 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Thảo luận: Đề tài nào thể hiện tính mới?
+Đề tài A: Quản lý kho bằng React và Node.js.
+Đề tài B: Dự báo tồn kho bằng mạng nơ-ron tích chập (CNN) kết hợp bộ nhớ dài-ngắn
+hạn (LSTM) và tối ưu bầy đàn.
+Câu hỏi: Mỗi đề tài đã nêu đóng góp học thuật chưa? Còn thiếu bằng chứng gì?
+Đối chiếu: Khoảng trống nghiên cứu, thay đổi phương pháp và kết quả so với baseline.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 31 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Đối chiếu tính mới của hai đề tài tồn kho
+A. Quản lý kho bằng React và Node.js: Công nghệ phổ thông và chức năng tạo, đọc,
+cập nhật, xóa dữ liệu (CRUD) chưa thể hiện đóng góp học thuật.
+B. Dự báo bằng CNN-LSTM và tối ưu bầy đàn: Có tiềm năng nghiên cứu mô hình lai
+cho chuỗi thời gian phi tuyến.
+B vẫn cần làm rõ: Vì sao kết hợp các phương pháp? Khác nghiên cứu trước ở đâu? Có
+cải thiện so với baseline không?
+Kết luận: Tính mới nằm ở bài toán hoặc phương pháp có bằng chứng, không chỉ ở tên
+công nghệ.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 32 / 124
+PHẦN 3
+1. Mô hình DIKW
+Tổng quan bốn tầng, giải thích và ví dụ
+vận dụng.
+Hệ thống tri thức và tư
+2. Ba phương pháp tư duy
+duy khoa học
+Diễn dịch, quy nạp và suy đoán.
+3. Vận dụng và kiểm chứng
+Đối chiếu cách suy luận, lựa chọn cho đề
+tài.
+PPNCKH • TS. Trần Minh Thái 33 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW
+DIKW: Dữ liệu, thông tin, tri thức và trí tuệ
+TRÍ TUỆ (WISDOM)
+Vận dụng tri thức để ra quyết định phù hợp
+TRI THỨC (KNOWLEDGE)
+Mô hình hóa quy luật và thuật toán
+THÔNG TIN (INFORMATION)
+Dữ liệu có ngữ cảnh và ý nghĩa
+DỮ LIỆU (DATA)
+Ký tự, số đo và tín hiệu chưa phân tích
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 34 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW
+Data: Dữ liệu thô
+Ví dụ: Log máy chủ, giao dịch tại điểm bán
+hàng (POS), điểm ảnh, byte mạng.
+Thách thức: Nhiễu, thiếu giá trị, lệch nhãn.
+Nguồn: Nội bộ, API hoặc bộ dữ liệu đối
+chuẩn.
+Yêu cầu: Đại diện, đủ quy mô và bảo vệ
+riêng tư.
+Nguồn dữ liệu thô
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 35 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW
+Information: Dữ liệu có ngữ cảnh
+XỬ LÝ
+1.500
+Làm sạch, lọc nhiễu
+giao dịch thất bại
+THÔNG TIN
+Thống kê mô tả
+12–13 giờ, thứ Sáu
+NGỮ CẢNH
+Thời gian, địa điểm, đơn vị đo và quan hệ dữ liệu
+Nhận diện bất thường, xu hướng và bài toán nghiên cứu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 36 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Tri thức và trí tuệ trong DIKW
+TRI THỨC TRÍ TUỆ
+Nhận diện quy luật, giải thích quan Dự báo, chi phí và rủi ro
+hệ dữ liệu.
++300% Lưu lượng giờ trưa, đi
+kèm nghẽn cơ sở dữ liệu Lựa chọn cân bằng tải
+(CSDL).
+Đề cương phân biệt đóng góp mô hình với quyết định ứng dụng.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 37 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Ví dụ DIKW: Học máy
+DATA THÔNG TIN KNOWLEDGE WISDOM
+100.000 giao dịch 0,17% gian lận Quan hệ giữa giá Cân nhắc cảnh báo
+thẻ trị giao dịch, IP lạ từ mạng nơ-ron đồ
+Tập trung ban đêm
+và nguy cơ gian lận thị để ưu tiên kiểm
+30 thuộc tính số
+tra
+hóa
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 38 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+DIKW: Phân loại các bước xử lý bình luận
+Tình huống minh họa: 50.000 bình luận
+tiếng Việt.
+25.0%
+Các bước: Tách từ, thống kê tần suất, dùng
+RoBERTa cải tiến nhận diện phàn nàn.
+Nhiệm vụ: Gắn từng bước với Data,
+Information hoặc Knowledge.
+75.0%
+Quyết định: Khâu giao hàng hay đóng gói
+cần ưu tiên? Cần thêm bằng chứng gì?
+Tiêu cực Còn lại
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 39 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+DIKW: Từ kết quả mô hình đến quyết định
+Tình huống: 10.000 ảnh X-quang theo chuẩn Digital Imaging and Communications in
+Medicine (DICOM), qua chuẩn hóa, khử nhiễu, tăng tương phản và gán nhãn.
+Kết quả giả định: Vision Transformer đạt độ nhạy 96%.
+Câu hỏi 1: Mức 96% đã đủ để quyết định lâm sàng? Còn thiếu gì?
+Câu hỏi 2: Vì sao bác sĩ cần kết hợp gợi ý mô hình với đánh giá lâm sàng?
+Đầu ra: Phân biệt tri thức mô hình với quyết định sử dụng tri thức.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 40 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+DIKW logistics: Dữ liệu đã đủ để quyết định?
+Dữ liệu: 10 triệu bản ghi từ hệ thống định vị
+toàn cầu (GPS) của 500 xe, trong 6 tháng tại
+23.4%
+Thành phố Hồ Chí Minh (TP.HCM).
+Quan sát: Trễ hẹn tập trung lúc 16h30–
+18h30 ở các tuyến ngập.
+Câu hỏi: Đã đủ căn cứ để đổi lộ trình chưa?
+76.6%
+Cần bổ sung quy luật, dự báo và điều kiện
+nào?
+Trễ hẹn Không trễ
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 41 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+DIKW logistics: Từ dữ liệu đến quyết định
+DỮ LIỆU QUY LUẬT QUYẾT ĐỊNH
+10 triệu bản ghi GPS Tốc độ giảm 60% khi mưa Spatio-Temporal Graph
+>50 mm và triều cường. Reinforcement Learning
+500 xe, 6 tháng
+đề xuất lộ trình động.
+Trễ ở tuyến ngập lúc
+TP.HCM
+16h30–18h30.
+Minh họa: Giảm trễ 35% cần kiểm chứng. Cân nhắc an toàn, hạn giao hàng.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 42 / 124
+TIẾT 2 / 5 • TÍNH MỚI & HỆ THỐNG TRI THỨC DIKW
+Ứng dụng DIKW: Dữ liệu và huấn luyện
+THU THẬP TIỀN XỬ LÝ HUẤN LUYỆN
+Data Information Knowledge
+Thiết kế giao thức Làm sạch Huấn luyện thuật toán
+Lấy mẫu Mã hóa đặc trưng Trích xuất quan hệ trong
+dữ liệu
+Kiểm soát nhiễu Phân tích khám phá (EDA)
+Đề cương: Làm rõ cách chuyển dữ liệu thực tế thành tri thức học thuật.
+Đóng góp: Khái quát hóa mô hình và công bố phát hiện khoa học.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 43 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Ba phương pháp tư duy khoa học
+Lý thuyết tổng quát đến trường
+1. Diễn dịch
+hợp cụ thể để kiểm định giả
+thuyết.
+TƯ DUY Nhiều quan sát đến quy luật
+2. Quy nạp
+KHOA HỌC chung. Kết luận có thể đổi khi có
+ngoại lệ.
+Dữ kiện thiếu hoặc bất thường
+3. Suy đoán
+đến giả thuyết giải thích hợp lý
+nhất.
+Chi tiết và ví dụ từng phương pháp ở slide 45–50.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 44 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Diễn dịch: Lý thuyết và kiểm chứng
+Lý thuyết Giả thuyết Quan sát Đối chiếu
+Logic: Tiền đề đúng và suy luận hợp lệ dẫn đến kết luận đúng.
+Ứng dụng: Dùng độ phức tạp O(n log n) để kiểm chứng hiệu năng.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 45 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Diễn dịch: Ví dụ và hạn chế
+Ví dụ: Từ lập luận về khả năng giữ thông tin của Attention, xây dựng kiểm
+chứng trên dịch máy.
+Hạn chế: Phụ thuộc vào tiền đề và lý thuyết ban đầu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 46 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Quy nạp: Quan sát và khái quát
+Quan sát Nhận diện mẫu Giả thuyết Lý thuyết
+Logic: Kết luận có tính xác suất, có thể thay đổi khi xuất hiện ngoại lệ.
+Ứng dụng: Học máy rút ra quy luật phân loại từ nhiều mẫu dữ liệu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 47 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Quy nạp: Ví dụ và hạn chế
+Ví dụ: Quan sát giao thức gói tin người dùng (UDP) bất thường trong các vụ tấn công
+từ chối dịch vụ phân tán (DDoS), rồi đề xuất mô hình nhận dạng.
+Hạn chế: Cần mẫu đủ lớn, tránh khái quát hóa quá mức và quá khớp (overfitting).
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 48 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Suy đoán: Giả thuyết giải thích
+Dữ kiện thiếu Giả thuyết Lời giải thích
+hoặc bất thường nguyên nhân hợp lý nhất
+Bản chất: Tìm lời giải thích tốt nhất từ dữ kiện hiện có.
+Ứng dụng: Chẩn đoán mạng, điều tra chứng cứ số và phát hiện lỗ hổng zero-day.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 49 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Suy đoán: Ví dụ và hạn chế
+Giả thuyết cần kiểm tra
+Nghẽn I/O ổ đĩa
+Hệ thống chậm Thử nghiệm
+CPU ít tải hoặc diễn dịch
+Rò rỉ bộ nhớ
+Bộ xử lý trung tâm (CPU)
+Vào/ra dữ liệu (I/O)
+Giả thuyết có thể sai. Cần kiểm chứng trước khi kết luận.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 50 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Tư duy trong phát hiện mã độc
+Diễn dịch (ví dụ giả định) Quy nạp (ví dụ giả định)
+Tiền đề: Mã hóa có thể làm tăng entropy Quan sát: 50.000 gói ứng dụng Android
+(APK) độc hại.
+tệp.
+Mẫu giả định: 92% xin quyền dịch vụ tin
+Giả thuyết: Biến đổi entropy giúp phát
+nhắn ngắn (SMS) và Accessibility.
+hiện mã độc trong 30 giây.
+Khái quát: Dùng bộ quyền xây dựng
+Kiểm chứng: Thử nghiệm trên 500 mẫu
+Random Forest, đánh giá trên dữ liệu
+ransomware, đối chiếu với tệp lành tính.
+độc lập.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 51 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Suy đoán nguyên nhân sự cố hệ thống
+HIỆN TƯỢNG GIẢ THUYẾT KIỂM CHỨNG
+Máy chủ treo lúc 2 giờ Có thể deadlock trong Tái lập môi trường để xác
+sáng. CSDL khi nhiều tác vụ khóa minh nguyên nhân và khắc
+bảng đồng thời. phục.
+CPU và RAM bình thường.
+Bộ nhớ truy cập ngẫu nhiên (RAM). Suy đoán cần kiểm chứng.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 52 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Đối chiếu tư duy: Độ chắc chắn của kết luận
+Tư duy Căn cứ của kết luận Giới hạn
+Diễn dịch Tiền đề đúng, suy luận hợp lệ Phụ thuộc vào tiền đề và logic
+Có thể đổi khi có ngoại lệ hoặc
+Quy nạp Nhiều quan sát cụ thể
+dữ liệu mới
+Vẫn là giả thuyết, cần kiểm
+Suy đoán Lời giải thích hợp lý nhất
+chứng
+Khi trình bày: Phân biệt tiền đề, quan sát, giả thuyết và giới hạn.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 53 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Vận dụng: Cách tư duy cho đề tài của anh/chị
+Đầu vào: Ghi một lý thuyết, tập quan sát hoặc hiện tượng bất thường thuộc đề tài của
+anh/chị.
+Nhiệm vụ: Chọn diễn dịch, quy nạp hoặc suy đoán. Nêu lý do dựa trên điểm xuất phát
+của lập luận.
+Sản phẩm: Viết một giả thuyết hoặc kết luận dự kiến và cách kiểm chứng bằng dữ liệu.
+Tự kiểm tra: Điều gì có thể khiến anh/chị bác bỏ hoặc sửa kết luận?
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 54 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Thảo luận: Kiểm chứng giả thuyết trễ mạng
+Tình huống: Mạng bị trễ. Nhóm nghiên cứu nghi ngờ nghẽn băng thông nhưng chưa
+đủ dữ liệu.
+Nhiệm vụ 1: Đề xuất dữ liệu cần thu thập và cách thử nghiệm giả thuyết.
+Nhiệm vụ 2: Nêu một nguyên nhân thay thế và dấu hiệu giúp phân biệt hai nguyên
+nhân.
+Đầu ra: Một kế hoạch kiểm chứng ngắn, gồm dữ liệu, phép thử và điều kiện bác bỏ giả
+thuyết.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 55 / 124
+PHẦN 4
+1. Mục đích nghiên cứu
+Cơ bản và ứng dụng. Tiếp theo là hình
+thức tổ chức.
+Phân loại và hướng
+2. Các hướng chuyên môn
+nghiên cứu CNTT
+AI, dữ liệu, an ninh thông tin, hệ thống và
+phần mềm.
+3. Nguồn hình thành đề tài
+Bài toán doanh nghiệp hoặc khoảng trống
+tài liệu.
+PPNCKH • TS. Trần Minh Thái 56 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Phân biệt nghiên cứu cơ bản và ứng dụng
+NGHIÊN CỨU CƠ BẢN NGHIÊN CỨU ỨNG DỤNG
+Mở rộng tri thức Giải quyết bài toán
+Khám phá quy luật thực tiễn cụ thể
+Chưa nhắm ứng dụng tức thì. Vận dụng lý thuyết vào một nhu cầu
+hoặc điều kiện thực tế.
+Ví dụ: P vs NP, lý thuyết tính toán, thuật
+toán lượng tử, độ phức tạp.
+Polynomial time (P)
+Nondeterministic polynomial time (NP)
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 57 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Nghiên cứu ứng dụng trong CNTT
+Ví dụ ứng dụng: Gợi ý sản phẩm thương mại điện tử, tự động hóa sản
+xuất bằng AI Vision.
+Định hướng cao học: Nghiên cứu ứng dụng là hướng phổ biến của đề tài
+thạc sĩ CNTT.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 58 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Các hình thức tổ chức nghiên cứu
+CHƯƠNG TRÌNH
+Nhiều đề tài, dự án cùng mục tiêu chiến lược
+ĐỀ TÀI DỰ ÁN
+Nhiệm vụ độc lập, câu hỏi học thuật cụ Mục tiêu ứng dụng gắn với thời gian,
+thể. Phù hợp bậc thạc sĩ. ngân sách và nguồn lực.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 59 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Hướng nghiên cứu: AI, dữ liệu và bảo mật
+•AI và học máy (ML): Deep Learning, AI có thể giải thích (XAI), LLM, Multimodal AI,
+Graph Neural Networks.
+•Khoa học Dữ liệu: Big Data Analytics, Khai phá dữ liệu chuỗi thời gian, Hệ thống gợi
+ý thông minh, Data Governance.
+•An ninh thông tin: Phát hiện mã độc bằng AI, Mật mã học sau lượng tử, Bảo vệ
+quyền riêng tư (Differential Privacy).
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 60 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI
+Hướng nghiên cứu: Hệ thống và phần mềm
+•Hệ thống và mạng: Cloud Computing, Edge Computing, Microservices, IoT, mạng di
+động thế hệ thứ năm (5G) và thứ sáu (6G).
+Công nghệ phần mềm: Độ đo Agile và phát triển kết hợp vận hành (DevOps), kiểm thử
+bằng AI, đánh giá chất lượng mã nguồn.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 61 / 124
+TIẾT 3 / 5 • BA PHƯƠNG PHÁP TƯ DUY & HƯỚNG ĐỀ TÀI • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Hai hướng lựa chọn đề tài
+Từ thực tiễn doanh nghiệp Từ tổng quan tài liệu
+Nhu cầu vận hành, nút thắt công nghệ. Bài báo IEEE và Association for
+Computing Machinery (ACM).
+Dữ liệu nội bộ, thỏa thuận bảo mật
+(NDA). Dữ liệu đối chuẩn công khai.
+Ứng dụng mới để giảm tổn thất. Cải tiến thuật toán so với State of the Art
+(SOTA).
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 62 / 124
+PHẦN 5
+1. Khung W5H2
+Bảy câu hỏi, lỗi thường gặp và tình huống
+tồn kho.
+W5H2 và phát biểu vấn
+2. Phát biểu vấn đề
+đề nghiên cứu
+Năm thành phần, ví dụ mẫu và thực hành
+viết.
+3. Bằng chứng và kỹ năng
+Tìm kiếm, đánh giá, viết, thực nghiệm và
+giá trị kinh doanh.
+PPNCKH • TS. Trần Minh Thái 63 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+W5H2: Sơ đồ bảy câu hỏi
+WHAT Vấn đề kỹ thuật hoặc triệu chứng là gì?
+WHO Ai hay bộ phận nào chịu ảnh hưởng?
+BÀI TOÁN
+WHERE Ở hệ thống, phân hệ hay địa bàn nào?
+NGHIÊN
+WHEN Xảy ra khi nào, với tần suất nào?
+CỨU
+WHY Nguyên nhân gốc nào cần kiểm chứng?
+HOW Đang xử lý thế nào, còn hạn chế gì?
+HOW MUCH Tổn thất chi phí, thời gian, sai số?
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 64 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+W5H2: Lỗi nhầm triệu chứng với nguyên nhân
+Quan sát: Hủy đơn khi đồng bộ kho với thanh toán
+WHY: Giả thuyết nguyên nhân
+WHERE: Vị trí lỗi
+Chưa đủ căn cứ: API Gateway? CSDL?
+“Hệ thống chậm vì CSDL
+kém.”
+Cần log hoặc phép đo nào để phân biệt hai giả thuyết?
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 65 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+W5H2: Lỗi thiếu thời điểm và đơn vị đo
+“Khách hàng thường chờ lâu, doanh nghiệp thiệt hại lớn.”
+WHEN HOW HOW MUCH
+Khung giờ, tần suất Cách xử lý hiện tại Giá trị, đơn vị, kỳ đo
+Kỳ khảo sát Hạn chế còn lại Số thực tế hay ước tính?
+Bài tập: Viết lại với chỗ trống cho dữ liệu chưa có. Không tự điền số.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 66 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+W5H2: Sửa mô tả bối cảnh mơ hồ
+WHAT WHO WHERE
+Chưa rõ: “Hệ thống hoạt Chưa rõ: “Mọi người đều Chưa rõ: “Lỗi ở toàn bộ hệ
+động kém.” bị ảnh hưởng.” thống.”
+Nhiệm vụ: Viết lại thành Nhiệm vụ: Chỉ rõ nhóm Nhiệm vụ: Khoanh vùng
+triệu chứng có thể quan người dùng hoặc bộ phận phân hệ cần khảo sát
+sát hoặc đo. chịu tác động. trước.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 67 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Tồn kho ảo: Thời điểm, nguyên nhân, tác động
+Mega-Sale: 120.000 khách hàng bị hủy đơn,
+45 nhân viên chăm sóc khách hàng (CSKH) quá tải.
+15 phút đầu >5.000 yêu cầu/giây Nghẽn khóa
+0 giờ, 12 giờ, 20 giờ Cùng mua một mã dòng MySQL
+2,4 tỷ đồng/đợt 350 triệu đồng/tháng
+Doanh thu mất đi Chi phí voucher
+Tình huống minh họa: Đồng bộ kho với thanh toán thời gian thực.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 68 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Thực hành W5H2: Mô tả bối cảnh
+Chọn một vấn đề thực tế trong hệ thống anh/chị đang tìm hiểu.
+WHAT: Viết một câu nêu triệu chứng kỹ thuật cụ thể.
+WHO: Nêu người dùng hoặc bộ phận chịu ảnh hưởng.
+WHERE: Khoanh vùng phân hệ hoặc địa bàn xảy ra vấn đề.
+Đầu ra: Một đoạn mô tả đủ bối cảnh để người chưa biết hệ thống vẫn hiểu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 69 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Thực hành W5H2: Giải thích và lượng hóa
+Với một vấn đề cụ thể, ghi lại triệu chứng và phân hệ trước khi phân tích.
+WHEN: Vấn đề xuất hiện khi nào, lặp lại ra sao?
+WHY: Nêu giả thuyết nguyên nhân và bằng chứng cần kiểm chứng.
+HOW: Mô tả cách xử lý hiện tại và hạn chế.
+HOW MUCH: Nêu tổn thất bằng tiền, sai số hoặc thời gian trễ. Đánh dấu số liệu chưa
+có để bổ sung.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 70 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Phát biểu vấn đề nghiên cứu
+Mục đích: Xác định vấn đề cần giải quyết và đối tượng hưởng lợi.
+Yêu cầu: Ngắn gọn, có bằng chứng đo lường và chỉ rõ khoảng trống nghiên cứu.
+Diễn đạt cụ thể: “Độ trễ hiện tại là 3,2 giây” thay cho “hệ thống chưa tốt”.
+Cơ sở: Tổng hợp từ phân tích nguyên nhân và hậu quả trong W5H2.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 71 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Phát biểu vấn đề: Năm thành phần
+Doanh nghiệp, loại hình, quy mô và hệ thống vận hành.
+1. Bối cảnh
+Khó khăn kỹ thuật và hậu quả có số liệu.
+2. Vấn đề
+Giải pháp đã áp dụng và hiệu quả hiện tại.
+3. Hiện trạng
+Điều giải pháp chưa xử lý trong điều kiện cụ thể.
+4. Khoảng trống
+Phương pháp nghiên cứu, mục tiêu định lượng và thời gian.
+5. Đề xuất
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 72 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Ví dụ: Bối cảnh và khoảng trống
+Công ty X: 500 nhân sự, 2 triệu người dùng
+14,8%
+HIỆN TRẠNG KHOẢNG TRỐNG
+Đơn hủy Mega-Sale
+Mất 2,4 tỷ đồng/đợt
+Redis chưa khắc phục Giả định: Thiếu cơ chế
+Voucher: 350 triệu nghẽn khóa ở tải >5.000 kiểm soát đồng thời và
+đồng/tháng giao dịch/giây. đặt trước tồn kho phù
+hợp.
+Số liệu và khoảng trống thuộc ví dụ minh họa.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 73 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Tồn kho ảo: Đề xuất và điều kiện đánh giá
+HIỆN TRẠNG MỤC TIÊU
+Transactional
+<1,5% hủy đơn
+14,8%
+Event-Sourcing
+<50 ms độ trễ
++ phân bổ tồn kho
+Đơn hủy trong Mega-
+đa luồng
+10.000 giao
+Sale
+Redis còn nghẽn khóa dịch/giây
+Khoảng trống giả định:
+khi >5.000 giao
+Kiểm soát đồng thời, đặt
+dịch/giây.
+trước tồn kho.
+Ví dụ minh họa: Các mục tiêu cần kiểm chứng bằng thực nghiệm.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 74 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Thực hành viết phát biểu vấn đề
+Bài tập: Viết một đoạn cho vấn đề anh/chị chọn, dùng đủ năm thành phần dưới đây.
+[Bối cảnh] đang gặp [vấn đề và hậu quả có số liệu].
+[Giải pháp hiện tại] đạt [mức hiệu quả] nhưng chưa xử lý được [khoảng trống] trong
+[điều kiện].
+Nghiên cứu đề xuất [phương pháp] nhằm đạt [mục tiêu định lượng] trong [thời gian].
+Tự kiểm tra: Phân biệt số liệu đã có với mục tiêu dự kiến.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 75 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Năm kỹ năng tạo bằng chứng nghiên cứu
+Chọn bài báo trực tiếp liên quan đến bài toán, phương pháp.
+1. Tìm kiếm
+Kiểm tra thiết kế, giới hạn và khả năng áp dụng kết quả.
+2. Đánh giá
+Lập luận chính xác, logic và dẫn nguồn trung thực.
+3. Viết
+Dùng công cụ dữ liệu, lập trình và lưu vết thí nghiệm.
+4. Thực nghiệm
+Tỷ suất hoàn vốn (ROI), kết nối kết quả với nhu cầu thực tế.
+5. Kinh doanh
+Đầu ra: Nguồn và bằng chứng hỗ trợ hoặc bác bỏ phát biểu vấn đề.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 76 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Tìm kiếm tài liệu nghiên cứu
+Currency, Relevance, Authority, Accuracy, Purpose (CRAAP)
+TRUY VẤN TÌM NGUỒN SÀNG LỌC
+AND, OR, NOT Google Scholar Danh sách bài báo liên
+quan trực tiếp đến bài
+Cụm từ chính xác IEEE Xplore, ACM
+toán và phương pháp.
+Tác giả, nơi công bố SpringerLink
+ScienceDirect, arXiv
+Tiếp theo: Thẩm định tài liệu theo đủ năm tiêu chí CRAAP.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 77 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+CRAAP: Năm tiêu chí đánh giá tài liệu
+Currency: Tài liệu có cập nhật so với vấn đề nghiên cứu?
+Relevance: Nội dung có liên quan trực tiếp đến câu hỏi nghiên cứu?
+Authority: Tác giả và nơi công bố có uy tín, chuyên môn phù hợp?
+Accuracy: Lập luận và kết quả có bằng chứng để kiểm tra?
+Purpose: Mục đích công bố là gì, có thiên lệch cần lưu ý?
+Buổi 2: Thực hành tìm kiếm và đánh giá nguồn.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 78 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Viết học thuật và quản lý thực nghiệm
+Văn phong: Rõ ràng, chính xác, khách quan và nhất quán.
+Dẫn chứng: Dùng “độ chính xác cải thiện 4,5% so với baseline” thay cho nhận xét cảm
+tính.
+Công cụ: Python, NumPy, Pandas, Scikit-learn, PyTorch/TensorFlow, ngôn ngữ truy vấn
+có cấu trúc (SQL) và Git.
+Lưu vết: Ghi siêu tham số, cách chia tập dữ liệu và nhật ký thí nghiệm.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 79 / 124
+TIẾT 4 / 5 • KHUNG W5H2 & KỸ THUẬT PHÁT BIỂU VẤN ĐỀ
+Kết nối nghiên cứu với kinh doanh
+NHU CẦU TÁC ĐỘNG HIỆU QUẢ ĐẦU TƯ
+Bài toán doanh nghiệp sẵn Quy đổi kết quả kỹ thuật Đánh giá ROI của giải pháp
+sàng đầu tư giải quyết. thành tiết kiệm chi phí đề xuất.
+hoặc tăng doanh thu.
+Giải thích giá trị nghiên cứu bằng cả ngôn ngữ học thuật và kinh doanh.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 80 / 124
+PHẦN 6
+1. Quy trình bảy bước
+Tổng quan, chi tiết từng giai đoạn và tình
+huống.
+Quy trình và thiết kế
+2. Câu hỏi và FINER
+nghiên cứu
+Câu hỏi chính, câu hỏi phụ và năm tiêu chí
+đánh giá.
+3. Mô hình tổ chức
+Tuần tự, vòng lặp, tiến hóa và bảo vệ lựa
+chọn.
+PPNCKH • TS. Trần Minh Thái 81 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Quy trình NCKH gồm 7 bước
+1. Vấn đề 2. Tổng quan 3. Giả thuyết 4. Thiết kế
+Doanh nghiệp / Tài liệu và Giả thuyết, Chọn phương
+tài liệu Research Gap tiêu chí đối chuẩn pháp nghiên cứu
+7. Công bố 6. Phân tích 5. Dữ liệu
+Công bố, Thực nghiệm, Thu thập,
+nhận phản biện diễn giải tiền xử lý
+Phản hồi: Ghi nhận kết quả, điều chỉnh thiết kế và kiểm chứng lại khi cần.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 82 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Quy trình NCKH: Bước 1–4
+1–2. BÀI TOÁN 3. GIẢ THUYẾT 4. THIẾT KẾ
+Xác định vấn đề sơ bộ Có thể kiểm chứng và bác Lượng dữ liệu
+bỏ bằng dữ liệu.
+Đọc tài liệu Độ đo
+Tinh chỉnh bài toán Mô hình đối chuẩn
+Kết quả bước trước là đầu vào cho bước sau.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 83 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Quy trình NCKH: Bước 5–7
+5. DỮ LIỆU 6. PHÂN TÍCH 7. CÔNG BỐ
+Dự trù nguồn lực thu thập Báo cáo thành công và Hoàn thiện báo cáo và
+và tiền xử lý. thất bại. Tránh chọn lọc chuẩn bị thuyết trình bảo
+kết quả thuận lợi. vệ.
+Khi cần: Quay lại giả thuyết hoặc thiết kế.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 84 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Tình huống: Dự báo phụ tải điện
+MAPE (%) Phụ tải giờ cao điểm
+18.5
+20
+So sánh hiện trạng, LSTM và
+14.1
+15 mô hình đề xuất.
+8.2
+10 Spatio-Temporal Graph kết
+hợp Temporal Attention.
+5
+Đánh giá bằng t-test.
+0
+Hiện trạng Baseline LSTM Đề xuất ST-
+điện lực Attn
+Sai số phần trăm tuyệt đối trung bình (MAPE).
+Chú giải ST-Attn: Spatio-Temporal Attention.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 85 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Câu hỏi nghiên cứu
+MRQ: Câu hỏi chính bao quát mục tiêu
+RQs: 3–4 câu hỏi Phương pháp Kết quả
+khía cạnh kỹ thuật trả lời kỳ vọng
+Mỗi câu hỏi phụ cần liên kết với phương pháp và kết quả tương ứng.
+Main Research Question (MRQ)
+Research Questions (RQs)
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 86 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+FINER: Năm tiêu chí đánh giá câu hỏi
+Khả thi về dữ liệu, kỹ năng, công nghệ và thời gian.
+F. Feasible
+Hấp dẫn với người nghiên cứu, có giá trị cho cộng đồng.
+I. Interesting
+Có khoảng trống và đóng góp về phương pháp hoặc dữ liệu.
+N. Novel
+Dữ liệu hợp pháp, bảo vệ định danh, minh bạch và công bằng.
+E. Ethical
+Đúng vấn đề, phù hợp chuyên ngành và mục tiêu luận văn.
+R. Relevant
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 87 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+FINER: Nhận diện rủi ro trước thực nghiệm
+Điểm chưa rõ FINER Nhiệm vụ cần làm rõ
+Quyền dùng dữ liệu nội bộ E Điều kiện cho phép sử dụng dữ liệu
+Còn thông tin định danh E Biện pháp bảo vệ trước khi dùng
+Độ đo chưa gắn bài toán R Kiểm tra kết quả có trả lời đúng bài toán
+Đầu ra: Việc, người xác nhận và bằng chứng. Tình huống minh họa.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 88 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Thực hành FINER trên bài toán tồn kho
+Tình huống minh họa: Dự báo tồn kho bán lẻ bằng chuỗi thời gian và biến ngoại sinh.
+Dự kiến có 50.000 bản ghi, RTX 4090 và PyTorch.
+F – Khả thi: Dữ liệu, kỹ năng, GPU và thời gian đã đủ chưa?
+I – Thú vị / N – Mới: Giá trị của kết quả là gì? Khác nghiên cứu trước ở đâu?
+E – Đạo đức / R – Phù hợp: Dữ liệu có hợp pháp? Kết quả có giải quyết đúng vấn đề?
+Đầu ra: Ghi bằng chứng đã có và điểm cần xác minh cho từng tiêu chí.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 89 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Đối chiếu FINER: Dự báo tồn kho bán lẻ
+F: 50.000 bản ghi, RTX 4090 và PyTorch mới là nguồn lực dự kiến. Cần kiểm tra chất
+lượng dữ liệu, kỹ năng và tiến độ.
+I / N: Nêu giá trị dự báo tồn kho. Đối chiếu bài báo để chứng minh đóng góp của chuỗi
+thời gian và biến ngoại sinh.
+E: Xác nhận NDA hoặc quyền sử dụng dữ liệu, xử lý thông tin định danh.
+R: Chứng minh kết quả dự báo trả lời trực tiếp vấn đề tồn kho đã chọn.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 90 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Cải thiện câu hỏi theo FINER (1/2)
+•Khả thi: “AI tự viết toàn bộ phần mềm?” quá rộng. Thu hẹp: “Code-LLM
+7B kết hợp kiểm tra tĩnh cải thiện phát hiện SQL Injection đến mức
+nào?”
+•Tính mới: “YOLOv8 nhận diện xe máy chính xác bao nhiêu?” chưa nêu
+đóng góp. Làm rõ: “Attention đa tỷ lệ cải thiện nhận diện khi sương mù,
+mưa ra sao?”
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 91 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Cải thiện câu hỏi theo FINER (2/2)
+•Vấn đề đạo đức: Thu thập dữ liệu camera mà không bảo đảm quyền
+riêng tư.
+•Hướng câu hỏi: Federated Learning có thể nhận diện mật độ giao thông
+mà không lưu ảnh cá nhân như thế nào?
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 92 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Ba mô hình tổ chức nghiên cứu
+Từng bước theo kế hoạch tuyến
+1. Tuần tự
+tính.
+TỔ CHỨC Thử nghiệm, đánh giá và tinh
+2. Vòng lặp
+NGHIÊN CỨU chỉnh qua các chu kỳ ngắn.
+Phát triển từng phần, thích ứng
+3. Tiến hóa
+và mở rộng theo phản hồi.
+Căn cứ lựa chọn: Độ phức tạp, tính bất định và độ ổn định của yêu cầu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 93 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Mô hình tuần tự và vòng lặp
+TUẦN TỰ VÒNG LẶP
+Bước 1 Bước 2 Bước 3 Thử nghiệm Đánh giá
+Ưu: Dễ quản lý, kế hoạch rõ. Ưu: Linh hoạt, phát hiện lỗi sớm.
+Nhược: Khó sửa nếu bước trước sai. Nhược: Cần giới hạn thời gian.
+Phù hợp: Bài toán rõ, dữ liệu ổn định. Phù hợp: AI/ML, tinh chỉnh tham số.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 94 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Mô hình tiến hóa
+Thích nghi liên tục và mở rộng từng mô-đun
+GIAI ĐOẠN 1 GIAI ĐOẠN 2 GIAI ĐOẠN 3
+Mô-đun A A + B A + B + C
+Sơ đồ minh họa cách mở rộng, không phải kế hoạch của một đề tài.
+Hợp đề tài phức tạp, dài hạn, hệ sinh thái lớn. Cần kinh nghiệm nghiên cứu.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 95 / 124
+VÍ DỤ MINH HỌA TRONG BÀI GIẢNG
+Ví dụ vòng lặp tối ưu mô hình AI
+F1-score (%) Tuần 1–4: Mạng phần dư (ResNet-
+91.4
+50), còn lỗi vùng biên.
+100
+84.2
+76.5
+80
+Tuần 5–8: Cân bằng lược đồ thích
+60
+nghi giới hạn tương phản (CLAHE),
+40
+tăng cường dữ liệu, giảm vết mờ.
+20
+Tuần 9–12: Multi-Scale Attention,
+0
+tối ưu Bayesian (p < 0,01).
+Chu kỳ 1: Chu kỳ 2: Chu kỳ 3: Đề
+Baseline Tiền xử lý xuất mới
+Dữ liệu của ví dụ trong bài giảng
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 96 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Chuẩn bị lựa chọn mô hình nghiên cứu
+Trước khi chọn: Ghi mức ổn định của yêu cầu, mức sẵn có của dữ liệu và các phần
+chưa chắc chắn.
+Ràng buộc: Nêu thời hạn, nguồn lực và khả năng tổ chức nhiều lần thử nghiệm.
+Câu hỏi định hướng: Nếu kết quả ban đầu không đạt, nhóm có thể sửa bước nào và
+với chi phí gì?
+Đầu ra: Một mô tả điều kiện đề tài để đối chiếu với ưu, nhược điểm của các mô hình.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 97 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Thảo luận: Đánh đổi giữa ổn định và linh hoạt
+Tình huống Mô hình Câu hỏi đánh đổi
+Bài toán rõ, dữ liệu ổn định, Rủi ro gì nếu đổi yêu cầu giữa
+Tuần tự
+hạn chặt chừng?
+Kiểm soát thời gian bằng cách
+AI cần nhiều thử nghiệm Vòng lặp
+nào?
+Cần năng lực quản lý, kinh nghiệm
+Mở rộng nhiều phân hệ Tiến hóa
+gì?
+Chọn một tình huống: Nêu lợi ích và chi phí phải chấp nhận.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 98 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Thực hành: Bảo vệ lựa chọn mô hình
+Chọn: Tuần tự, vòng lặp hoặc tiến hóa cho đề tài của anh/chị.
+Lập luận: Nêu hai đặc điểm của bài toán hoặc dữ liệu làm căn cứ cho lựa chọn.
+Đánh đổi: Chỉ ra hạn chế của mô hình đã chọn và cách kiểm soát.
+Phản biện: Vì sao một phương án khác kém phù hợp hơn?
+Đầu ra: Một đoạn giải thích lựa chọn, gắn với kế hoạch thực hiện đề tài.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 99 / 124
+PHẦN 7
+1. Nhận diện vi phạm
+Sao chép, chắp vá, tự đạo văn và hậu quả.
+Đạo đức nghiên cứu và
+2. Viết và trích dẫn
+liêm chính học thuật
+Diễn đạt lại, IEEE, bài tập và bảng tự kiểm.
+3. Bảo vệ dữ liệu
+Quyền sử dụng, định danh và minh bạch
+kết quả.
+PPNCKH • TS. Trần Minh Thái 100 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Đạo văn: Sao chép và chắp vá
+Đạo văn: Dùng ý tưởng, câu chữ hoặc kết quả của người khác mà không
+dẫn nguồn trung thực.
+Sao chép nguyên văn: Chép câu chữ nhưng thiếu ngoặc kép và trích dẫn.
+Chắp vá: Chỉ thay vài từ, giữ cấu trúc câu và không dẫn nguồn.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 101 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Tự đạo văn và hậu quả
+Tự đạo văn: Tái sử dụng nội dung đã công bố hoặc nộp trước mà thiếu
+công khai, trích dẫn theo yêu cầu.
+Hậu quả: Công trình có thể bị hủy kết quả và xử lý theo quy chế đào tạo.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 102 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Diễn đạt lại: Quy trình bốn bước
+Xác định ý chính, điều kiện và giới hạn của nguồn.
+1. Đọc hiểu
+Tóm tắt theo lập luận của mình, tránh bám theo từng từ.
+2. Đóng tài liệu
+Giữ đúng ý và thuật ngữ, thay đổi cấu trúc diễn đạt.
+3. Viết lại
+Kiểm tra không thêm, bớt, sai ý. Bổ sung trích dẫn IEEE.
+4. Đối chiếu
+Tiếp theo: Quy tắc IEEE, bài tập bản dịch và bảng tự kiểm.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 103 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Trích dẫn IEEE và cam kết liêm chính
+IEEE: Dùng số trong ngoặc vuông [1], [2]. Sắp tài liệu theo thứ tự xuất
+hiện.
+Cam kết: Xác nhận bằng văn bản về tính trung thực và liêm chính của
+công trình.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 104 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Thảo luận: Bản dịch này có đạt yêu cầu?
+Câu gốc: “Deep neural networks require massive datasets and high GPU resources to
+achieve top accuracy.”
+Bản dịch: “Mạng nơ-ron sâu cần tập dữ liệu khổng lồ và tài nguyên GPU cao để đạt độ
+chính xác hàng đầu.”
+Câu hỏi: Nếu dùng bản dịch này mà không dẫn nguồn, có bảo đảm liêm chính học
+thuật không? Vì sao?
+Yêu cầu: Chỉ ra vấn đề về diễn đạt và đề xuất cách khắc phục.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 105 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Đối chiếu: Vì sao bản diễn đạt đạt yêu cầu?
+Ý nguồn: Mạng nơ-ron sâu cần dữ liệu và tài nguyên tính toán để đạt độ chính xác cao.
+Bản sửa minh họa: “Hiệu năng của mô hình học sâu thường gắn với chi phí tính toán
+và quy mô dữ liệu huấn luyện [1].”
+Phân tích: Bản sửa tổ chức lại quan hệ giữa các ý, dùng thuật ngữ phù hợp và chỉ rõ
+nguồn cần trích dẫn.
+Giới hạn: [1] là ký hiệu minh họa. Phải kiểm tra lại ý với tài liệu thực tế và thay bằng
+nguồn tương ứng.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 106 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Bảng tự kiểm sau khi diễn đạt lại
+Đúng ý: Có giữ đủ ý chính và giới hạn của tác giả không?
+Độc lập: Cấu trúc câu có thể hiện cách hiểu của mình, thay vì thay từ hoặc dịch sát?
+Thuật ngữ: Có dùng nhất quán và đúng nghĩa chuyên ngành không?
+Nguồn: Trích dẫn IEEE có trỏ tới tài liệu thực sự đã đọc không?
+Hoàn thiện: Sửa những mục chưa đạt trước khi đưa đoạn văn vào báo cáo.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 107 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Bảo vệ dữ liệu: Các lớp trách nhiệm
+Dữ liệu nội bộ: Thỏa thuận bảo
+1. Quyền sử dụng
+mật NDA trước khi khai thác.
+DỮ LIỆU Bảo vệ tên, CCCD, điện thoại, tài
+2. Thông tin
+NGHIÊN CỨU định danh khoản. Dùng tên doanh nghiệp
+giả khi cần.
+Báo cáo giới hạn, thất bại. Nêu
+3. Minh bạch
+biện pháp kỹ thuật và pháp lý.
+và bảo vệ
+Ví dụ xử lý dữ liệu ở slide 109–110.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 108 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Bảo vệ dữ liệu khách hàng (1/2)
+Dữ liệu gốc Cách xử lý Kết quả
+USER_HASH_
+Nguyễn Văn An SHA-256 Hash + Salt
+8F2A9B1C…
+CCCD / CMND: Không còn trong
+Loại bỏ cột dữ liệu
+079085012345 tập dữ liệu
+Điện thoại: Tokenization PHONE_TOKEN_
+0908****** (giả danh) 3812
+Chứng minh nhân dân (CMND)
+Secure Hash Algorithm 256-bit (SHA-256): Hàm băm 256 bit.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 109 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Bảo vệ dữ liệu khách hàng (2/2)
+Dữ liệu gốc Cách xử lý Kết quả
+123 Lê Lợi, Khái quát hóa Quận 1,
+P. Bến Nghé, Q.1 địa lý TP. Hồ Chí Minh
+Gom nhóm
+34 tuổi Nhóm 30–39 tuổi
+theo khoảng tuổi
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 110 / 124
+PHẦN 8
+1. Bảng kiểm báo cáo
+Chương 1, 2, 3 và Kết luận theo đúng
+trọng số.
+Hoàn thiện báo cáo và
+2. Sản phẩm từng buổi
+workshop
+Mỗi buổi hoàn thiện tiếp kết quả của buổi
+trước.
+3. Workshop 60 phút
+Xác lập bài toán, viết, phản biện và chỉnh
+sửa.
+PPNCKH • TS. Trần Minh Thái 111 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Bảng kiểm báo cáo: Phần đầu và Chương 1–2
+Phần đầu: Bìa, cam đoan, cảm ơn, tóm tắt 250–300 từ và các danh mục.
+Chương 1
+20%
+Liên hệ DIKW, tư duy, quy trình và đạo đức với đề tài.
+Chương 2
+30%
+W5H2, phát biểu vấn đề, minh chứng Zotero/Mendeley, ma
+trận tài liệu.
+Nghiệm thu: Khoảng trống phải có căn cứ từ tài liệu và bối cảnh.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 112 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Bảng kiểm báo cáo: Chương 3 và phần kết
+Chương 3: Đề cương nghiên cứu chi tiết
+45%
+Tiêu đề, mục tiêu, FINER, phương pháp, tiến độ, rủi ro, kết quả dự
+kiến và ROI.
+Kết luận
+5%
+Kết quả đạt được, khả thi, hạn chế và hướng tiếp theo.
+Tài liệu tham khảo và phụ lục: Theo mẫu, trích dẫn IEEE.
+Hai phần này không thuộc trọng số 5% của Kết luận.
+Nghiệm thu: Mục tiêu, phương pháp, dữ liệu và kết quả phải liên kết.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 113 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Sản phẩm cần hoàn thành: Buổi 1–3
+SAU BUỔI 1 SAU BUỔI 2 SAU BUỔI 3
+W5H2 Thư viện Quy trình nghiên cứu
+Zotero/Mendeley
+Phát biểu vấn đề Lựa chọn mô hình
+Ma trận tài liệu
+Lý do chọn cách tư duy Tự đánh giá FINER
+Khoảng trống nghiên cứu
+Mỗi buổi sử dụng và hoàn thiện kết quả của buổi trước.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 114 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Sản phẩm cần hoàn thành: Buổi 4–7
+SAU BUỔI 4 SAU BUỔI 5 BUỔI 6–7
+Kế hoạch thực nghiệm Báo cáo hoàn chỉnh Trình bày
+Tiến độ, rủi ro Kiểm tra liêm chính Tiếp nhận góp ý
+Kết quả dự kiến Slide trình bày Nộp báo cáo hoàn chỉnh
+Thuyết trình, số liệu và tài liệu tham khảo phải thống nhất với báo cáo.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 115 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Workshop 60 phút: Lộ trình và đầu ra
+Chọn hướng doanh nghiệp hoặc tài liệu. Làm rõ bối cảnh và
+15 phút đầu
+bằng chứng.
+Phân tích W5H2, viết phát biểu vấn đề, chọn phương pháp tư
+20 phút tiếp
+duy.
+Đổi bài, phản biện theo bốn tiêu chí đánh giá.
+15 phút tiếp
+Chỉnh sửa sản phẩm theo góp ý.
+10 phút cuối
+Đầu ra: Bảng W5H2, phát biểu vấn đề và lý do chọn phương pháp tư duy.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 116 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+Khởi động thực hành: Chọn một hướng
+Hướng A – Doanh nghiệp: Phù hợp khi có bài toán vận hành và khả năng tiếp cận dữ
+liệu nội bộ.
+Hướng B – Tài liệu: Phù hợp khi bắt đầu từ hạn chế của nghiên cứu trước và nguồn dữ
+liệu đối chuẩn.
+Quyết định: Chỉ chọn một hướng. Nêu nguồn dữ liệu hoặc tài liệu làm căn cứ.
+Trong 15 phút đầu: Hoàn thành bảng kiểm tương ứng trên màn hình kế tiếp. Đầu ra là
+một vấn đề sơ bộ có bối cảnh.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 117 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+15 phút thực hành: Bảng kiểm hai hướng
+Hướng A – Doanh nghiệp Hướng B – Tài liệu
+Đơn vị: Tên chính thức hoặc tên giả theo Chủ đề: Một phạm vi nghiên cứu hẹp.
+NDA.
+Công trình nền: 3–5 bài báo tiêu biểu.
+Bối cảnh: Lĩnh vực, quy mô, nhân sự, chi
+Khoảng trống: Sai số, chi phí hoặc dữ liệu
+nhánh.
+đặc thù.
+Hạ tầng: Cloud/On-premise và phần
+Dữ liệu đối chuẩn: Nguồn công khai như
+mềm nghiệp vụ.
+Kaggle, kho dữ liệu University of
+Dữ liệu: Loại, nguồn và quy mô (ví dụ California, Irvine (UCI) hoặc Hugging Face.
+gigabyte (GB)/năm).
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 118 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+20 phút: W5H2 và phát biểu vấn đề
+1. W5H2: Vấn đề gì, ai chịu ảnh hưởng, ở đâu, khi nào, vì sao, xử lý thế nào và tổn thất
+bao nhiêu?
+2. Viết đủ: Bối cảnh, vấn đề, hiện trạng, khoảng trống và đề xuất.
+Hướng doanh nghiệp: “[Đơn vị X] gặp [thách thức], gây tổn thất [số liệu]…”
+Hướng tài liệu: “Nghiên cứu về [chủ đề] còn hạn chế ở [khoảng trống]…”
+3. Nêu mục tiêu bằng sai số, F1-score hoặc độ trễ. Chọn diễn dịch, quy nạp hay suy
+đoán và giải thích.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 119 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP • BÀI TẬP TÌNH HUỐNG / THẢO LUẬN
+25 phút: Phản biện và chỉnh sửa
+15 phút: Đổi bài và phản biện 10 phút: Chỉnh sửa
+25% 25% 25% 25%
+CỤ THỂ ĐỊNH LƯỢNG LOGIC HỌC THUẬT
+Nhu cầu hoặc Có số đo trong Nguyên nhân gắn Khách quan, IEEE
+khoảng trống rõ. HOW MUCH. với giải pháp. theo mẫu HUFLIT.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 120 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Tổng kết: Nghiên cứu và tư duy
+Bản chất NCKH: Tính mới và đóng góp tri thức phân biệt nghiên cứu với
+dự án kỹ thuật.
+DIKW: Chuyển dữ liệu thực nghiệm thành thông tin và tri thức khoa học.
+Tư duy: Kết hợp diễn dịch, quy nạp và suy đoán để xây dựng lập luận.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 121 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Tổng kết: Bài toán và liêm chính
+Nguồn đề tài: Nhu cầu doanh nghiệp hoặc khoảng trống từ tổng quan tài
+liệu.
+Liêm chính: Trung thực trong nghiên cứu, chống đạo văn và bảo vệ dữ
+liệu cá nhân.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 122 / 124
+TIẾT 5 / 5 • QUY TRÌNH NCKH, ĐẠO ĐỨC & WORKSHOP
+Chuẩn bị cho Buổi 2
+Cài công cụ: Zotero cùng Zotero Connector, hoặc chọn Mendeley.
+Tìm tài liệu: Ít nhất 5 bài báo liên quan trực tiếp đến đề tài.
+Đọc sơ bộ: Abstract và Introduction để chuẩn bị ma trận tổng hợp.
+Hoàn thiện: Sửa phát biểu vấn đề và W5H2 theo góp ý của giảng viên.
+PPNCKH trong CNTT · Bài 1 · TS. Trần Minh Thái · HUFLIT 123 / 124
+KẾT THÚC BÀI 1
+Hẹn gặp lại tại Buổi 2
+TS. Trần Minh Thái
+HUFLIT University 124 / 124

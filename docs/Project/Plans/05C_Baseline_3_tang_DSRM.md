@@ -1,11 +1,8 @@
 # 05C — Ba tầng baseline (yêu cầu Bài 03 PPNCKH) + khả năng tái lập
 
-**Yêu cầu của thầy (trang 5-6, 9 bài giảng):**
-- **Nhóm 1 — Đơn giản (mốc sàn):** thuật toán truyền thống.
-- **Nhóm 2 — Kinh điển:** mô hình nền tảng, được trích dẫn nhiều.
-- **Nhóm 3 — SOTA gần đây:** công bố IEEE/ACM trong 2 năm.
-- Cả 3 nhóm phải **tái lập được**: có code, có seed, có khai báo phần cứng, cùng dữ liệu, cùng ngân sách tinh chỉnh.
-
+- Cả 3 nhóm phải **so sánh công bằng**: cùng dữ liệu, cùng split, cùng ngân sách tinh chỉnh và cùng hardware profile.
+- **Seed phải truy xuất được**: dùng seed cụ thể từ paper/repository khi tuyên bố tái lập bài báo; nếu bài chỉ nói nhiều lần chạy mà không công bố số seed, ghi rõ `seed value not reported`.
+- Project dùng bộ 10 seed cố định để kiểm soát thực nghiệm; đây là protocol của project, không mặc định là seed của bài báo.
 ---
 
 ## 1. Ba tầng baseline đề xuất
@@ -67,8 +64,7 @@ Chú thích footnote 1: `https://github.com/monkey0head/time-to-split` — **to�
 
 > *"we repeat seven random trials with different seeds"*
 
-→ Có **7 lần lặp với seed khác nhau** — mẫu để mình bắt chước: chạy 10 seed, báo Mean ± Std (đúng trang 9 bài giảng).
-
+→ Bài báo có **7 lần lặp với seed khác nhau**, nhưng bản PDF không công bố danh sách giá trị seed. Đây là bằng chứng cho việc báo cáo nhiều lần chạy; không đủ để khẳng định seed cụ thể dùng trong reproduction. Project dùng 10 seed cố định như protocol kiểm soát riêng.
 ---
 
 ## 3. Vì sao KHÔNG dùng [13] và [14] làm baseline
@@ -128,11 +124,14 @@ Chú thích footnote 1: `https://github.com/monkey0head/time-to-split` — **to�
 | Trường | Mẫu khai (điền số thật) |
 |---|---|
 | **Mã nguồn** | `commit hash` của repo mình + link 3 repo baseline |
-| **Seed** | `[42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718]` — 10 seed |
+| **Seed** | `paper_replication`: seed cụ thể từ repo/paper, nếu có; `project_controlled_comparison`: `[42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718]` |
 | **CPU/GPU/RAM** | ví dụ: `Intel Core i5-XXXX, 16 GB RAM, no GPU, Spark 4.2.0 local[*], Java 17` |
 | **Thời gian chạy** | wall-clock mỗi mô hình × mỗi split, ghi bằng `time.perf_counter()` |
 | **Ngân sách tinh chỉnh** | số cấu hình thử cho **mỗi mô hình, gồm baseline** (vd 30) |
 
+**Quy tắc ghi nhãn kết quả:**
+- `paper_replication`: dùng đúng split/preprocessing/seed/config được bài báo hoặc repository công bố; thiếu seed thì ghi `not reported`, không tự đặt giá trị rồi gọi là tái lập nguyên văn.
+- `project_controlled_comparison`: mọi mô hình dùng chung 10 seed, 3 split, ngân sách và hardware profile của project; báo Mean ± Std.
 ---
 
 ## 6. Việc phải làm để có đủ 3 tầng trước khi nộp

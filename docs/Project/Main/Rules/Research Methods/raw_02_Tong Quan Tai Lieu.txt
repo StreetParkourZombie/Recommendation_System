@@ -1,0 +1,891 @@
+HỌC PHẦN: PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC TRONG CÔNG NGHỆ THÔNG TIN
+BÀI 02: TỔNG QUAN TÀI LIỆU
+Giảng viên: TS. Trần Minh Thái
+Khoa CNTT • Trường Đại học Ngoại ngữ - Tin học TP.HCM
+CẤU TRÚC CHƯƠNG TRÌNH
+NỘI DUNG
+Nhận diện & Tìm kiếm Đọc bài, Tổng hợp bằng chứng
+& Zotero
+• Đạo đức công bố: Tránh tạp
+chí săn mồi, Think-Check-Submit • Đọc & Ma trận: Đọc 3 lượt
+& COPE Keshav, Cornell & Synthesis
+Matrix
+• Hệ sinh thái: Khoa học máy tính
+(Computer Science - CS), CORE • Gap & Trích dẫn: Xác lập Gap ≥
+& SJR 200 từ, 4 ảnh Zotero & Workshop
+• Kỹ thuật tìm kiếm: Cú pháp • Chuẩn đầu ra buổi học: Hoàn
+Boolean 3 trục, Connected Papers thành dữ liệu Chương 2 Đề
+& PRISMA cương nghiên cứu
+02 / 63
+TIẾT 1 • ĐẠO ĐỨC CÔNG BỐ
+KHỞI ĐỘNG: BÀI HỌC VỀ THƯ MỜI CÔNG BỐ SIÊU TỐC
+Tình huống Cạm bẫy Xuất bản Hậu quả & Bài học Cảnh báo
+• Thư mời tâng bốc: Email spam • Từ chối công nhận: Công trình
+mời nộp bài từ tạp chí quốc tế lạ bị Hội đồng Thạc sĩ (ThS) loại bỏ
+lẫm hoàn toàn
+• Chấp nhận sau 48h: Cam kết • Không được công nhận:
+duyệt đăng siêu tốc không cần Không có bình duyệt thực chất;
+chỉnh sửa mất quyền nộp lại
+• Phí xử lý bài viết (Article • Dấu hiệu cảnh báo: Tốc độ
+Processing Charge - APC) cao: duyệt phi lý luôn là dấu hiệu của
+Mức phí 800–1.500 USD lừa đảo
+03 / 63
+AN TOÀN HỌC THUẬT
+NGUYÊN NHÂN VÀ HẬU QUẢ CỦA XUẤT BẢN TRỤC LỢI
+Vì sao người học chọn nhầm ấn Hậu quả đối với bằng cấp, hồ
+phẩm sơ và chi phí
+• Áp lực thời gian: Cần bài báo • Hủy kết quả bảo vệ: Bị tước
+gấp để kịp tiến độ bảo vệ Luận bằng nếu bài báo vi phạm liêm
+văn ThS chính
+• Thiếu thông tin: Chưa phân • Vết đen học thuật: Tên tác giả
+biệt chỉ mục Web of Science bị lưu vết trên các diễn đàn liêm
+(WoS/ISI) và Scopus chính
+• Tâm lý chủ quan: Tin vào chỉ số • Tổn hại tài chính: Mất chi phí
+Impact Factor tự phong trên trang APC lớn cho các tổ chức phi pháp
+web
+04 / 63
+THẨM ĐỊNH ẤN PHẨM
+BỘ TIÊU CHÍ SÀNG LỌC: THINK - CHECK - SUBMIT
+1. Think 2. Check 3. Submit
+• Mức độ tin cậy: • Ban biên tập: Biên • Quyết định nộp:
+Bạn hoặc đồng tập viên có thông tin Chỉ gửi bài khi thỏa
+nghiệp đã từng đọc học thuật xác thực mãn tất cả tiêu chí an
+bài ở đây chưa? không? toàn
+• Khả năng kiểm • Cổng chính thức: • Được công nhận:
+chứng: Có tìm được Tra cứu checklist Đảm bảo công trình
+các bài báo mới nhất hướng dẫn đầy đủ được công nhận khi
+của tạp chí không? [thinkchecksubmit.org] bảo vệ
+05 / 63
+DANH MỤC CẢNH BÁO
+DẤU HIỆU NHẬN DIỆN ẤN PHẨM SĂN MỒI & TRỤC LỢI
+Dấu hiệu Nhận diện Trực quan Nguồn kiểm chứng ấn phẩm
+• Tên gọi mạo danh: Đặt tên gần • Tra cứu Scopus: Kiểm tra tạp
+giống tạp chí danh tiếng để gây chí trên nguồn chính thức của
+nhầm lẫn Scopus [scopus.com/sources]
+• Email spam dồn dập: Gửi thư • Danh mục Beall: Tham khảo
+mời nộp bài liên tục với lời tâng danh sách cảnh báo Beall (Beall's
+bốc quá đà List) [beallslist.net]
+• Ban biên tập ma: Điền tên giáo • Điều kiện công bố: Chỉ công bố
+sư nổi tiếng nhưng không hề có tại kênh thuộc Scopus/WoS chính
+sự đồng ý thống
+06 / 63
+AN TOÀN HỌC THUẬT
+CẢNH GIÁC VỚI HỘI THẢO HỌC THUẬT KÉM CHẤT LƯỢNG
+Đặc điểm Hội thảo Giả mạo / Quy tắc Thẩm định Hội thảo CS
+Thương mại
+• Hội thảo IEEE: Kiểm tra tại cổng
+• Địa điểm du lịch: Quảng bá bảo trợ chính thức của IEEE
+nghỉ dưỡng thay vì chuyên môn [https://www.ieee.org/conferences-
+events]
+học thuật
+• Hội thảo ACM: Kiểm tra danh
+• Gom bài đa ngành: Nhận bài từ
+mục sự kiện được bảo trợ của
+Y học, Kinh tế đến Trí tuệ nhân
+ACM [acm.org/conferences]
+tạo
+• Ban Technical Program
+• Cam kết kỷ yếu: Hứa hẹn đưa
+Committee (TPC): Kiểm tra
+bài vào kỷ yếu Scopus mà không
+thành viên và hồ sơ học thuật
+phản biện
+07 / 63
+CHUẨN MỰC COPE
+ĐÍNH CHÍNH, THU HỒI VÀ TRÁCH NHIỆM NGƯỜI ĐỌC
+Đính chính Thu hồi (Retraction) Trách nhiệm Người
+(Correction) đọc
+• Bản chất: Tuyên bố
+• Bản chất: Sửa đổi bài báo không còn • Rà soát dữ liệu:
+sai sót kỹ thuật hoặc giá trị khoa học Kiểm tra tại cổng
+số liệu nhỏ Retraction Watch
+• Hướng dẫn COPE:
+[retractionwatch.com]
+• Ảnh hưởng: Kết Tham khảo Ủy ban
+• Minh bạch: Nêu rõ
+luận chính của Đạo đức Xuất bản
+tình trạng bài nếu
+công trình vẫn giữ [publicationethics.org]
+đưa vào tổng quan
+nguyên
+08 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: THẨM ĐỊNH ẤN PHẨM HỌC THUẬT
+THỜI LƯỢNG: 15 PHÚT | Mục tiêu: Thẩm định độ uy tín ấn phẩm theo chuẩn Think-Check-Submit
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1: Tra cứu chỉ mục: Tra • Phiếu thẩm định: Bản ghi kết
+cứu tên ấn phẩm trên Scopus quả đối soát Think-Check-Submit
+Preview [scopus.com/sources]
+• Minh chứng Scopus: Ảnh chụp
+• Bước 2: Đối soát Checklist: màn hình hồ sơ ấn phẩm trên
+Kiểm tra tiêu chí tại Think Check Scopus
+Submit [thinkchecksubmit.org]
+• Kết luận thẩm định: Ghi rõ ấn
+• Bước 3: Xác minh Biên tập: phẩm đạt hoặc không đạt tiêu
+Kiểm tra hồ sơ 2 Editors trên chí
+Scholar
+09 / 63
+HỆ SINH THÁI CÔNG BỐ
+HỘI THẢO VÀ TẠP CHÍ TRONG KHOA HỌC MÁY TÍNH (CS)
+Hội thảo Khoa học Máy tính Tạp chí Khoa học (Journals)
+(Conferences)
+• Đặc trưng: Công trình dài; chu
+• Đặc trưng: Chu kỳ 3–6 tháng; kỳ phản biện 6–18 tháng
+bài ngắn và cập nhật nhanh
+• Tiếp nhận liên tục: Nhiều vòng
+• Tỷ lệ duyệt khắt khe: Top tier chỉnh sửa phản biện
+A* chỉ chấp nhận 15-20% bài nộp (Major/Minor)
+• Xếp hạng CORE: Đánh giá theo • Phân vị SJR: Đánh giá theo
+các hạng A*/A/B Q1–Q4
+10 / 63
+ĐỐI CHIẾU TIÊU CHÍ
+SO SÁNH CHI TIẾT HỘI THẢO VÀ TẠP CHÍ TRONG KHMT
+Tiêu chí So sánh Hội thảo CS (Conferences) Tạp chí Khoa học (Journals)
+Kênh công bố nhanh và danh giá Kênh lưu trữ công trình sâu và mở
+Vị thế & Tốc độ
+nhất CS (3-6 tháng) rộng (6-18 tháng)
+Deadline cố định, bình duyệt 1-2 Tiếp nhận liên tục quanh năm,
+Quy trình phản biện
+vòng tập trung nhiều vòng chỉnh sửa
+Ngắn gọn (8-10 trang theo mẫu Toàn diện (15-30+ trang, đầy đủ
+Độ dài & Định dạng
+chuẩn IEEE/ACM) chứng minh toán)
+11 / 63
+HỆ THỐNG XẾP HẠNG HỘI THẢO CS (CORE RANKING)
+A* FLAGSHIP
+CVPR · NeurIPS · ICSE
+A EXCELLENT
+CIKM · ICDM
+B GOOD
+ACI · PAKDD · PRICAI
+C RECOGNIZED
+ƯU TIÊN HẠNG B TRỞ LÊN
+12 / 63
+HỆ THỐNG PHÂN HẠNG TẠP CHÍ SCIMAGO (SJR QUARTILES)
+Q1 Q2 Q3 Q4
+TOP 25% 25–50% 50–75% BOTTOM 25%
+ƯU TIÊN NÊN TRÍCH DẪN DÙNG CHỌN THẨM ĐỊNH KỸ
+NGUỒN LỌC
+THS: ƯU TIÊN NGUỒN Q1–Q2 Q3–Q4: SOÁT KỸ
+13 / 63
+THAO TÁC TRA CỨU
+HƯỚNG DẪN TRA CỨU CỔNG CORE VÀ SCIMAGO
+Quy trình Tra cứu CORE Quy trình Tra cứu SCImago SJR
+Ranking
+• Tìm kiếm trên SCImago: Nhập
+• Cổng CORE: Truy cập cổng xếp tên đầy đủ tạp chí hoặc mã định
+hạng hội thảo [portal.core.edu.au] danh ISSN
+• Nhập từ khóa / Acronym: Tìm • Kiểm tra Phân vị (Quartile):
+kiếm theo tên viết tắt (ví dụ: KDD, Xem biểu đồ màu sắc Q1, Q2,
+CVPR, PAKDD) Q3, Q4 qua các năm
+• Đối chiếu phiên bản: Kiểm tra • Xác minh Chuyên ngành: Kiểm
+kết quả trong bản công bố mới tra đúng phân ngành Computer
+nhất Science
+14 / 63
+ĐO LƯỜNG TRI THỨC
+CÁC CHỈ SỐ ĐO LƯỜNG ẢNH HƯỞNG HỌC THUẬT
+Chỉ số Đo lường Đối tượng Đo lường Ý nghĩa & Bản chất Khoa học
+Journal Impact Tạp chí (Web of Hệ số ảnh hưởng (JIF) đo số trích dẫn TB
+Factor (JIF) Science) trong 2 năm của tạp chí
+SCImago Journal Tạp chí & Kỷ yếu Tính trọng số trích dẫn (trích dẫn từ nguồn
+Rank (SJR) (Scopus) uy tín có giá trị cao hơn)
+Tác giả có H bài báo, mỗi bài được trích
+H-index Tác giả cá nhân
+dẫn ít nhất H lần
+Tác giả (Google Số lượng bài báo của tác giả nhận được từ
+i10-index
+Scholar) 10 trích dẫn trở lên
+15 / 63
+NGUỒN CÔNG BỐ
+HIỆP HỘI CHUYÊN MÔN HÀNG ĐẦU TRONG CNTT
+IEEE Xplore Digital Library ACM Digital Library
+• Kho dữ liệu IEEE: Lưu trữ tài • Thư viện số ACM: Kho tài
+liệu hàng đầu về Điện tử và nguyên của Hiệp hội Máy tính
+KHMT [ieeexplore.ieee.org] quốc tế [dl.acm.org]
+• Loại ấn phẩm: Kỷ yếu hội thảo • Bình duyệt: Chuyên gia cùng
+và tạp chí Transactions lĩnh vực đánh giá bản thảo
+• Định dạng IEEE: Được dùng • Phạm vi nội dung: Bao phủ từ
+phổ biến trong CNTT lý thuyết tính toán, AI, phần mềm
+đến hệ thống mạng
+16 / 63
+NGUỒN CÔNG BỐ
+CÁC NHÀ XUẤT BẢN THƯƠNG MẠI HỌC THUẬT UY TÍN
+Springer & Bộ sách LNCS Elsevier ScienceDirect & Wiley
+• SpringerLink: Nhà xuất bản • Elsevier ScienceDirect: NXB
+sách và tạp chí khoa học quy mô tạp chí khoa học lâu đời hàng đầu
+lớn [link.springer.com] thế giới [sciencedirect.com]
+• Lecture Notes in Computer • Danh mục tạp chí CS: Gồm các
+Science (LNCS): Lưu trữ kỷ yếu tạp chí như Artificial Intelligence,
+hội thảo do Springer xuất bản Pattern Recognition
+• Đặc thù CS: Nhiều hội thảo • Wiley Online Library: NXB
+CORE A/B chọn LNCS làm kênh danh tiếng với nhiều chuyên san
+xuất bản chính thức mạng và bảo mật
+[onlinelibrary.wiley.com]
+17 / 63
+NGUỒN TÀI LIỆU
+MÔ HÌNH TRUY CẬP MỞ & KHO LƯU TRỮ PREPRINT
+Kho Bản thảo Sớm (arXiv Mô hình Truy cập Mở (Open
+Preprints) Access)
+• Cổng arXiv chính thức: Kho • Gold Open Access: Bài báo mở
+lưu trữ mở bản thảo sớm lớn nhất tự do ngay khi xuất bản; tác giả
+thế giới [arxiv.org] thường trả APC
+• Thời điểm xuất hiện: Tiếp cận ý • Green Open Access: Tác giả tự
+tưởng mới trước khi xuất bản 6- lưu trữ bản thảo trong kho lưu trữ
+12 tháng của trường
+• Trạng thái bình duyệt: Chưa • Directory of Open Access
+phản biện kín; cần kiểm tra mã Journals (DOAJ): Danh mục tạp
+nguồn và hồ sơ tác giả chí truy cập mở [doaj.org]
+18 / 63
+CẬP NHẬT TRI THỨC
+XÂY DỰNG MẠNG LƯỚI THEO DÕI HỌC THUẬT CÁ NHÂN
+Nền tảng Kết nối Khoa học Cách nhận thông báo bài mới
+• Google Scholar Profile: Tạo hồ • Thiết lập Google Alert: Nhận
+sơ cá nhân và theo dõi các giáo email tự động khi có bài báo mới
+sư đầu ngành [scholar.google.com] chứa từ khóa đề tài
+• ResearchGate: Mạng xã hội • Theo dõi nhóm nghiên cứu:
+học thuật trao đổi trực tiếp với tác Kiểm tra định kỳ trang công bố
+giả [researchgate.net] của nhóm
+• Digital Bibliography & Library • Hồ sơ DBLP tác giả: Tra cứu
+Project (DBLP): Hệ thống thư toàn bộ lịch sử công bố của
+mục chuyên ngành [dblp.org] chuyên gia mục tiêu
+19 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: TRA CỨU HỘI THẢO & TẠP CHÍ
+THỜI LƯỢNG: 15 PHÚT | Mục tiêu: Tra cứu xếp hạng CORE và phân vị SJR theo đề tài
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1 — Hội thảo: Kiểm tra • Phiếu tra cứu: Bảng xếp hạng
+hạng CORE tại conf-ranks của 2 ấn phẩm mục tiêu
+[portal.core.edu.au]
+• Ảnh minh chứng: Ảnh màn
+• Bước 2 — Tạp chí: Kiểm tra
+hình tra cứu CORE và SCImago
+phân vị Q1–Q4 trên SCImago
+• Đối chiếu chuẩn ThS: Xác
+[scimagojr.com]
+nhận đạt tiêu chuẩn Hội đồng
+• Bước 3 — Tác giả: Kiểm tra H-
+Thạc sĩ
+index trên Google Scholar
+[scholar.google.com]
+20 / 63
+CÚ PHÁP TÌM KIẾM BOOLEAN NÂNG CAO CHO KHMT
+ĐỒNG NGHĨA CẢ HAI LOẠI KẾT QUẢ
+OR AND NOT /
+fraud OR
+(...) AND GNN − (...) −survey
+anomaly
+("fraud" OR "anomaly") AND "GNN" −survey
+TRUY VẤN
+"..." = CỤM TỪ CHÍNH XÁC * = BIẾN THỂ TỪ
+21 / 63
+SEARCH STRING DESIGN
+QUY TRÌNH THIẾT KẾ CHUỖI TÌM KIẾM THEO 3 TRỤC
+Trục 1: Bài toán Trục 2: Công nghệ Trục 3: Bối cảnh
+(Problem) (Method) (Scope)
+• Xác định thực thể: • Giải pháp kỹ • Môi trường áp
+Hiện tượng hoặc vấn thuật: Thuật toán, dụng: Miền dữ liệu,
+đề kỹ thuật cần giải mô hình hoặc kiến thiết bị hoặc ngữ
+quyết trúc sử dụng cảnh cụ thể
+• Từ đồng nghĩa: • Từ viết tắt: Bổ • Giới hạn phạm vi:
+Liệt kê các cách diễn sung tên viết tắt và Ngăn chặn kết quả
+đạt tương đương của tên đầy đủ của thuật lan sang các lĩnh vực
+bài toán toán không liên quan
+22 / 63
+CASE STUDY THỰC TIỄN
+VÍ DỤ CHUỖI TRUY VẤN MẪU: PHÁT HIỆN GIAN LẬN
+Thiết kế 3 Trục Từ khóa Cụ thể Chuỗi Hoàn chỉnh & Kiểm soát
+Kết quả
+• Trục bài toán (Problem):
+("fraud detection" OR "financial • Chuỗi Boolean chuẩn:
+anomaly") (Problem) AND (Method) AND
+(Scope)
+• Trục công nghệ (Method):
+Mạng nơ-ron đồ thị: ("graph • Trường tìm kiếm: Thiết lập tìm
+neural network" OR "GNN") kiếm trên Title, Abstract và
+Keywords
+• Trục bối cảnh (Scope):
+("fintech" OR "online banking") • Đầu ra tìm kiếm: Thu khoảng
+80–150 bài trong 5 năm để tiếp
+tục sàng lọc
+23 / 63
+NGUỒN TRA CỨU
+CƠ SỞ DỮ LIỆU CHỈ MỤC TRÍCH DẪN TOÀN CẦU
+Scopus (Nhà xuất bản Elsevier) Web of Science (Tập đoàn
+Clarivate)
+• Scopus: Cơ sở dữ liệu tóm tắt
+và trích dẫn quy mô lớn • Chỉ mục Web of Science: Tiêu
+[scopus.com] chuẩn vàng về lập chỉ mục tạp chí
+• Phạm vi chuyên ngành: Bao lõi SCI/SCIE [webofscience.com]
+phủ toàn diện các hội thảo và tạp
+• Kiểm soát chất lượng: Tạp chí
+chí CNTT quốc tế
+được thẩm định trước khi lập
+• Công cụ phân tích: Đo lường chỉ mục
+chỉ số SJR, số lượng trích dẫn và
+• Báo cáo JCR: Cung cấp chỉ số
+đồng tác giả
+Journal Impact Factor (JIF) chính
+thống
+24 / 63
+NGUỒN TRA CỨU
+THƯ VIỆN SỐ TOÀN VĂN & CÔNG CỤ TÌM KIẾM MỞ
+Thư viện Số Toàn văn Chuyên Công cụ Tìm kiếm Học thuật
+ngành Google Scholar
+• IEEE Xplore & ACM DL: Kho • Phạm vi rộng: Tìm trên toàn bộ
+lưu trữ toàn văn các công trình web học thuật
+gốc của IEEE và ACM [scholar.google.com]
+• Tìm bản mở miễn phí: Tự động
+• Tài liệu toàn văn: Tải PDF có
+phát hiện các bản PDF hợp pháp
+mã định danh DOI
+trên kho trường đại học
+• Bộ lọc theo năm: Giới hạn thời
+• Nhập vào Zotero: Đưa thông tin
+gian xuất bản trong 3-5 năm gần
+trích dẫn trực tiếp sang Zotero
+nhất
+bằng một thao tác
+25 / 63
+CÚ PHÁP TÌM KIẾM
+MẸO TÌM KIẾM HỌC THUẬT TRÊN GOOGLE SCHOLAR
+Tìm theo tác giả, định dạng và Tính năng Lần theo Dấu vết
+tiêu đề
+• Bài viết liên quan: Bấm
+• Tìm theo tác giả: Sử dụng cú 'Related articles' để tìm thêm tài
+pháp `author:"Ten Tac Gia"` liệu cùng chủ đề
+• Tìm theo định dạng: Thêm cú • Lần theo trích dẫn: Bấm 'Cited
+pháp `filetype:pdf` để tải trực tiếp by' để tìm các công trình mới phát
+triển từ bài gốc
+• Tìm trong tiêu đề: Dùng cú
+pháp `allintitle:"tu khoa"` • Nhập trích dẫn: Chuyển dữ liệu
+tự động sang Zotero bằng một cú
+nhấp chuột
+26 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: THIẾT KẾ CHUỖI TÌM KIẾM 3 TRỤC
+THỜI LƯỢNG: 15 PHÚT | Mục tiêu: Thiết kế chuỗi Boolean 3 trục và chạy thử trên CSDL
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1: Liệt kê từ khóa: Xác • Ma trận 3 trục: Từ khóa kèm
+định 3 trục Problem - Method - các từ đồng nghĩa
+Scope
+• Truy vấn hoàn chỉnh: Dùng
+• Bước 2: Ghép toán tử chuỗi Boolean cho Chương 2
+Boolean: Dùng OR cùng trục và
+• Kết quả kiểm thử: Số lượng bài
+AND giữa các trục
+thu được trước và sau khi lọc
+• Bước 3: Chạy thử CSDL: Thử
+nghiệm chuỗi trên Google Scholar
+[scholar.google.com]
+27 / 63
+KỸ THUẬT TÌM KIẾM LAN TỎA (SNOWBALLING TECHNIQUE)
+BACKWARD FORWARD
+BÀI BÁO
+BÀI NỀN TẢNG BÀI TRÍCH DẪN
+HẠT GIỐNG
+NỀN TẢNG CẢI TIẾN
+BASELINE ỨNG DỤNG
+CONNECTED PAPERS
+28 / 63
+LƯU ĐỒ 4 GIAI ĐOẠN SÀNG LỌC TÀI LIỆU THEO PRISMA
+1 NHẬN DIỆN
+THU THẬP TỪ CSDL
+2 SÀNG LỌC
+LOẠI TRÙNG · ĐỌC TÓM TẮT
+3 HỢP LỆ
+ĐỌC TOÀN VĂN
+4 ĐƯA VÀO
+LẬP MA TRẬN TỔNG HỢP 29 / 63
+BÁO CÁO MINH BẠCH
+QUY CHUẨN BÁO CÁO SỐ LIỆU SÀNG LỌC THEO PRISMA
+Các Tiêu chí Ghi nhận Bắt buộc Báo cáo Lý do Loại trừ Vòng
+Toàn văn
+• Bài thu thập ban đầu: Ghi rõ số
+lượng từ từng CSDL (IEEE, ACM, • Lý do loại cụ thể: Ghi rõ: Thiếu
+Scopus) số liệu thực nghiệm, không đo độ
+trễ, dữ liệu quá cũ
+• Số bài trùng lặp đã xóa: Báo
+cáo số bản sao bị loại sau khi gộp • Danh sách đưa vào: Chốt 15–
+vào công cụ quản lý 30 bài đáp ứng tiêu chí để đọc
+toàn văn
+• Số bài loại sau khi đọc
+Abstract: Thống kê số lượng bài • Giá trị cho Luận văn ThS:
+không đúng chủ đề ở vòng đọc Chứng minh quy trình tìm kiếm
+lướt khoa học, không bỏ sót bài quan
+trọng
+30 / 63
+SÀNG LỌC Y VĂN
+TIÊU CHÍ CHỌN VÀ LOẠI BÀI BÁO (SELECTION CRITERIA)
+Tiêu chí Lựa chọn (Inclusion Tiêu chí Loại trừ (Exclusion
+Criteria) Criteria)
+• Đúng trọng tâm bài toán: Giải • Không có toàn văn: Không tiếp
+quyết trực tiếp bài toán kỹ thuật cận được tệp PDF gắn DOI
+thuộc đề tài
+• Thiếu kiểm chứng: Chỉ nêu ý
+• Hạng nguồn công bố: Xuất bản tưởng sơ khai, thiếu số liệu thực
+tại kỷ yếu CORE A*/A/B hoặc nghiệm
+Scopus Q1/Q2
+• Nguồn bị loại: Bài đăng tại tạp
+• Cập nhật & Thực nghiệm: chí trục lợi hoặc hội thảo rác
+Công bố trong 3-5 năm gần nhất,
+đầy đủ thực nghiệm
+31 / 63
+QUẢN LÝ DỮ LIỆU
+QUY CHUẨN ĐẶT TÊN VÀ LƯU TRỮ TỆP TIN TÀI LIỆU
+Mẫu đặt tên tệp thống nhất Các Lỗi Kinh điển Cần Tránh
+• Mẫu tên tệp: • Tên mặc định vô nghĩa: Tránh
+`[Năm]_[TênTácGiả1]_[TừKhóaC lưu dạng `document(1).pdf` hoặc
+hính].pdf` `download.pdf`
+• Ví dụ: • Ký tự đặc biệt: Không dùng
+`2024_Chen_GNN_FraudDetectio tiếng Việt có dấu, khoảng trắng
+n.pdf` hoặc ký tự lạ
+• Kết quả: Tự động phân nhóm • Thất lạc siêu dữ liệu: Mất nhiều
+theo năm và tác giả khi xem thư thời gian tìm kiếm lại nguồn gốc
+mục bài báo
+32 / 63
+TỔ CHỨC CÂY THƯ MỤC NGHIÊN CỨU SỐ TRÊN ĐÁM MÂY
+CÂY THƯ MỤC QUY TẮC
+NGHIEN_CUU/
+MỘT BẢN GỐC
+1
+01_TỔNG QUAN
+LIÊN KẾT ZOTERO
+2
+02_PHƯƠNG PHÁP
+SAO LƯU ĐA TẦNG
+3
+03_THỰC NGHIỆM
+33 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: SNOWBALLING & CÂY THƯ MỤC
+THỜI LƯỢNG: 15 PHÚT | Mục tiêu: Truy vết y văn qua Connected Papers và lập cây thư mục số
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1: Khám phá mạng lưới: • Đồ thị liên kết: Ảnh chụp mạng
+Nạp bài Seed Paper vào gồm 5 bài liên quan
+Connected Papers
+• Bảng tiêu chí PRISMA: Ghi đủ
+[connectedpapers.com]
+3 tiêu chí Chọn và 3 tiêu chí Loại
+• Bước 2: Thiết lập Tiêu chí: Xác
+• Cây thư mục đám mây: Tổ
+định 3 tiêu chí Chọn và 3 tiêu chí
+chức 4 thư mục nghiên cứu số
+Loại
+• Bước 3: Đổi tên tệp tin: Đặt tên
+chuẩn: Năm_TácGiả_TừKhóa
+34 / 63
+PHƯƠNG PHÁP ĐỌC BÀI BÁO KHOA HỌC 3 LƯỢT
+5–10 PHÚT ~ 1 GIỜ 2–3 GIỜ
+ĐỌC LƯỚT ĐỌC KẾT QUẢ KIỂM TRA GIẢ ĐỊNH
+1 2 3
+TITLE · GIẢ ĐỊNH · HẠN
+HÌNH · KẾT QUẢ
+ABSTRACT CHẾ
+ĐỌC LƯỚT → HIỂU SÂU → ĐÁNH GIÁ GIẢ ĐỊNH & HẠN CHẾ
+35 / 63
+BỘ LỌC TƯ DUY
+5 CÂU HỎI TRẢ LỜI TRONG LƯỢT ĐỌC THỨ NHẤT (PASS 1)
+Bộ Câu hỏi 5Cs của S. Keshav Đánh giá Đóng góp & Trình bày
+• 1. Category (Phân loại): Đây là • 4. Contributions (Đóng góp):
+bài báo dạng nào? Đo lường, giải Bài báo khác công trình trước ở
+thuật hay ứng dụng? điểm nào?
+• 2. Context (Bối cảnh): Nghiên • 5. Clarity (Rõ ràng): Bài báo có
+cứu liên quan đến bài nào? Đặt được viết mạch lạc, dễ hiểu hay
+trong ngữ cảnh nào? tối nghĩa?
+• 3. Correctness (Đúng đắn): • Mục tiêu hoàn thành: Trả lời
+Các giả định của tác giả có hợp lý trong 10 phút để quyết định đọc
+và đáng tin cậy không? tiếp hay dừng lại
+36 / 63
+PHÂN TÍCH KẾT QUẢ
+KỸ THUẬT ĐỌC SÂU DỮ LIỆU THỰC NGHIỆM (PASS 2)
+Kiểm tra Phép Đo & Độ tin cậy Đúng Phép So sánh (Fair
+Comparison)
+• Trục toạ độ & thang đo: Xem
+xét gốc toạ độ, thang tuyến tính • Baseline cập nhật: Đối đầu giải
+hay logarit pháp tiên tiến nhất (State-of-the-
+Art - SOTA)
+• Độ đo đánh giá chuẩn: Dữ liệu
+mất cân bằng cần F1-score và • Điều kiện phần cứng: So sánh
+AUC thay vì Accuracy thời gian chạy trên cùng cấu hình
+CPU và GPU
+• Tập dữ liệu chuẩn: Thực
+nghiệm trên Benchmark công khai • Kiểm định thống kê: Có p-
+hay tự tạo value hoặc khoảng tin cậy
+37 / 63
+PHẢN BIỆN KHOA HỌC
+KỸ THUẬT ĐỌC PHẢN BIỆN CHUYÊN SÂU (PASS 3)
+Tái tạo Tư duy Tác giả (Mental Chất vấn Giả định & Tìm Điểm
+Re-creation) yếu
+• Đặt mình vào tác giả: Tự hình • Bỏ giả định ngầm: Nếu dữ liệu
+dung giải pháp trước khi đọc chi đổi phân phối, giải thuật còn
+tiết bài đúng?
+• Đối chiếu cách tiếp cận: So • Rò rỉ dữ liệu: Tập train và test
+sánh điểm khác biệt giữa giải có bị lẫn lộn thông tin không?
+pháp 2 bên
+• Đầu vào cho đề tài ThS: Chọn
+• Cơ chế chính: Xác định thành một giới hạn chưa được giải
+phần tạo ra mức cải thiện quyết
+38 / 63
+PHÂN TÍCH THUẬT TOÁN
+KỸ THUẬT ĐỌC CÔNG THỨC TOÁN VÀ MÃ GIẢ (ALGORITHMS)
+Đọc Công thức Toán học Phân tích Thuật toán & Mã giả
+• Danh sách ký hiệu: Lập bảng • Độ phức tạp: Xác định Big-O
+ghi chú ý nghĩa biến số, vector và theo thời gian thực thi và bộ nhớ
+ma trận
+• Khả thi triển khai: Thuật toán
+• Ý nghĩa trực quan: Hình dung có chạy được trên dữ liệu lớn
+công thức biến đổi dữ liệu ra sao thực tế không?
+• Điều kiện biên: Kiểm tra công • Phát hiện giả định ngầm: Chỉ
+thức hoạt động khi dữ liệu bằng 0 ra các giả định lý tưởng hóa để
+hoặc vô cùng mở đề tài ThS
+39 / 63
+HỆ THỐNG GHI CHÉP CORNELL TRONG ĐỌC HỌC THUẬT
+CUES · 30% NOTES · 70%
+TỪ KHÓA Ý TƯỞNG & SỐ LIỆU HÌNH VẼ & MÃ GIẢ
+THUẬT TOÁN
+CÔNG THỨC
+CÂU HỎI
+SUMMARY ĐÓNG GÓP + Ý NGHĨA VỚI ĐỀ TÀI
+40 / 63
+TƯ DUY PHẢN BIỆN
+NHẬN DIỆN THIÊN KIẾN NGHIÊN CỨU TRONG BÀI BÁO
+Các Dạng Thiên kiến Thường Kỹ năng Phản biện của Học
+gặp viên ThS
+• Thiên kiến xuất bản: Tạp chí • Kiểm tra tính tổng quát: Mô
+chỉ chuộng đăng kết quả thực hình có hoạt động tốt trên miền
+nghiệm tích cực dữ liệu khác?
+• Baseline lỗi thời: Tác giả chỉ so • Tìm kiếm kịch bản biên: Xem
+sánh với thuật toán cũ để tôn mô tác giả có né tránh các trường
+hình hợp dữ liệu khó?
+• Overfitting dữ liệu hẹp: Mô • Đề xuất cải tiến: Biến điểm yếu
+hình tinh chỉnh quá mức trên 1 thành hướng đi cho Luận văn
+benchmark cụ thể Thạc sĩ
+41 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: ĐỌC PASS 1 & GHI CHÉP CORNELL
+THỜI LƯỢNG: 15 PHÚT | Mục tiêu: Đọc Pass 1 theo 5Cs và ghi chép theo mẫu Cornell
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1: Đọc lướt 5Cs: Đọc • Phiếu đọc Pass 1: Bản trả lời 5
+Title, Abstract, Intro, Conclusion câu hỏi cốt lõi bài báo
+• Bước 2: Trả lời 5 câu hỏi: Ghi • Mẫu Cornell: Trang gồm cột từ
+nhanh Category, Context, khóa, ghi chú và phần tóm tắt
+Correctness, Contrib, Clarity
+• Đóng góp & Giới hạn: Xác định
+• Bước 3: Chất vấn Giả định: 1 đóng góp chính và 1 điểm yếu
+Chỉ ra 1 giả định ngầm hoặc thiên
+kiến trong bài
+42 / 63
+TƯ DUY HỌC THUẬT
+BẢN CHẤT TỔNG QUAN: TỔNG HỢP CÓ PHÊ PHÁN
+Sai lầm: Liệt kê Rời rạc Chuẩn mực: Tổng hợp có Phê
+(Summary) phán (Synthesis)
+• Liệt kê thụ động: Viết dạng: • Nhóm theo chủ đề: Tổ chức
+'Tác giả A làm X. Tác giả B làm Y. tổng quan theo trường phái giải
+Tác giả C làm Z' pháp hoặc kỹ thuật
+• Thiếu liên kết: Các bài báo • So sánh theo cùng tiêu chí:
+đứng độc lập, không có sự đối Đối chiếu kết quả, chi phí và
+thoại học thuật giới hạn giữa các nhóm
+• Đánh giá của Hội đồng: Chỉ • Kết luận cần đạt: Chỉ ra giới
+tóm tắt từng bài, chưa so sánh hạn nào dẫn đến câu hỏi nghiên
+hoặc rút ra khoảng trống cứu của đề tài
+43 / 63
+SYNTHESIS MATRIX
+MA TRẬN TỔNG HỢP: 3 CỘT KỸ THUẬT NỀN TẢNG
+Cột 1: Tác giả & Cột 2: Bài toán & Cột 3: Phương
+Năm Data pháp
+• Mã trích dẫn • Bài toán kỹ thuật: • Kiến trúc cốt lõi:
+Zotero: Ghi tên tác Xác định rõ mục tiêu Mô hình toán học
+giả chính và năm cần tối ưu hóa hoặc hoặc giải thuật nền
+(e.g. Chen et al., phát hiện tảng đề xuất
+2024 [1])
+• Dữ liệu thực • Đóng góp mới: Chỉ
+• Hạng nguồn công nghiệm: Nêu bộ rõ kỹ thuật cải tiến so
+bố: Ghi rõ tên kỷ yếu benchmark công khai với các nghiên cứu
+CORE A*/A/B hoặc hoặc dữ liệu doanh trước đó
+tạp chí Scopus nghiệp
+44 / 63
+SYNTHESIS MATRIX
+MA TRẬN TỔNG HỢP: KẾT QUẢ ĐỊNH LƯỢNG & GIỚI HẠN
+Cột 4: Kết quả Thực nghiệm Cột 5: GIỚI HẠN CÓ THỂ KIỂM
+Định lượng CHỨNG
+• Số liệu thực nghiệm cụ thể: • Điểm nghẽn kỹ thuật: Chỉ đích
+Ghi rõ các chỉ số đo lường chuẩn danh trường hợp thuật toán chạy
+xác: F1-score, AUC, Accuracy chậm hoặc sai sót
+• Chi phí tính toán: Ghi nhận thời • Giả định ngầm lý tưởng: Chỉ ra
+gian suy luận (Latency) và bộ nhớ việc mô hình giả định dữ liệu tĩnh
+RAM/GPU tiêu hao hoặc đầy đủ nhãn
+• Mức cải thiện so với baseline: • Ý nghĩa khoa học: Cột 5 chính
+Nêu tỷ lệ phần trăm vượt trội là cơ sở trực tiếp để bạn viết đoạn
+trước các thuật toán đối chứng văn Research Gap
+45 / 63
+MINH HỌA THỰC TIỄN
+VÍ DỤ MA TRẬN TỔNG QUAN: BÀI TOÁN PHÁT HIỆN GIAN LẬN
+Tập dữ liệu & Kết Hạn chế cốt lõi
+Tác giả & Năm Phương pháp đề xuất
+quả (Limitation)
+Chen et al. GNN không đồng nhất kết DGraph-Fin; F1: Độ trễ cao (>800ms); Chưa
+(2024) [1] hợp Attention 89.4% hỗ trợ dữ liệu luồng
+Kumar et al. Dynamic Graph SAGE lấy E-commerce; Tốn nhiều RAM GPU; Giảm
+(2023) [2] mẫu trọng số AUC: 92.1% sâu khi mất cân bằng
+Ngân hàng VN; Suy giảm trước các thủ
+Nguyen & Tran Mô hình nén đồ thị nhẹ và
+F1: 87.8%; Trễ: đoạn lừa đảo mới (Zero-
+(2025) [3] chưng cất
+45ms day)
+46 / 63
+TÌM KIẾM Ý TƯỞNG
+KỸ THUẬT PHÂN TÍCH CỘT 'HẠN CHẾ' ĐỂ MỞ ĐỀ TÀI
+1. Hạn chế Phương 2. Hạn chế Bối cảnh 3. Hạn chế Giả định
+pháp
+• Miền dữ liệu hẹp: • Giả định ngầm: Mô
+• Điểm nghẽn kỹ Thuật toán chỉ chạy hình giả định đồ thị
+thuật: Mô hình quá tốt trên dữ liệu tĩnh hoặc dữ liệu đầy
+nặng, độ trễ cao chuẩn, thất bại ở dữ đủ nhãn
+không đáp ứng thời liệu thực tế
+• Cơ hội Thạc sĩ:
+gian thực
+• Cơ hội Thạc sĩ: Nghiên cứu giải pháp
+• Cơ hội Thạc sĩ: Đề Kiểm chứng và tinh trong điều kiện thiếu
+xuất kiến trúc nhẹ chỉnh mô hình thích nhãn cực hạn
+hơn hoặc cơ chế lấy nghi dữ liệu Việt
+mẫu tối ưu Nam
+47 / 63
+KỸ NĂNG VIẾT HỌC THUẬT
+KỸ THUẬT SOẠN THẢO ĐOẠN VĂN TỔNG HỢP THEO CHỦ ĐỀ
+1. Câu mở đoạn 2. Thân đoạn 3. Câu chốt (Critical
+(Topic) (Synthesis) Link)
+• Khái quát xu • Đối thoại học • Đúc kết điểm
+hướng: Nêu bức thuật: Chỉ rõ cách nghẽn: Chỉ ra giới
+tranh toàn cảnh của bài sau khắc phục hạn chung mà cả
+nhóm giải pháp kỹ điểm yếu của bài nhóm bài chưa giải
+thuật trước quyết được
+• Định vị chủ đề: Ví • Dẫn chứng số • Tạo tiền đề: Mở
+dụ: 'Trong phát hiện liệu: So sánh đối đường trực tiếp sang
+gian lận, hướng tiếp chiếu chỉ số F1/AUC phát biểu Khoảng
+cận GNN...' và độ trễ thực tế trống Nghiên cứu
+48 / 63
+CẢNH BÁO HỌC THUẬT
+CÁC SAI SÓT KINH ĐIỂN CẦN TRÁNH TRONG VIẾT TỔNG QUAN
+1. Liệt kê Máy móc 2. Khen ngợi Cảm 3. Trích dẫn Lỗi thời
+tính
+• Lỗi Abstract chép • Lỗi khoảng trống
+lại: Dịch tóm tắt từng • Lỗi cực đoan: thời gian: 80% tài
+bài ghép lại mà Dùng từ 'tuyệt đối', liệu tham khảo đã
+không có đối thoại 'hoàn hảo' mà thiếu xuất bản cách đây
+số liệu chứng minh trên 5-7 năm
+• Khắc phục chuẩn:
+Gộp các bài cùng • Khắc phục chuẩn: • Khắc phục chuẩn:
+trường phái và so Sử dụng ngôn ngữ Ưu tiên tối đa các
+sánh ưu khuyết điểm học thuật khách công trình trong giai
+quan, trích số liệu đoạn 3-5 năm gần
+F1/AUC nhất
+49 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: LẬP BẢNG SYNTHESIS MATRIX
+THỜI LƯỢNG: 20 PHÚT | Mục tiêu: Lập bảng Synthesis Matrix 5 cột cho 3 bài báo chuẩn
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1: Khởi tạo bảng: Tạo • Ma trận 3 bài: Hoàn thiện 5 cột
+bảng 5 cột: Tác giả, Bài toán, Mô dữ liệu định lượng
+hình, Kết quả, Hạn chế
+• Đối chiếu chéo: Nhận định 1
+• Bước 2: Trích xuất kỹ thuật: câu về điểm khác biệt kỹ thuật
+Điền số liệu F1/AUC và đặc điểm
+• Đầu vào cho research gap:
+mô hình từng bài
+Chọn một hạn chế có bằng
+• Bước 3: So sánh đối chiếu: chứng
+Phân tích điểm hạn chế chung mở
+ra hướng nghiên cứu
+50 / 63
+ĐỊNH VỊ GIÁ TRỊ
+BẢN CHẤT CỦA KHOẢNG TRỐNG NGHIÊN CỨU (RESEARCH GAP)
+Định nghĩa & Ý nghĩa Khoa học Các Dạng Khoảng trống
+Thường gặp
+• Giới hạn tri thức: Điểm nghẽn
+kỹ thuật chưa có lời giải trong y • Giới hạn phương pháp: Độ
+văn trễ, RAM hoặc F1 chưa đạt mục
+tiêu
+• Lý do làm Luận văn: Nghiên
+cứu không lặp lại việc người khác • Gap Dữ liệu / Bối cảnh: Chưa
+đã làm xong thử nghiệm trên dữ liệu mất cân
+bằng hoặc VN
+• Yêu cầu đóng góp: Nêu điểm
+khác với các công trình đã có • Gap Ứng dụng: Khoảng cách
+giữa mô hình lý thuyết và triển
+khai
+51 / 63
+CẤU TRÚC 3 THÀNH PHẦN CỦA ĐOẠN VĂN RESEARCH GAP
+ĐÃ BIẾT ĐIỂM NGHẼN GIẢI PHÁP
+1 2 3
+“NGHIÊN CỨU
+SOTA + SỐ LIỆU “TUY NHIÊN…”
+NÀY…”
+ĐÃ BIẾT → TUY NHIÊN → NGHIÊN CỨU NÀY…
+52 / 63
+MINH HỌA HỌC THUẬT
+ĐOẠN VĂN PHÁT BIỂU RESEARCH GAP MẪU (CHUẨN MỰC)
+1. ĐIỀU ĐÃ BIẾT (KNOWN): NỀN TẢNG TIỀN ĐỀ
+Trong phát hiện gian lận tài chính, các mô hình GNN như Chen et al. [1] và
+Kumar et al. [2] đã đưa chỉ số F1 lên trên 89%.
+2. KHOẢNG TRỐNG CỐT LÕI (CRITICAL GAP): ĐIỂM NGHẼN KỸ THUẬT
+Tuy nhiên, các mô hình này đều giả định đồ thị tĩnh; độ trễ tăng trên 800ms khi
+dữ liệu bùng phát và suy giảm khi mất cân bằng cực hạn.
+3. ĐỊNH VỊ ĐỀ TÀI (PROPOSED RESOLUTION): GIẢI PHÁP MỚI
+Đề tài đề xuất Dynamic GNN nhẹ tích hợp bộ nhớ suy giảm, giảm độ trễ xuống
+dưới 100 ms mà vẫn duy trì F1 trên 91%.
+53 / 63
+TIÊU CHÍ NGHIỆM THU
+CHECKLIST ĐÁNH GIÁ CHẤT LƯỢNG RESEARCH GAP
+Tiêu chuẩn Nội dung Khoa học Tiêu chuẩn Khả thi & Văn
+phong
+• Dung lượng chuẩn: Đoạn văn
+đạt tối thiểu 200 từ (đoạn mẫu đạt • Tính khả thi đề tài: Nằm trong
+220 từ) khả năng thực nghiệm trong thời
+gian ThS
+• Gốc rễ từ Ma trận: Bắt nguồn
+trực tiếp từ cột Hạn chế của Ma • Kỹ thuật Hedging: Dùng từ ngữ
+trận khách quan, tránh khẳng định cực
+đoan
+• Bằng chứng định lượng: Nêu
+rõ số liệu và nguồn tác giả ([1], • Kết nối Chương 3: Mở đường
+[2]) cho câu hỏi và phương pháp đề
+xuất
+54 / 63
+HOẠT ĐỘNG ÁP DỤNG
+THỰC HÀNH: SOẠN THẢO RESEARCH GAP
+THỜI LƯỢNG: 15 PHÚT | Mục tiêu: Soạn đoạn văn Research Gap chuẩn 3 phần (≥ 200 từ)
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Bước 1: Nêu điều đã biết: • Đoạn văn research gap: Đủ 3
+Known: Tóm tắt 2 công trình tiêu phần và dài 200–250 từ
+biểu từ Ma trận
+• Bằng chứng định lượng: Có
+• Bước 2: Chỉ ra điểm nghẽn: số đo và nguồn [1], [2] rõ ràng
+Critical Gap: Nêu hạn chế kỹ thuật
+• Tuyên bố tính mới: Khẳng định
+chưa giải quyết
+đóng góp khoa học mới của học
+• Bước 3: Định vị đề tài: viên
+Proposed: Đề xuất giải pháp và
+mục tiêu định lượng
+55 / 63
+CÔNG CỤ NGHIÊN CỨU
+HỆ SINH THÁI CÔNG CỤ QUẢN TRỊ TRÍCH DẪN ZOTERO
+Zotero Desktop Zotero Connector Đồng bộ Đám mây
+• Ứng dụng • Tiện ích trình • Tài khoản Zotero
+desktop: Công cụ duyệt: Tích hợp trên Cloud: Đồng bộ thư
+mã nguồn mở để Chrome, Edge, viện xuyên suốt giữa
+quản lý thư viện tài Firefox để lưu bài 1- laptop và máy bàn
+liệu [zotero.org] click
+• Sao lưu: Đồng bộ
+• Tổ chức bộ sưu • Dữ liệu được lưu: ghi chú và PDF để
+tập: Tạo các Tự động nhận diện khôi phục khi đổi
+Collection theo từng tên tác giả, tạp chí và máy
+chương và đề tài tệp PDF
+Luận văn
+56 / 63
+QUY TRÌNH TỰ ĐỘNG HÓA TRÍCH DẪN VỚI ZOTERO
+NGUỒN ZOTERO ĐẦU RA
+PDF WORD / DOCS
+ZOTERO
+WEB / CSDL PDF READER
+LIBRARY
+GHI CHÚ
+BETTER BIBTEX
+TRÍCH DẪN · GHI CHÚ · .BIB
+57 / 63
+MINH CHỨNG CHƯƠNG 2
+QUY CHUẨN 4 ẢNH MINH CHỨNG TRÍCH DẪN VỚI ZOTERO
+Minh chứng Quản lý Thư viện Minh chứng Trích dẫn & Mã
+nguồn
+• Ảnh 2.1: Thư viện Đề tài: Bộ
+sưu tập đề tài có 5 bài báo kèm • Ảnh 2.3: Trích dẫn IEEE: Văn
+metadata DOI bản Word/LaTeX chèn citation [1]
+và References
+• Ảnh 2.2: Đọc PDF Zotero: Giao
+diện Reader mở bài chính, có • Ảnh 2.4: Tệp BibTeX: Giao diện
+highlight ghi chú tệp .bib hiển thị các entry @article
+• Cài đặt bộ công cụ: Tải Zotero • Nền tảng Overleaf: Soạn bài
+Desktop cùng Connector báo trực tuyến [overleaf.com]
+[zotero.org/download]
+58 / 63
+QUY CHUẨN BÁO CÁO
+HƯỚNG DẪN CHỤP ẢNH MINH CHỨNG 2.1 VÀ 2.2
+Ảnh 2.1: Giao diện Thư viện Đề Ảnh 2.2: Đọc & Ghi chú trên
+tài PDF
+• Collection đề tài: Tạo thư mục • Trình đọc Zotero: Mở PDF trực
+riêng theo tên đề tài luận văn tiếp để đọc và ghi chú
+• Kiểm tra Siêu dữ liệu: Soát cột • Quy ước Highlight: Màu vàng
+phải: Tiêu đề, tác giả và mã DOI cho đóng góp mới, màu đỏ cho
+hợp lệ hạn chế
+• Bố cục 3 cột: Hiển thị đầy đủ • Khung Annotation: Hiển thị
+danh sách 5 bài báo trong Zotero khung chú thích bên trái phục vụ
+Ma trận
+59 / 63
+QUY CHUẨN BÁO CÁO
+HƯỚNG DẪN CHỤP ẢNH MINH CHỨNG 2.3 VÀ 2.4
+Ảnh 2.3: Chèn Trích dẫn IEEE Ảnh 2.4: Tệp BibTeX Overleaf
+• Chèn trích dẫn: Đặt con trỏ và • Cấu hình Better BibTeX: Xuất
+bấm nút Add/Edit Citation thư viện tự động sang tệp
+references.bib
+• Hộp chọn bài báo: Ghi lại trạng
+thái Zotero khi tìm và chọn tài liệu • Giao diện Overleaf: Chụp tệp
+.bib hiển thị citekey chuẩn
+• Danh mục tài liệu: Hiển thị mã
+[overleaf.com]
+[1] cùng phần References
+• Biên dịch PDF: Minh chứng
+lệnh \cite hiển thị số trích dẫn
+IEEE
+60 / 63
+LATEX WORKFLOW
+QUY TRÌNH XUẤT BIBTEX VÀ ĐỒNG BỘ OVERLEAF
+Cài đặt Better Đồng bộ tệp .bib Đồng bộ Overleaf
+BibTeX với Overleaf
+• Nạp file .bib: Tải
+• Tiện ích mở rộng: • Keep updated: Bật references.bib lên dự
+Tải plugin Better tính năng tự cập nhật án Overleaf
+BibTeX cho Zotero tệp `.bib` khi có bài [overleaf.com]
+[retorque.re/zotero- mới • Lệnh gọi chuẩn
+better-bibtex]
+IEEE: Dùng:
+• Tên file chuẩn:
+• Quy tắc citekey:
+`\bibliographystyle{IE
+Lưu tệp
+Dùng mẫu ổn định:
+EEtran}`
+`references.bib` trong
+`[auth:lower][year]`
+thư mục dự án
+61 / 63
+HOẠT ĐỘNG CHỐT BUỔI HỌC
+WORKSHOP TỔNG HỢP (60 PHÚT): HOÀN THIỆN CHƯƠNG 2
+THỜI LƯỢNG: 60 PHÚT | Mục tiêu: Hoàn thiện hồ sơ Chương 2 và bộ 4 ảnh Zotero
+Các bước Thực hiện Sản phẩm Bắt buộc Nghiệm thu
+• Chặng 1 (15p): Thư viện • Ma trận Tổng hợp 5 bài: Bảng
+Zotero: Cài Zotero, nạp 5 bài Synthesis Matrix đầy đủ 5 cột kỹ
+DOI, chụp 4 ảnh [zotero.org] thuật
+• Chặng 2 (25p): Ma trận Tổng • Đoạn văn Research Gap: Văn
+hợp: Trích xuất kỹ thuật và hoàn bản đạt ≥ 200 từ, đáp ứng 5 tiêu
+thiện 5 cột Ma trận chí nghiệm thu
+• Chặng 3 (20p): Viết Research • Hồ sơ 4 ảnh minh chứng: Bộ 4
+Gap: Soạn đoạn văn Research ảnh quy chuẩn sẵn sàng cho
+Gap chuẩn 3 phần (≥ 200 từ) Chương 2
+62 / 63
+KẾT NỐI CHƯƠNG TRÌNH
+TỔNG KẾT BÀI 2 & ĐỊNH HƯỚNG BUỔI HỌC TIẾP THEO
+Thành quả Năng lực Bài 2 Chuẩn bị cho Bài 03: Phương
+pháp Nghiên cứu
+• Thẩm định ấn phẩm: Kiểm tra
+checklist Think-Check-Submit • Kết nối logic: Research Gap ở
+và chỉ mục Scopus Bài 2 chính là đầu vào để thiết kế
+giải pháp Bài 3
+• Tìm kiếm & Sàng lọc: Thành
+thạo Boolean 3 trục, PRISMA và • Nội dung Bài 3: Mô hình hóa
+Connected Papers toán học, thiết kế giải thuật và
+thiết lập thực nghiệm
+• Tổng hợp tri thức: Lập Ma trận
+5 cột, phát biểu Gap và quản trị • Nhiệm vụ về nhà: Nộp đủ các
+Zotero mục trong Rubric Chương 2
+của HUFLIT
+63 / 63

@@ -2,7 +2,9 @@
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
 **Phục vụ:** IT252BIDA (Xử lý dữ liệu lớn) + IT252STRM (Phương pháp nghiên cứu khoa học)
-**Cập nhật:** 2026-11-04 00:15 GMT+7
+**Cập nhật:** 2026-11-09 23:48 GMT+7
+
+> **Change note:** Từ cập nhật này, tài liệu phân biệt hai track: (A) reproduction Paper 01 và (B) controlled experiment của project. Kết quả hai track không gộp chung.
 
 ---
 
@@ -133,7 +135,50 @@ S9  Streamlit dashboard đọc MongoDB → screenshot fig9_dashboard.png
 | `reports/stats_summary.csv` | 12 dòng kết quả kiểm định (3 split × 4 metric) |
 | `docs/Project/Main/report/Big_Data/figures/` | fig1–fig7 (R) · fig8 PRISMA (SVG) · fig9 dashboard (PNG) |
 
-## 7. Tình huống thực nghiệm đã trải qua (2026-11-04)
+## 8. Track reproduction Paper 01 — bổ sung 2026-11-09
+
+Paper neo: **Ji et al., A Critical Study on Data Leakage in Recommender System Offline Evaluation**, ACM TOIS, DOI `10.1145/3569930`.
+
+### Mục tiêu
+
+Kiểm tra có thể tái lập logic và kết quả chính của bài trên đúng protocol hay không. Đây không phải bước thay thế pipeline project.
+
+### Điều kiện được gọi là reproduction
+
+Phải ghi và đối chiếu: dataset interval/filter; split leave-last-one-out; BPR, NeuMF, SASRec, LightGCN; metric/cutoff; preprocessing; seed; dependency; hardware; output. Paper dùng MovieLens-25M subset 9.808.925 interactions, 62.202 users, 56.774 items, time span 2009-11-21 đến 2019-11-20, không filtering. Không thay model bằng ALS/MostPopular rồi gọi reproduction.
+
+### Artifact
+
+Repository chính thức: `https://github.com/putatu/dataLeakageRec`. Clone/pin ở thư mục riêng ngoài source project, ví dụ `D:\recsys_papers\dataLeakageRec`. Không sửa repository gốc. Mọi patch lưu trong reproduction log.
+
+### Output bắt buộc
+
+- `docs/Project/Plans/Implementation/02_Reproduction_Report_Template.md` được copy thành report Paper 01.
+- Commit hash, environment manifest, command, smoke-test log, dataset checksum.
+- Difference ledger Paper 01 vs local run.
+- Classification: `faithful_reproduction`, `partial_reproduction`, `method_informed_implementation` hoặc `blocked`.
+
+## 9. Track B — controlled experiment của project
+
+Project vẫn dùng MovieLens-25M project protocol, `random80_20`, `temporal_global`, `leave_one_out`, MostPopular và ALS trước. Track này trả lời RQ1–RQ4; không dùng để khẳng định đã tái lập Paper 01.
+
+### Gates trước khi chạy full
+
+1. Paper 01 README/dependency/dataset setup được ghi.
+2. Smoke test Paper 01 chạy hoặc có log blocked.
+3. Paper protocol vs project protocol được lập bảng.
+4. Không trộn output/repository/environment hai track.
+5. Chỉ sau đó chạy controlled comparison full matrix.
+
+## 10. Cập nhật liên kết
+
+- [Paper 01 exploration](../../References/Papers/Exploration/01_Data_Leakage.md)
+- [Implementation map](../Plans/Implementation/04_Research_Questions_Gaps_and_Action_Map.md)
+- [Reproduction template](../Plans/Implementation/02_Reproduction_Report_Template.md)
+
+## 11. Lịch sử kết quả project
+
+Các kết quả PoC trước cập nhật này vẫn là kết quả project-controlled, không phải reproduction Paper 01. Giữ nguyên để truy vết lịch sử.
 
 ### 7.1 Bốn phát hiện chính (đã kiểm định thống kê)
 

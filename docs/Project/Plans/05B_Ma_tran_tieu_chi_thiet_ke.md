@@ -3,15 +3,15 @@
 **Mục đích:** đối chiếu 14 tài liệu tham khảo với 8 tiêu chí mà Bài 03 yêu cầu khi chọn bài đối chuẩn:
 (1) chia 3 tập train/val/test tách biệt · (2) so sánh SOTA · (3) ý nghĩa thống kê (p-value / nhiều lần chạy)
 (4) cùng dữ liệu + tiền xử lý · (5) cùng ngân sách tinh chỉnh · (6) khai báo GPU/CPU/RAM/thời gian chạy
-(7) mã nguồn gốc (GitHub/Zenodo) · (8) random seed cố định (tái lập).
+(7) mã nguồn gốc (GitHub/Zenodo) · (8) random seed cố định hoặc công bố đủ thông tin để tái lập.
 
-**Cứng (hard requirement của thầy):** (6) cấu hình phần cứng, (7) code, (8) seed — *bắt buộc phải kiểm tra được*.
+**Cứng (hard requirement của thầy):** (6) cấu hình phần cứng, (7) code, (8) seed — phải kiểm tra được ở mức bài báo hoặc phải ghi rõ thiếu dữ liệu. Không tự suy diễn seed của bài báo từ seed protocol của project.
 
 | # | Tài liệu | Venue | 7. Mã nguồn | 8. Seed | Dataset (để đối sánh) | 6. Cấu hình HW |
 |---|---|---|---|---|---|---|
-| 01 | TOIS 2023 Data Leakage | ACM TOIS 41(3) Art.75 | Có | Có (7 lần lặp, seed khác nhau) | MovieLens-25M, Yelp, Amazon-music/electronic | Không nêu (chỉ hyperparameter) |
-| 02 | TORS 2024 Reproducing Pop. Bias | ACM TORS 2(1) Art.5 | Có | Có (fix seed khi split) | MovieLens-1M, LastFM, Book-Crossing | Không nêu |
-| 03 | RecSys'25 Time to Split | ACM RecSys '25 pp.874-883 | Có | Có (nhiều seed, báo mean/variance) | ML-1M, ML-20M, Amazon Beauty/Sports, BeerAdv, Diginetica, YooChoose, Zvuk | NVIDIA H100 80GB HBM3 |
+| 01 | TOIS 2023 Data Leakage | ACM TOIS 41(3) Art.75 | Có | Có 7 lần lặp với seed khác nhau; **giá trị seed không thấy trong PDF, cần kiểm tra repo** | MovieLens-25M, Yelp, Amazon-music/electronic | Không nêu (chỉ hyperparameter) |
+| 02 | TORS 2024 Reproducing Pop. Bias | ACM TORS 2(1) Art.5 | Có | Có fix seed khi split; **giá trị cần lấy từ code** | MovieLens-1M, LastFM, Book-Crossing | Không nêu |
+| 03 | RecSys'25 Time to Split | ACM RecSys '25 pp.874-883 | Có | Nêu nhiều seed và mean/variance; **PDF không ghi bộ số cụ thể, cần kiểm tra repo** | ML-1M, ML-20M, Amazon Beauty/Sports, BeerAdv, Diginetica, YooChoose, Zvuk | NVIDIA H100 80GB HBM3 |
 | 04 | RecSys'26 Convergent Validity | ACM RecSys '26 pp.410-418 | Có (Zenodo 10.5281/zenodo.21549024) | Không nêu | MovieLens, KuaiRec | Không nêu |
 | 05 | TOIS 2023 Bias/Debias Survey | ACM TOIS 41(3) Art.67 | Không (survey) | N/A | N/A (survey) | N/A |
 | 06 | UMAI 2024 Pop. Bias Survey | Springer UMAI 34(5) | Không (survey) | N/A | N/A (survey) | N/A |
@@ -26,14 +26,13 @@
 
 ## Kết luận phân loại (theo 8 tiêu chí Bài 03)
 
-### Nhóm A — Đủ điều kiện "bài đối chuẩn" (có code + seed + dataset rõ)
-- **[01]** TOIS 2023 Data Leakage: code `github.com/putatu/dataLeakageRec`, 7 lần lặp seed khác nhau, 4 dataset public, hyperparameter search đầy đủ. **Thiếu:** GPU/CPU/RAM.
-- **[02]** TORS 2024: code `github.com/SavvinaDaniil/UnfairnessOfPopularityBias`, fix seed khi split. **Thiếu:** HW.
-- **[03]** RecSys'25: code `github.com/monkey0head/time-to-split`, nhiều seed + báo variance, 8 dataset, **có HW**: NVIDIA H100 80GB. → **mạnh nhất về tái lập**.
+### Nhóm A — Ứng viên đối chuẩn mạnh (có code + dataset; seed/HW cần xác minh đầy đủ)
+- **[01]** TOIS 2023 Data Leakage: code `github.com/putatu/dataLeakageRec`, 7 lần lặp seed khác nhau; **PDF không công bố danh sách seed, cần xác minh repo trước khi gọi reproduction**. **Thiếu:** GPU/CPU/RAM.
+- **[02]** TORS 2024: code `github.com/SavvinaDaniil/UnfairnessOfPopularityBias`, fix seed khi split; **giá trị seed cần trích từ code**. **Thiếu:** HW.
+- **[03]** RecSys'25: code `github.com/monkey0head/time-to-split`, nhiều seed + báo variance; **PDF không ghi bộ số cụ thể, cần trích repo**, 8 dataset, **có HW**: NVIDIA H100 80GB. → **mạnh nhất về tái lập**.
 - **[12]** RecSys'20: code + **data splits tải được** (`github.com/mengzaiqiao/data_splits`), 10 dataset. **Thiếu:** seed, HW.
 - **[11]** RecSys'21: supplemental code, ML-20M + EASE. **Thiếu:** seed, HW.
 - **[04]** RecSys'26: code trên Zenodo (DOI cố định), MovieLens + KuaiRec. **Thiếu:** seed, HW.
-
 ### Nhóm B — Chỉ dùng làm nền lý thuyết / định nghĩa (survey, position, tutorial)
 - **[05]**, **[06]**, **[07]**, **[08]** — không có thực nghiệm nên tiêu chí code/seed/HW không áp dụng. Dùng cho phần Known + định nghĩa metric (catalog coverage, Gini, exposure).
 

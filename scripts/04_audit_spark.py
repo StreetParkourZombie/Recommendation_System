@@ -35,6 +35,7 @@ os.makedirs(OUT, exist_ok=True); os.makedirs(TMP, exist_ok=True)
 
 ap = argparse.ArgumentParser()
 ap.add_argument("split", choices=["random80_20", "temporal_global", "leave_one_out"])
+ap.add_argument("--seed", type=int, default=42)
 ap.add_argument("--n-users", type=int, default=30000)
 ap.add_argument("--rank", type=int, default=16)
 ap.add_argument("--maxiter", type=int, default=8)
@@ -45,6 +46,7 @@ ap.add_argument("--min-train", type=int, default=5)
 ap.add_argument("--thresh", type=float, default=4.0, help="nguong rating duoc coi la relevant")
 A = ap.parse_args()
 NAME = A.split
+SEED = A.seed
 
 spark = (SparkSession.builder
          .appName("RecSysAudit6_" + NAME).master("local[8]")
@@ -74,7 +76,7 @@ log("users:", df.select("userId").distinct().count(), "items:", df.select("movie
 THR = None
 if NAME == "random80_20":
     THR = df.select(F.expr("percentile_approx(timestamp, 0.8)").alias("t")).first()["t"]
-    d = df.withColumn("is_test", F.rand(42) > F.lit(0.8))
+    d = df.withColumn("is_test", F.rand(SEED) > F.lit(0.8))
 elif NAME == "temporal_global":
     THR = df.select(F.expr("percentile_approx(timestamp, 0.8)").alias("t")).first()["t"]
     d = df.withColumn("is_test", F.col("timestamp") >= F.lit(THR))
@@ -123,7 +125,7 @@ R = dict(split=NAME, train_rows=tr_n, test_rows=te_n,
          relevance_threshold=A.thresh,
          test_relevant_rows=int(te_rel_all), test_relevant_eval_rows=int(te_rel_eval),
          eval_relevant_users=int(te_rel_users),
-         min_train_threshold=A.min_train, seed=42, spark_version="4.2.0")
+         min_train_threshold=A.min_train, seed=SEED, spark_version="4.2.0")
 log("DATA", NAME, json.dumps(R, ensure_ascii=False))
 
 def save():
@@ -183,7 +185,7 @@ save()
 # ---------------- implicit ALS + numpy top-K ----------------
 def als_run():
     t0 = time.time()
-    sub_users = train.select("userId").distinct().limit(A.n_users).select("userId")
+    sub_users = train.select("userId").distinct().orderBy("userId").limit(A.n_users).select("userId")
     tr = train.join(F.broadcast(sub_users), "userId").persist()
     te = test.join(F.broadcast(sub_users), "userId").persist()
     # implicit: chi phai tuong tac POSITIVE (rating >= thresh)
@@ -193,7 +195,7 @@ def als_run():
     als = ALS(userCol="userId", itemCol="movieId", ratingCol="rating",
               rank=A.rank, maxIter=A.maxiter, regParam=A.reg,
               implicitPrefs=True, alpha=A.alpha,
-              coldStartStrategy="drop", seed=42)
+              coldStartStrategy="drop", seed=SEED)
     m = als.fit(tr_pos)
     fit_s = time.time() - t0
     uf = m.userFactors.select("id", "features").collect()
@@ -282,7 +284,7 @@ def als_run():
              avg_pop_rec=round(avg_pop_rec, 2), avg_pop_all=round(avg_pop_all, 2),
              popularity_bias_ratio=round(avg_pop_rec / avg_pop_all, 4) if avg_pop_all else 0.0,
              subsample_users=int(A.n_users), rank=A.rank, maxIter=A.maxiter,
-             regParam=A.reg, implicitPrefs=True, alpha=A.alpha, seed=42,
+             regParam=A.reg, implicitPrefs=True, alpha=A.alpha, seed=SEED,
              relevance_threshold=A.thresh,
              fit_seconds=round(fit_s, 1), total_seconds=round(time.time() - t0, 1))
     log("ALS", NAME, json.dumps(r, ensure_ascii=False))

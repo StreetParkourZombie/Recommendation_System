@@ -185,6 +185,45 @@
 | `…\report\Big_Data\figures\fig9_dashboard.png` | dashboard, 152.694 B, 1920×1260 |
 | `…\docs\References\Papers\*.pdf` | 9 paper + `_manifest.json` |
 
+## 11. Environment contract cho Paper 01 reproduction
+
+- Repository: `https://github.com/putatu/dataLeakageRec`
+- Clone riêng: `D:\recsys_papers\dataLeakageRec`; pin commit/tag trước khi chạy.
+- Không cài dependency Paper 01 vào project Python hiện tại.
+- Ghi Python, OS, Java, framework/library versions, CPU/RAM/GPU, dataset path/checksum.
+- Nếu repository yêu cầu version khác Python 3.14/PySpark 4.2, ưu tiên environment tương thích repository; không sửa code trước smoke test.
+- Không giả định Paper 01 dùng Spark/Hadoop. Chỉ ghi khi README hoặc methods xác nhận.
+
+### Protocol checklist
+
+| Thành phần | Paper 01 cần xác minh | Project không được thay thế bằng |
+|---|---|---|
+| Dataset | MovieLens subset và time interval | full 25M project dataset |
+| Split | leave-last-one-out theo paper | `random80_20` project |
+| Models | BPR, NeuMF, SASRec, LightGCN | ALS/MostPopular |
+| Metrics | paper metric/cutoff | project metric nếu khác |
+| Seed | paper/repository hoặc `not_reported` | project seed 42 |
+| Runtime | paper/repository/hardware | local Spark runtime |
+
+### Run stages
+
+1. README/config inspection.
+2. Dependency/environment setup.
+3. Dataset/preprocessing smoke test.
+4. One small model smoke test.
+5. One paper-config run if smoke test passes.
+6. Full run only after report has difference ledger.
+
+### Output and stop conditions
+
+Reports: `docs/Project/Plans/Implementation/`. Temporary clone/data: `D:\recsys_papers\`. Logs: `logs/paper01\`. Do not mix with project `results/`, `reports/`, MongoDB `recsys`.
+
+Stop and log `blocked` when dependency, dataset, GPU/RAM, repository link or license prevents faithful run. Command passing alone is only `smoke_test_pass`, not reproduction success.
+
+## 12. Pre-run gate
+
+Before cloning/running Paper 01, three docs must agree on two-track boundary, paper protocol, project protocol, isolated path, report path and classification rules. Inspect repository first; do not start full model training.
+
 ### 10.5 Cảnh báo mới (2026-11-04)
 
 | Vấn đề | Xử lý |

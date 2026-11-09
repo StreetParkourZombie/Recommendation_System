@@ -1,13 +1,48 @@
 # Architecture — Kiến trúc pipeline đánh giá hệ thống gợi ý
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-04
+**Cập nhật:** 2026-11-09 23:48 GMT+7
+
+> Architecture contains two isolated tracks: Paper 01 reproduction and project controlled experiment.
+
+---
 
 ---
 
 ## 1. Tổng quan
 
-Pipeline **4 tầng, chạy tuần tự, offline batch**, không service online:
+Pipeline project là **offline batch pipeline**, không service online. Paper 01 reproduction chạy ngoài pipeline project, trong repository/environment riêng.
+
+```text
+TRACK A — PAPER 01 REPRODUCTION
+official repository + paper protocol
+  -> pinned commit + isolated environment
+  -> paper dataset/split/models/metrics
+  -> smoke test -> reproduction report
+
+TRACK B — PROJECT CONTROLLED EXPERIMENT
+MovieLens-25M project preprocessing
+  -> 3 project splits
+  -> MostPopular + ALS
+  -> leakage + popularity bias + runtime
+  -> Spark/HDFS/MongoDB/R/Streamlit
+
+Không nối output Track A vào MongoDB project nếu chưa có mapping protocol.
+```
+
+### Ranh giới model
+
+Paper 01: BPR, NeuMF, SASRec, LightGCN. Project: MostPopular và ALS ở phase controlled đầu. ALS result không được trình bày là Paper 01 reproduction.
+
+### Ranh giới dữ liệu
+
+Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Hai dataset phải lưu checksum và report riêng.
+
+### Data lineage
+
+`paper_run_id` dành cho reproduction report. `protocol_id=project_protocol_v1` dành cho results/MongoDB/reports project. Không overwrite project result bằng Paper artifact.
+
+## 2. Tầng 1 — Ingest
 
 ```
 ┌─ TẦNG 1 ─ INGEST ─────────────────────────────────────────────────────┐
@@ -49,12 +84,12 @@ Pipeline **4 tầng, chạy tuần tự, offline batch**, không service online:
 
 ## 2. Tầng 1 — Ingest
 
-| Bước | Công cụ | Ghi chú |
-|---|---|---|
-| 1.1 Tải | `https://files.grouplens.org/datasets/movielens/ml-25m.zip` | 261.978.986 B |
-| 1.2 Giải nén | `D:\recsys_data\raw\ml-25m\` | 8 file |
-| 1.3 CSV → Parquet | **pyarrow** `pacsv.open_csv` + `pq.ParquetWriter` | 26s, schema cố định `userId int32, movieId int32, rating float32, timestamp int32` |
-| 1.4 Checksum | SHA-256 từng file parquet → `ratings.parquet.sha256` | tái lập |
+| Bước             | Công cụ                                                     | Ghi chú                                                                                |
+| ------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 1.1 Tải           | `https://files.grouplens.org/datasets/movielens/ml-25m.zip` | 261.978.986 B                                                                           |
+| 1.2 Giải nén     | `D:\recsys_data\raw\ml-25m\`                                | 8 file                                                                                  |
+| 1.3 CSV → Parquet | **pyarrow** `pacsv.open_csv` + `pq.ParquetWriter`   | 26s, schema cố định `userId int32, movieId int32, rating float32, timestamp int32` |
+| 1.4 Checksum       | SHA-256 từng file parquet → `ratings.parquet.sha256`      | tái lập                                                                               |
 
 **Vì sao pyarrow chứ không phải Spark:** `df.write.parquet` trên Windows cần `winutils.exe` (`hadoop.home.dir` unset) → fail. Pyarrow ghi thẳng, không cần Hadoop native libs.
 
@@ -114,10 +149,10 @@ Output: `/recsys/out/popularity_by_year/part-r-00000` → **323.737 dòng** (key
 
 **2 lỗi đã gặp và cách sửa (xem `Environment.md` §5):**
 
-| Lỗi | Nguyên nhân | Sửa |
-|---|---|---|
+| Lỗi                                                                             | Nguyên nhân                                                           | Sửa                                                                                                                              |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `Type mismatch in value from map: expected LongWritable, received IntWritable` | `setOutputValueClass` = output reducer nhưng map ghi `IntWritable` | Thống nhất **cả 3** (map, combiner, reducer) dùng `IntWritable` + thêm `setMapOutputValueClass(IntWritable.class)` |
-| `wrong value class: LongWritable is not IntWritable` | Combiner ghi `LongWritable`, reducer input là `IntWritable` | Combiner dùng `IntWritable` |
+| `wrong value class: LongWritable is not IntWritable`                           | Combiner ghi `LongWritable`, reducer input là `IntWritable`        | Combiner dùng `IntWritable`                                                                                                    |
 
 ### 3.3 Kiểm chứng tương đương (Gate G3) — ĐÃ CHẠY, PASS
 
@@ -125,16 +160,16 @@ Bắt buộc: kết quả MapReduce phải **khớp tuyệt đối** kết quả
 
 Script: `scripts/08_crosscheck_g3.py` → `results/g3_crosscheck.json`.
 
-| Chỉ số | Kết quả |
-|---|---|
-| MapReduce rows | 323.737 |
-| Spark SQL rows | 323.737 |
-| Union keys | 323.737 |
-| **Exact match** | **323.737 / 323.737 = 100,0000%** |
-| Tổng tương tác (MR) | 25.000.095 |
-| Tổng tương tác (Spark) | 25.000.095 |
-| Tổng tương tác (kỳ vọng) | 25.000.095 |
-| **gate_G3_passed** | ✅ **true** |
+| Chỉ số                       | Kết quả                               |
+| ------------------------------ | --------------------------------------- |
+| MapReduce rows                 | 323.737                                 |
+| Spark SQL rows                 | 323.737                                 |
+| Union keys                     | 323.737                                 |
+| **Exact match**          | **323.737 / 323.737 = 100,0000%** |
+| Tổng tương tác (MR)        | 25.000.095                              |
+| Tổng tương tác (Spark)     | 25.000.095                              |
+| Tổng tương tác (kỳ vọng) | 25.000.095                              |
+| **gate_G3_passed**       | ✅ **true**                       |
 
 > **Bẫy timezone đã ghi nhận:** MapReduce dùng `SimpleDateFormat` với **UTC**, Spark mặc định `from_unixtime` theo **local (UTC+7)** → lệch 24.778/323.775 key (7,65%). Phải set `.config("spark.sql.session.timeZone", "UTC")`. Đây là loại lỗi âm thầm mà chỉ phát hiện được khi có đối chiếu số — lý do G3 là bắt buộc, không phải thủ tục.
 
@@ -142,11 +177,11 @@ Script: `scripts/08_crosscheck_g3.py` → `results/g3_crosscheck.json`.
 
 ### 4.1 Sinh split
 
-| Tên | Mã Spark |
-|---|---|
-| `random80_20` | `df.withColumn("is_test", F.rand(42) > F.lit(0.8))` |
+| Tên                | Mã Spark                                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `random80_20`     | `df.withColumn("is_test", F.rand(42) > F.lit(0.8))`                                                       |
 | `temporal_global` | `df.withColumn("is_test", F.col("timestamp") >= F.lit(THR))`, `THR = percentile_approx(timestamp, 0.8)` |
-| `leave_one_out` | `Window.partitionBy("userId").orderBy(timestamp.desc(), movieId.asc())` → `rn == 1` |
+| `leave_one_out`   | `Window.partitionBy("userId").orderBy(timestamp.desc(), movieId.asc())` → `rn == 1`                    |
 
 ### 4.2 Audit tầng 1 (Spark SQL thuần)
 
@@ -190,11 +225,11 @@ for s in range(0, len(U), 2000):          # chunk để không OOM
 
 ### 5.1 MongoDB
 
-| Collection | Schema | Nguồn |
-|---|---|---|
-| `audit_metrics` | **42 field** đầy đủ: `{split, model, ndcg10, dcg10, hit_rate10, catalog_coverage, longtail_coverage, gini_exposure, avg_pop_rec, avg_pop_all, popularity_bias_ratio, train_rows, test_rows, train_max_ts, train_max_ts_iso, test_min_ts, test_min_ts_iso, temporal_violation_global, temporal_violation_global_pct, temporal_violation_user, temporal_violation_user_pct, unseen_item_rows, unseen_item_pct, coldstart_user_rows, eval_users, eval_test_rows, eval_relevant_users, test_relevant_eval_rows, relevance_threshold, min_train_threshold, seed, spark_version, dataset, run_at, + tham số ALS}` | `scripts/05_store_mongodb.py` ← `results/poc6_*.json` |
-| `item_profile` | `{movieId, title, year, genres[]}` | `movies.csv` (62.423 phim) |
-| `audit_metrics_r` | schema rút gọn 12 field (bảng chung phục vụ báo cáo R) | `scripts/06_analysis_r.R` |
+| Collection          | Schema                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Nguồn                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| `audit_metrics`   | **42 field** đầy đủ: `{split, model, ndcg10, dcg10, hit_rate10, catalog_coverage, longtail_coverage, gini_exposure, avg_pop_rec, avg_pop_all, popularity_bias_ratio, train_rows, test_rows, train_max_ts, train_max_ts_iso, test_min_ts, test_min_ts_iso, temporal_violation_global, temporal_violation_global_pct, temporal_violation_user, temporal_violation_user_pct, unseen_item_rows, unseen_item_pct, coldstart_user_rows, eval_users, eval_test_rows, eval_relevant_users, test_relevant_eval_rows, relevance_threshold, min_train_threshold, seed, spark_version, dataset, run_at, + tham số ALS}` | `scripts/05_store_mongodb.py` ← `results/poc6_*.json` |
+| `item_profile`    | `{movieId, title, year, genres[]}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `movies.csv` (62.423 phim)                               |
+| `audit_metrics_r` | schema rút gọn 12 field (bảng chung phục vụ báo cáo R)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `scripts/06_analysis_r.R`                                |
 
 **Index:** `{split: 1, model: 1}` unique trên `audit_metrics`; `{movieId: 1}` unique trên `item_profile`.
 
@@ -205,6 +240,7 @@ for s in range(0, len(U), 2000):          # chunk để không OOM
 **R 4.6.2** tại `C:\Program Files\R\R-4.6.2`, user library `D:\R-library`. Package: `jsonlite`, `dplyr`, `ggplot2`, `mongolite`, `corrplot`.
 
 Luồng thực tế (`scripts/06_analysis_r.R`):
+
 1. Đọc `D:/recsys_data/poc/poc6_<split>.json` bằng `jsonlite::fromJSON` → 2 data frame (cấp dữ liệu + hiệu quả/bias).
 2. Kiểm tra thứ tự mô hình (Spearman) — kết luận **ALS > Popularity ở cả 3 split**.
 3. Chuẩn hoá NDCG trong từng split (max = 1) → so sánh **độ lớn tương đối**.
@@ -215,6 +251,7 @@ Luồng thực tế (`scripts/06_analysis_r.R`):
 **Giới hạn đã ghi nhận:** `SparkR` / `sparklyr` **không cài** (cần Spark + R trong cùng môi trường). R hiện đóng vai trò **phân tích + trực quan**, phần xử lý dữ liệu lớn do PySpark đảm nhiệm. Trong báo cáo phải nói rõ giới hạn này.
 
 **Lỗi R đã gặp:**
+
 - `mongo(mongo = MONGO, ...)` → `unused argument` → đúng cú pháp là `mongo(url = MONGO, ...)`.
 - `$insert()` không nhận list-of-list → phải truyền **vector chuỗi JSON** (`toJSON(auto_unbox = TRUE, na = "null")`).
 - `corrplot()` chưa `library(corrplot)` → `could not find function`.
@@ -257,16 +294,16 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
 
 ## 7. Điểm kiểm soát chất lượng (quality gate)
 
-| Gate | Điều kiện | Trạng thái 04/11 | Hành động nếu fail |
-|---|---|---|---|
-| G1 | `rows == 25.000.095` | ✅ pass | dừng, kiểm tra checksum |
-| G2 | `ts_min == 1995-01-09 11:46:49` và `ts_max == 2019-11-21 09:15:03` | ✅ pass | dừng |
-| G3 | MapReduce popularity == Spark popularity, **khớp tuyệt đối** | ✅ **pass 100%** (323.737/323.737) | dừng, sửa job / kiểm tra timezone |
-| G4 | `temporal_violation_global_pct(random) > 95%` | ✅ pass (100,0000%) | kiểm tra lại định nghĩa split |
-| G5 | `temporal_violation_global_pct(temporal_global) == 0` | ✅ pass (0,0000%) | kiểm tra threshold |
-| G6 | NDCG của ALS ≥ NDCG popularity (sanity) | ✅ pass (3/3 split) | kiểm tra top-K/mask |
-| G7 | `eval_relevant_users` > 0 ở mọi split (tập đánh giá khả dụng) | ✅ pass (temporal: 6.219 > 0) | cảnh báo khi so sánh NDCG giữa split |
-| G8 | Gap 3 phần nằm trong 200–250 từ | ✅ pass (237 từ) | rút gọn `scripts/09_count_gap.py` |
+| Gate | Điều kiện                                                            | Trạng thái 04/11                       | Hành động nếu fail                   |
+| ---- | ----------------------------------------------------------------------- | ---------------------------------------- | ---------------------------------------- |
+| G1   | `rows == 25.000.095`                                                  | ✅ pass                                  | dừng, kiểm tra checksum                |
+| G2   | `ts_min == 1995-01-09 11:46:49` và `ts_max == 2019-11-21 09:15:03` | ✅ pass                                  | dừng                                    |
+| G3   | MapReduce popularity == Spark popularity, **khớp tuyệt đối**  | ✅ **pass 100%** (323.737/323.737) | dừng, sửa job / kiểm tra timezone     |
+| G4   | `temporal_violation_global_pct(random) > 95%`                         | ✅ pass (100,0000%)                      | kiểm tra lại định nghĩa split       |
+| G5   | `temporal_violation_global_pct(temporal_global) == 0`                 | ✅ pass (0,0000%)                        | kiểm tra threshold                      |
+| G6   | NDCG của ALS ≥ NDCG popularity (sanity)                               | ✅ pass (3/3 split)                      | kiểm tra top-K/mask                     |
+| G7   | `eval_relevant_users` > 0 ở mọi split (tập đánh giá khả dụng) | ✅ pass (temporal: 6.219 > 0)            | cảnh báo khi so sánh NDCG giữa split |
+| G8   | Gap 3 phần nằm trong 200–250 từ                                     | ✅ pass (237 từ)                        | rút gọn `scripts/09_count_gap.py`    |
 
 ## 8. Tầng 6 — Kiểm định thống kê (bổ sung 2026-11-04)
 
@@ -280,13 +317,13 @@ thì phải có **một giá trị cho mỗi user**.
 
 ### 8.2 Thành phần
 
-| Mã | Thành phần | Công nghệ | Script | Trạng thái |
-|---|---|---|---|---|
-| S5.1 | Sinh per-user metrics | PySpark 4.2.0 + numpy | `scripts/11_peruser_ndcg.py` | ✅ chạy thật, 3 split |
-| S5.2 | Bootstrap CI + Wilcoxon + Cohen's dz + Kendall tau-b | numpy (vector hoá) + scipy 1.18.0 | `scripts/12_stats_tests.py` | ✅ chạy thật, 3 split |
-| S5.3 | PRISMA 2020 flow | SVG thuần (không cần Cairo) | `scripts/13_prisma_flow.py` | ✅ SVG |
-| S5.4 | Benchmark Big Data | PySpark + YARN REST | `scripts/14_perf_benchmark.py` | 🔄 đang chạy |
-| S5.5 | Chụp dashboard | Chrome DevTools Protocol | `scripts/15_screenshot_dashboard.py` | ✅ PNG 1920×1260 |
+| Mã  | Thành phần                                         | Công nghệ                        | Script                                 | Trạng thái            |
+| ---- | ---------------------------------------------------- | ---------------------------------- | -------------------------------------- | ----------------------- |
+| S5.1 | Sinh per-user metrics                                | PySpark 4.2.0 + numpy              | `scripts/11_peruser_ndcg.py`         | ✅ chạy thật, 3 split |
+| S5.2 | Bootstrap CI + Wilcoxon + Cohen's dz + Kendall tau-b | numpy (vector hoá) + scipy 1.18.0 | `scripts/12_stats_tests.py`          | ✅ chạy thật, 3 split |
+| S5.3 | PRISMA 2020 flow                                     | SVG thuần (không cần Cairo)     | `scripts/13_prisma_flow.py`          | ✅ SVG                  |
+| S5.4 | Benchmark Big Data                                   | PySpark + YARN REST                | `scripts/14_perf_benchmark.py`       | 🔄 đang chạy          |
+| S5.5 | Chụp dashboard                                      | Chrome DevTools Protocol           | `scripts/15_screenshot_dashboard.py` | ✅ PNG 1920×1260       |
 
 ### 8.3 Sơ đồ luồng (mở rộng)
 
@@ -304,12 +341,12 @@ peruser_<split>.csv ──►│ scripts/12_stats_tests.py     │
 
 ### 8.4 Điểm kiểm soát chất lượng (bổ sung)
 
-| Gate | Điều kiện | Trạng thái 04/11 | Hành động nếu fail |
-|---|---|---|---|
-| G9 | `n_paired > 0` ở cả 3 split | ✅ pass (29.337 / 1.363 / 17.704) | kiểm tra `min_train`, ngưỡng liên quan |
-| G10 | Metric hằng số **không** được báo "có ý nghĩa" | ✅ pass (cờ `constant_metric`) | kiểm tra `n_nonzero == 0` |
-| G11 | Bootstrap CI phải hẹp hơn khoảng cách hiệu ứng khi kết luận "có ý nghĩa" | ✅ pass (CI không chạm 0) | kiểm tra lại số lần bootstrap |
-| G12 | Mọi khẳng định về thiên lệch phải kèm `longtail_coverage` | ✅ pass (0 ở cả 6 tổ hợp → **không** khẳng định "đã xử lý") | sửa phần diễn giải |
+| Gate | Điều kiện                                                                         | Trạng thái 04/11                                                             | Hành động nếu fail                       |
+| ---- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | -------------------------------------------- |
+| G9   | `n_paired > 0` ở cả 3 split                                                      | ✅ pass (29.337 / 1.363 / 17.704)                                              | kiểm tra `min_train`, ngưỡng liên quan |
+| G10  | Metric hằng số **không** được báo "có ý nghĩa"                       | ✅ pass (cờ `constant_metric`)                                              | kiểm tra `n_nonzero == 0`                 |
+| G11  | Bootstrap CI phải hẹp hơn khoảng cách hiệu ứng khi kết luận "có ý nghĩa" | ✅ pass (CI không chạm 0)                                                    | kiểm tra lại số lần bootstrap            |
+| G12  | Mọi khẳng định về thiên lệch phải kèm `longtail_coverage`                 | ✅ pass (0 ở cả 6 tổ hợp → **không** khẳng định "đã xử lý") | sửa phần diễn giải                       |
 
 ---
 
@@ -329,22 +366,22 @@ Manifest: `docs/References/Papers/_manifest.json` — trường `provenance` ghi
 
 ### 9.2 Trạng thái 13/14 paper (bản nhà xuất bản)
 
-| # | File | DOI | Venue (Crossref) |
-|---|---|---|---|
-| 01 | `01_TOIS2022_DataLeakage_RS_OfflineEvaluation.pdf` | `10.1145/3569930` | ACM TOIS 41(3) Art.75 |
-| 02 | `02_TOIS2023_Reproducing_PopularityBias_EvaluationStrategies.pdf` | `10.1145/3637066` | ACM TORS 2(1) Art.5 |
-| 03 | `03_RecSys2025_TimeToSplit.pdf` | `10.1145/3705328.3748164` | RecSys '25, 874–883 |
-| 04 | `04_RecSys2026_ConvergentValidity_OfflineEvaluation.pdf` | `10.1145/3773078.3831818` | RecSys '26, 410–418 |
-| 05 | `05_TOIS2022_Bias_Debias_Survey.pdf` | `10.1145/3564284` | ACM TOIS 41(3) Art.67 |
-| 06 | `06_UMAI2024_Survey_PopularityBias.pdf` | `10.1007/s11257-024-09406-0` | Springer UMAI 34(5) |
-| 07 | `07_SIGIR2023_FreshLook_EvaluationStandpoint.pdf` | `10.1145/3539618.3591931` | SIGIR '23, 2629–2638 |
-| 08 | `08_RecSys2023_Challenges_OfflineEvaluation.pdf` | `10.1145/3604915.3609495` | RecSys '23 tutorial |
-| 09 | `09_RecSys2025_InheritedPopularityBias_ColdStart.pdf` | `10.1145/3705328.3748035` | RecSys '25 |
-| 10 | `10_TOIS2023_Relieving_PopularityBias_Interactive.pdf` | `10.1145/3618107` | ACM TOIS 42(2) Art.52 |
-| 11 | `11_RecSys2021_QualityMetrics_Consistency.pdf` | `10.1145/3460231.3478848` | RecSys '21, 708–713 |
-| 12 | `12_RecSys2020_DataSplitting_Strategies.pdf` | `10.1145/3383313.3418479` | RecSys '20, 681–686 |
-| 13 | `13_JBigData2019_Elearning_RS_Spark_Hadoop.pdf` | `10.1186/s40537-019-0169-4` | Springer J. Big Data 6(1):2 |
-| 14 | `14_ESWA2023_EvaluationFramework_BigData.pdf` | `10.1016/j.eswa.2023.120659` | Elsevier ESWA 231:120659 — **CHƯA TẢI** |
+| #  | File                                                                | DOI                            | Venue (Crossref)                                 |
+| -- | ------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------ |
+| 01 | `01_TOIS2022_DataLeakage_RS_OfflineEvaluation.pdf`                | `10.1145/3569930`            | ACM TOIS 41(3) Art.75                            |
+| 02 | `02_TOIS2023_Reproducing_PopularityBias_EvaluationStrategies.pdf` | `10.1145/3637066`            | ACM TORS 2(1) Art.5                              |
+| 03 | `03_RecSys2025_TimeToSplit.pdf`                                   | `10.1145/3705328.3748164`    | RecSys '25, 874–883                             |
+| 04 | `04_RecSys2026_ConvergentValidity_OfflineEvaluation.pdf`          | `10.1145/3773078.3831818`    | RecSys '26, 410–418                             |
+| 05 | `05_TOIS2022_Bias_Debias_Survey.pdf`                              | `10.1145/3564284`            | ACM TOIS 41(3) Art.67                            |
+| 06 | `06_UMAI2024_Survey_PopularityBias.pdf`                           | `10.1007/s11257-024-09406-0` | Springer UMAI 34(5)                              |
+| 07 | `07_SIGIR2023_FreshLook_EvaluationStandpoint.pdf`                 | `10.1145/3539618.3591931`    | SIGIR '23, 2629–2638                            |
+| 08 | `08_RecSys2023_Challenges_OfflineEvaluation.pdf`                  | `10.1145/3604915.3609495`    | RecSys '23 tutorial                              |
+| 09 | `09_RecSys2025_InheritedPopularityBias_ColdStart.pdf`             | `10.1145/3705328.3748035`    | RecSys '25                                       |
+| 10 | `10_TOIS2023_Relieving_PopularityBias_Interactive.pdf`            | `10.1145/3618107`            | ACM TOIS 42(2) Art.52                            |
+| 11 | `11_RecSys2021_QualityMetrics_Consistency.pdf`                    | `10.1145/3460231.3478848`    | RecSys '21, 708–713                             |
+| 12 | `12_RecSys2020_DataSplitting_Strategies.pdf`                      | `10.1145/3383313.3418479`    | RecSys '20, 681–686                             |
+| 13 | `13_JBigData2019_Elearning_RS_Spark_Hadoop.pdf`                   | `10.1186/s40537-019-0169-4`  | Springer J. Big Data 6(1):2                      |
+| 14 | `14_ESWA2023_EvaluationFramework_BigData.pdf`                     | `10.1016/j.eswa.2023.120659` | Elsevier ESWA 231:120659 — **CHƯA TẢI** |
 
 **Kiểm chứng bản thật:** `pypdf` đọc `/Creator`; bản arXiv là `arXiv GenPDF`, bản xuất bản là
 `acmart` / `MiKTeX-pdfTeX` / `Acrobat Distiller` / `Springer` + footer bản quyền ACM/Springer.

@@ -1,4 +1,0 @@
-"split","train_rows","test_rows","viol_global","viol_user","unseen_item","cold_user","eval_users","eval_rel_users"
-"random80_20",19997972,5002123,100,98.9084,0.0559,0,162541,158688
-"temporal_global",19999206,5000889,0,0,8.7594,4235246,137839,6219
-"leave_one_out",24837554,162541,99.9988,0,0.0388,0,162541,96003

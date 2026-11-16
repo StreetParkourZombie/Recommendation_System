@@ -1,11 +1,39 @@
 # Architecture — Kiến trúc pipeline đánh giá hệ thống gợi ý
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-09 23:48 GMT+7
+**Cập nhật:** 2026-11-15 (bổ sung §0 notebook-first, `src/audit/*`; §2 Parquet write đã giải quyết)
 
 > Architecture contains two isolated tracks: Paper 01 reproduction and project controlled experiment.
+>
+> **Từ 2026-11-15:** pipeline project có **hai đường thực thi** — notebook-first (`notebooks/jupyter/04`–`09` + `src/audit/*`, đã PASS 6/6 gate) và script-driven (`scripts/04_audit_spark.py`, giữ làm tham chiếu và nguồn số 2026-11-04). Cùng protocol, khác đường chọn tập user đánh giá → chênh NDCG ≤ 0,0053. Xem `Metrics.md` §4.5.
 
 ---
+
+## 0. Đường thực thi notebook-first (bổ sung 2026-11-15)
+
+Script đơn khối `04_audit_spark.py` chạy 40–60 phút và chỉ in kết quả cuối — không quan sát được bước nào hỏng. Notebook 04–09 chia nhỏ theo gate, mỗi bước ghi checkpoint.
+
+```
+04_build_splits          3 split → D:\recsys_data\splits\<strategy>\{train,test}\*.parquet
+   │                     verify_materialized + overlap_check → L4 PASS
+05_audit_split_leakage   temporal_violation (toàn cục + user), unseen_item, cold_start → L5 PASS
+   │
+   ├── 06_mostpopular_baseline   Popularity top-K, NDCG/Hit/coverage/Gini/bias → L6a PASS
+   ├── 07_ndcg_manual_check      5 fixture NDCG tính tay, tol 1e-12          → L6b PASS
+   └── 08_als_implicit           ALS implicit + numpy top-K + seen_exclusion  → L6c PASS
+                │
+                ▼
+09_compare_and_reversal   comparison.json, reversal_table.csv, rq1_answer.md     → L7 PASS
+```
+
+| Nguyên tắc | Lý do |
+|---|---|
+| Code dùng lại nằm ở `src/audit/*`, notebook chỉ gọi + in bảng | cell notebook đọc được, không ẩn logic trong 800 dòng |
+| Mỗi notebook một process (`scripts/run_notebook.py`) | tránh NPE `PartitionKeyedAccumulator.byPartition()` khi reuse Spark session |
+| Split materialize xuống đĩa một lần | 05/06/08 đọc cùng một file; không tính lại `F.rand` |
+| Mọi assert ghi vào `runs/<run_id>/checkpoints/<step>.json` | truy vết số về từng bước |
+
+**Không dùng GPU.** PySpark 4.2.0 trên Windows chạy CPU; `local[4]` dùng 4 core. `netlib-blas: dlopen(libopenblas.dll) failed` là cảnh báo lành tính — numpy fallback reference BLAS, chỉ chậm hơn.
 
 ---
 
@@ -42,14 +70,15 @@ Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Ha
 
 `paper_run_id` dành cho reproduction report. `protocol_id=project_protocol_v1` dành cho results/MongoDB/reports project. Không overwrite project result bằng Paper artifact.
 
-## 2. Tầng 1 — Ingest
+### 1.1 Sơ đồ 4 tầng
 
 ```
 ┌─ TẦNG 1 ─ INGEST ─────────────────────────────────────────────────────┐
 │  MovieLens ml-25m (ratings.csv 25.000.095 dòng, 678 MB)             │
-│      │  _ml_to_parquet.py (pyarrow streaming, 26s)                  │
+│      │  scripts/01_ml_to_parquet.py (pyarrow streaming, 26s)         │
 │      ▼                                                            │
-│  data/interim/ratings/part-00000.parquet (176 MB, 31 row-groups)   │
+│  D:\recsys_data\parquet\ratings\part-00000.parquet                  │
+│  (175.961.682 B, 31 row-groups)                                     │
 └──────────────────────────────────────────────────────────────────────┘
                               │
 ┌─ TẦNG 2 ─ BIG DATA (HDFS + MapReduce) ──────────────────────────────┐
@@ -63,19 +92,25 @@ Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Ha
 │  /recsys/out/  (coverage, long-tail threshold)                     │
 └──────────────────────────────────────────────────────────────────────┘
                               │
-┌─ TẦNG 3 ─ SPARK ────────────────────────────────────────────────────┐
+┌─ TẦNG 3 ─ SPARK (local[4]) ─────────────────────────────────────────┐
 │  S3  sinh 3 split:  random80_20 | temporal_global | leave_one_out  │
+│      └─ materialize → D:\recsys_data\splits\        (notebook 04)   │
 │  S4  audit tầng 1: temporal_violation, unseen_item, cold_start     │
+│      (notebook 05)                                                  │
 │  S5  baseline Popularity (Spark SQL) → NDCG@10, DCG@10              │
-│  S6  ALS (rank 16, maxIter 8, seed 42) → userFactors/itemFactors   │
+│      (notebook 06)                                                  │
+│  S6  ALS implicit (rank 16, maxIter 8, alpha 10, seed 42)          │
+│      → userFactors/itemFactors              (notebook 08)           │
 │  S7  top-K bằng numpy: U[s:e] @ V.T → argpartition (chunk 2000)   │
 │  S8  bias metrics: coverage, long-tail, Gini, popularity_bias_ratio│
+│  S8b so sánh 2 mô hình × 3 split, kiểm tra đảo chiều (notebook 09) │
 └──────────────────────────────────────────────────────────────────────┘
                               │
 ┌─ TẦNG 4 ─ LƯU TRỮ & TRỰC QUAN ──────────────────────────────────────┐
 │  S9  MongoDB: collection `audit_metrics` (split × model)           │
 │      + collection `item_profile` (popularity, year, long-tail flag) │
-│  S10 R + SparkR: thống kê mô tả, kiểm định, biểu đồ              │
+│  S9b runs/<run_id>/: manifest + checkpoints + outputs + figures    │
+│  S10 R 4.6.2 (không SparkR): thống kê mô tả, kiểm định, biểu đồ    │
 │  S11 Streamlit: dashboard đọc MongoDB                             │
 └──────────────────────────────────────────────────────────────────────┘
 ```
@@ -89,9 +124,11 @@ Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Ha
 | 1.1 Tải           | `https://files.grouplens.org/datasets/movielens/ml-25m.zip` | 261.978.986 B                                                                           |
 | 1.2 Giải nén     | `D:\recsys_data\raw\ml-25m\`                                | 8 file                                                                                  |
 | 1.3 CSV → Parquet | **pyarrow** `pacsv.open_csv` + `pq.ParquetWriter`   | 26s, schema cố định `userId int32, movieId int32, rating float32, timestamp int32` |
-| 1.4 Checksum       | SHA-256 từng file parquet → `ratings.parquet.sha256`      | tái lập                                                                               |
+| 1.4 Checksum       | SHA-256 file CSV + thư mục parquet                        | `ratings.csv` = `9c855257…26e385` (678.260.987 B); parquet dir = `379d0b2e…9657c` |
 
-**Vì sao pyarrow chứ không phải Spark:** `df.write.parquet` trên Windows cần `winutils.exe` (`hadoop.home.dir` unset) → fail. Pyarrow ghi thẳng, không cần Hadoop native libs.
+**Vì sao pyarrow cho ingest:** `_ml_to_parquet.py` cần stream 678 MB CSV → Parquet với schema cố định, không cần dựng Spark session chỉ để đổi định dạng. pyarrow làm trong 26s.
+
+> **Đã giải quyết 2026-11-15:** `df.write.parquet` trên Windows **chạy được** sau khi đặt `HADOOP_HOME=D:\recsys_data\tools\hadoop` và đặt **cả** `bin\winutils.exe` **lẫn** `bin\hadoop.dll` (prepend `bin` vào `PATH`). Thiếu `winutils.exe` → `hadoop.home.dir are unset`. Có `winutils.exe` mà thiếu `hadoop.dll` → `UnsatisfiedLinkError: NativeIO$Windows.access0`. Cả hai cùng có → đọc/ghi thư mục Parquet đều OK. Đây là cách `materialize_split` ghi 3 split xuống `D:\recsys_data\splits\`. Chi tiết: `MetErrors/io.md`.
 
 ---
 
@@ -103,14 +140,13 @@ Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Ha
 
 ```bash
 docker exec namenode hdfs dfs -mkdir -p /recsys/ratings
-docker cp D:\recsys_data\parquet\ratings\part-00000.parquet namenode:/tmp/ratings.parquet
+docker cp "D:\recsys_data\parquet\ratings\part-00000.parquet" namenode:/tmp/ratings.parquet
 docker exec namenode hdfs dfs -put -f /tmp/ratings.parquet /recsys/ratings/part-00000.parquet
+```
 
-
-**Kốt quả:** 1 file, 167,8 MB, 175.961.682 byte (`hdfs dfs -count -q`).
+**Kết quả:** 1 file, 167,8 MiB, 175.961.682 byte (`hdfs dfs -count -q`).
 
 > MapReduce job cần **CSV text** chứ không phải Parquet (MapReduce đọc `TextInputFormat`). Vì vậy `scripts/03_run_mapreduce.sh` nạp thêm `/recsys/ratings_csv/part-00000.csv` (646,8 MB) từ `/tmp/ratings.csv` trong container. Parquet vẫn giữ vai trò nguồn cho Spark.
-```
 
 ### 3.2 Job MapReduce (Java — `scripts/02_PopularityByYear.java`)
 
@@ -192,14 +228,17 @@ cold   = test.join(broadcast(train.select("userId").distinct()), "userId", "left
 elig   = train.groupBy("userId").count().filter(F.col("count") >= 5).select("userId")
 ```
 
-### 4.3 ALS + top-K numpy
+### 4.3 ALS implicit + top-K numpy
+
+> **Phải là `implicitPrefs=True`.** ALS explicit xếp hạng theo sai số dự đoán rating → phim user chấm 5,0 mà mô hình đoán 3,2 vẫn bị đẩy xuống cuối → NDCG ≈ 0. Sai phương pháp cho đánh giá top-N. Xem `Metrics.md` §2.0.
 
 ```python
 als = ALS(userCol="userId", itemCol="movieId", ratingCol="rating",
-          rank=16, maxIter=8, regParam=0.05, coldStartStrategy="drop", seed=42)
-m = als.fit(train_subsample)
-U = np.array([r["features"] for r in m.userFactors.collect()])   # (n_user, 16)
-V = np.array([r["features"] for r in m.itemFactors.collect()])   # (n_item, 16)
+          rank=16, maxIter=8, regParam=0.05, implicitPrefs=True, alpha=10.0,
+          coldStartStrategy="drop", seed=42)
+m = als.fit(train_subsample)                                      # 30.000 user đầu theo userId
+U = np.array([r["features"] for r in m.userFactors.collect()])    # (n_user, 16)
+V = np.array([r["features"] for r in m.itemFactors.collect()])    # (n_item, 16)
 
 for s in range(0, len(U), 2000):          # chunk để không OOM
     sc = U[s:s+2000] @ V.T
@@ -207,7 +246,7 @@ for s in range(0, len(U), 2000):          # chunk để không OOM
     # np.argpartition(-row, 10)[:10] -> top-10
 ```
 
-**Vì sao không `recommendForAllUsers`:** hàm này tạo cartesian 162.541 × 59.047 ≈ 9,6 tỷ cặp → OOM. Cách numpy chunk 2.000 user cho **cùng kết quả toán học** (top-K theo `U·V`) nhưng kiểm soát được bộ nhớ.
+**Vì sao không `recommendForAllUsers`:** hàm này tạo cartesian 162.541 × 59.047 ≈ 9,6 tỷ cặp → OOM. Cách numpy chunk 2.000 user cho **cùng kết quả toán học** (top-K theo `U·V`) nhưng kiểm soát được bộ nhớ. Notebook 08 assert `seen_exclusion` để chắc item đã xem không lọt vào top-K.
 
 ### 4.4 Cấu hình Spark bắt buộc
 
@@ -227,7 +266,7 @@ for s in range(0, len(U), 2000):          # chunk để không OOM
 
 | Collection          | Schema                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Nguồn                                                     |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| `audit_metrics`   | **42 field** đầy đủ: `{split, model, ndcg10, dcg10, hit_rate10, catalog_coverage, longtail_coverage, gini_exposure, avg_pop_rec, avg_pop_all, popularity_bias_ratio, train_rows, test_rows, train_max_ts, train_max_ts_iso, test_min_ts, test_min_ts_iso, temporal_violation_global, temporal_violation_global_pct, temporal_violation_user, temporal_violation_user_pct, unseen_item_rows, unseen_item_pct, coldstart_user_rows, eval_users, eval_test_rows, eval_relevant_users, test_relevant_eval_rows, relevance_threshold, min_train_threshold, seed, spark_version, dataset, run_at, + tham số ALS}` | `scripts/05_store_mongodb.py` ← `results/poc6_*.json` |
+| `audit_metrics`   | **42 field** đầy đủ: `{split, model, ndcg10, dcg10, hit_rate10, catalog_coverage, longtail_coverage, gini_exposure, avg_pop_rec, avg_pop_all, popularity_bias_ratio, train_rows, test_rows, train_max_ts, train_max_ts_iso, test_min_ts, test_min_ts_iso, temporal_violation_global, temporal_violation_global_pct, temporal_violation_user, temporal_violation_user_pct, unseen_item_rows, unseen_item_pct, coldstart_user_rows, eval_users, eval_test_rows, eval_relevant_users, test_relevant_eval_rows, relevance_threshold, min_train_threshold, seed, spark_version, dataset, run_at, + tham số ALS}` | `scripts/05_store_mongodb.py` ← `D:\recsys_data\poc\poc6_*.json` (đường A) |
 | `item_profile`    | `{movieId, title, year, genres[]}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `movies.csv` (62.423 phim)                               |
 | `audit_metrics_r` | schema rút gọn 12 field (bảng chung phục vụ báo cáo R)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `scripts/06_analysis_r.R`                                |
 
@@ -246,7 +285,7 @@ Luồng thực tế (`scripts/06_analysis_r.R`):
 3. Chuẩn hoá NDCG trong từng split (max = 1) → so sánh **độ lớn tương đối**.
 4. Ma trận tương quan 6 tổ hợp (`corrplot`) — bỏ `longtail_coverage` vì bằng 0 ở cả 6 dòng (SD = 0).
 5. Đọc MongoDB (`mongolite`) để kiểm tra, ghi bảng chung vào `recsys.audit_metrics_r`.
-6. Xuất: `reports/metrics_summary.csv`, `reports/data_level_metrics.csv`, 7 PNG vào `reports/figures/`.
+6. Xuất: 7 PNG vào `reports/figures/`. (Hai CSV `metrics_summary.csv`, `data_level_metrics.csv` đã bị gỡ khỏi repo — số liệu nay lấy từ `runs/<run_id>/outputs/`.)
 
 **Giới hạn đã ghi nhận:** `SparkR` / `sparklyr` **không cài** (cần Spark + R trong cùng môi trường). R hiện đóng vai trò **phân tích + trực quan**, phần xử lý dữ liệu lớn do PySpark đảm nhiệm. Trong báo cáo phải nói rõ giới hạn này.
 
@@ -284,11 +323,21 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
                     │                     │                     │
                     └──────────┬──────────┴──────────┬──────────┘
                                ▼                     ▼
-                    audit_metrics (tầng 1)    ALS → top-K → bias metrics
-                                                    │
-                                                    ▼
-                                          MongoDB → R/SparkR → Streamlit
+                 D:\recsys_data\splits\<split>\   (materialize 735 MB)
+                               │
+                    ┌──────────┴──────────┐
+                    ▼                     ▼
+            MostPopular top-K      ALS implicit → numpy top-K
+                    │                     │
+                    └──────────┬──────────┘
+                               ▼
+                audit_metrics (tầng 1) + bias metrics
+                               │
+                               ▼
+              MongoDB → R → Streamlit  |  runs/<run_id>/outputs/
 ```
+
+**Sau 2026-11-15:** S3 **materialize** split xuống `D:\recsys_data\splits\`; S4 (Popularity) và S3b (ALS) đọc từ đó, **không đọc lại `ratings.csv`**. Nhờ vậy 3 notebook độc lập nhìn thấy đúng cùng một tập train/test — không phụ thuộc `F.rand(42)` được sinh lại.
 
 ---
 
@@ -304,6 +353,19 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
 | G6   | NDCG của ALS ≥ NDCG popularity (sanity)                               | ✅ pass (3/3 split)                      | kiểm tra top-K/mask                     |
 | G7   | `eval_relevant_users` > 0 ở mọi split (tập đánh giá khả dụng) | ✅ pass (temporal: 6.219 > 0)            | cảnh báo khi so sánh NDCG giữa split |
 | G8   | Gap 3 phần nằm trong 200–250 từ                                     | ✅ pass (237 từ)                        | rút gọn `scripts/09_count_gap.py`    |
+
+### 7.1 Gate notebook-first (2026-11-15)
+
+| Gate | Điều kiện | Trạng thái | Run ID |
+|---|---|---|:---:|
+| L4 | 3 split ghi đĩa, `matches_expected=True`, `overlap=0` | ✅ PASS | `20261115_191009_04_build_splits_2a395f07` |
+| L5 | `temporal_violation_global_pct(random) > 95%` và `== 0` với temporal | ✅ PASS (98,9158% user-relative / 0,0000%) | `20261115_192229_05_audit_split_leakage_8e672786` |
+| L6a | MostPopular NDCG giảm đơn điệu random → temporal → LOO | ✅ PASS (0,0852 → 0,0455 → 0,0183) | `20261115_192522_06_mostpopular_baseline_c39572de` |
+| L6b | 5 fixture NDCG khớp tính tay, tolerance `1e-12` | ✅ PASS | `20261115_190933_07_ndcg_manual_check_e1cc5714` |
+| L6c | ALS ≥ MostPopular cả 3 split + `seen_exclusion` PASS | ✅ PASS (3/3) | `20261115_192654_08_als_implicit_0c1385ff` |
+| L7 | `reversals_found == 0` hoặc liệt kê rõ cặp đảo chiều | ✅ PASS (0 ở 3/3 cặp) | `20261115_193151_09_compare_and_reversal_66fefc4f` |
+
+> **G7 cảnh báo:** `eval_relevant_users` chênh rất lớn giữa split (158.692 / 6.219 / 96.003). NDCG **không** so cặp được giữa các split. Xem `Drawbacks.md` §3.3.
 
 ## 8. Tầng 6 — Kiểm định thống kê (bổ sung 2026-11-04)
 
@@ -329,15 +391,17 @@ thì phải có **một giá trị cho mỗi user**.
 
 ```
                         ┌──────────────────────────────┐
-peruser_<split>.csv ──►│ scripts/12_stats_tests.py     │
-(29.337 / 1.363 /      │  • bootstrap CI 95% (10.000)  │
-17.704 user)            │  • Wilcoxon signed-rank        │
-                        │  • Cohen's dz, rank-biserial   │
+peruser_ndcg_<split>.npz│ scripts/12_stats_tests.py     │
+hoặc peruser_<split>.csv│  • bootstrap CI 95% (10.000)  │
+(29.229 / 1.348 /       │  • Wilcoxon signed-rank        │
+17.673 user — notebook 08)│ • Cohen's dz, rank-biserial   │
                         │  • Kendall tau-b              │
                         └──────────────┬───────────────┘
                                        ▼
-             reports/stats_<split>.json  +  reports/stats_summary.csv
+                     runs/<run_id>/outputs/stats_<split>.json
 ```
+
+> `reports/stats_summary.csv` đã bị gỡ khỏi repo. Số kiểm định nay đọc từ `runs/<run_id>/outputs/` (đường B) hoặc `D:\recsys_data\` (đường A).
 
 ### 8.4 Điểm kiểm soát chất lượng (bổ sung)
 
@@ -400,40 +464,41 @@ Manifest: `docs/References/Papers/_manifest.json` — trường `provenance` ghi
 ```powershell
 cd "D:\Master Exers\Big Data\Recomendation_System"
 
-# 0. hạ tầng
+# 0. hạ tầng (bật thủ công)
 docker start namenode datanode resourcemanager nodemanager historyserver
 
-# 1. ingest
-python scripts\01_ml_to_parquet.py
+# A. ĐƯỜNG B — notebook-first (khuyến nghị, quan sát được từng bước)
+python scripts\run_notebook.py notebooks\jupyter\00_environment_check.ipynb
+python scripts\run_notebook.py notebooks\jupyter\01_verify_dataset.ipynb
+python scripts\run_notebook.py notebooks\jupyter\02_profile_ratings_with_spark.ipynb
+python scripts\run_notebook.py notebooks\jupyter\03_understand_interactions.ipynb
+python scripts\run_notebook.py notebooks\jupyter\04_build_splits.ipynb
+python scripts\run_notebook.py notebooks\jupyter\05_audit_split_leakage.ipynb
+python scripts\run_notebook.py notebooks\jupyter\06_mostpopular_baseline.ipynb
+python scripts\run_notebook.py notebooks\jupyter\07_ndcg_manual_check.ipynb
+python scripts\run_notebook.py notebooks\jupyter\08_als_implicit.ipynb
+python scripts\run_notebook.py notebooks\jupyter\09_compare_and_reversal.ipynb
 
-# 2. HDFS + MapReduce (Java) -> G3 cross-check
+# B. ĐƯỜNG A — script (nguồn số 2026-11-04, giữ làm tham chiếu)
+python scripts\01_ml_to_parquet.py
 bash scripts/run_mr.sh
 python scripts\08_crosscheck_g3.py
-
-# 3. audit + model (3 split) -> MongoDB
 python scripts\04_audit_spark.py
 python scripts\05_store_mongodb.py
-
-# 4. per-user + kiểm định thống kê
 python scripts\11_peruser_ndcg.py random80_20
 python scripts\11_peruser_ndcg.py temporal_global
 python scripts\11_peruser_ndcg.py leave_one_out
 python scripts\12_stats_tests.py
 
-# 5. R (đọc MongoDB, ghi recsys.audit_metrics_r)
+# C. Trực quan + tài liệu tham khảo
 Rscript scripts\06_analysis_r.R
-
-# 6. PRISMA + benchmark
 python scripts\13_prisma_flow.py
 python scripts\14_perf_benchmark.py
-
-# 7. dashboard + screenshot
 python -m streamlit run scripts\07_dashboard.py --server.headless true --server.port 8501
 python scripts\15_screenshot_dashboard.py
-
-# 8. tài liệu tham khảo
 python scripts\10_fetch_papers.py
 ```
 
-> **Trần thời gian:** mỗi lệnh phải < 30 phút (trần exec session của OpenClaw). Bước 4 và 6 là
-> các ứng viên vượt trần nếu gộp — phải tách theo split / theo engine.
+> **Trần thời gian:** mỗi lệnh phải < 30 phút. Bước B (`04_audit_spark.py`) và `11_peruser_ndcg.py` là ứng viên vượt trần nếu gộp — phải tách theo split.
+>
+> **Không chạy A và B rồi trộn số.** Hai đường cho NDCG chênh ≤ 0,0053 (xem `Metrics.md` §4.5). Chọn một đường, ghi rõ đường nào.

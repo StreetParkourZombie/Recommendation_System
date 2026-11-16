@@ -32,6 +32,7 @@ env/
 ENV/
 .env
 .env.*
+.jupyter_kernels/
 
 # ---- IDE / Editor ----
 .vscode/
@@ -43,6 +44,8 @@ Thumbs.db
 
 # ---- Jupyter ----
 .ipynb_checkpoints/
+notebooks/jupyter/*.executed.ipynb
+notebooks/jupyter/*.failed.ipynb
 
 # ---- Test / Coverage ----
 .pytest_cache/
@@ -55,9 +58,11 @@ htmlcov/
 .ruff_cache/
 
 # ---- Dữ liệu lớn (raw/interim/processed) ----
+datasets/
 data/raw/
 data/interim/
 data/processed/
+data/recsys_data
 data/mongodb/
 *.parquet
 *.csv.gz
@@ -80,6 +85,11 @@ models/*
 logs/
 *.log
 *.err
+
+# ---- Hệ thống / services ----
+# ---- Notebook run artifacts ----
+runs/
+results/
 
 # ---- Hệ thống / services ----
 mongod.lock

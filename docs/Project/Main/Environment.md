@@ -25,29 +25,34 @@
 
 | Thành phần | Phiên bản / vị trí | Ghi chú |
 |---|---|---|
-| Python | 3.14 (`C:\Users\PC\AppData\Local\Python\pythoncore-3.14-64`) | |
-| PySpark | **4.2.0** | ⚠️ API khác Spark 3.x — xem §5 |
-| pyarrow | **26.0.0** | dùng để ghi Parquet (tránh winutils) |
-| pandas | 3.0.3 | PySpark cảnh báo chưa hỗ trợ đầy đủ pandas ≥3 |
-| numpy | có | dùng cho top-K chunk |
-| pymongo | có | |
-| streamlit | có | |
-| plotly / scikit-learn | có | |
+| Python Host | 3.14.5 (`C:\Users\PC\AppData\Local\Python\pythoncore-3.14-64`) | Môi trường hệ thống chứa PySpark |
+| Python Project venv | 3.14.5 (`D:\Master Exers\Big Data\Recomendation_System\.venv`) | Môi trường cục bộ có link site-packages |
+| Jupyter Kernel | `Python 3.14 (BigData RecSys .venv)` (`recsys-project-venv`) | Kernel chuẩn dành riêng cho notebook dự án |
+| PySpark | **4.2.0** | Cấu hình chạy `local[4]` (hoặc `local[8]`), driver 6g |
+| pyarrow | **26.0.0** | Ingest CSV → Parquet gốc (không cần JVM, 26s cho 25M dòng) |
+| pandas | 3.0.3 | PySpark cảnh báo chưa hỗ trợ đầy đủ pandas ≥ 3.0.0 (vẫn hoạt động tốt cho profile) |
+| numpy | có | Dùng cho chunking và tính top-K |
+| pymongo | có | Kết nối lưu trữ kết quả MongoDB |
+| streamlit | có | Web UI demo |
 | Java | `jdk-24` tại `C:\Program Files\Java\jdk-24` (host) · **OpenJDK 1.8.0_232** trong container Hadoop | |
-| **R** | ✅ **đã cài 04/11** — R 4.6.2 tại `C:\Program Files\R\R-4.6.2\bin\Rscript.exe` | user library `D:\R-library` (không ghi được vào `C:\Program Files`) |
-| R packages | ✅ `jsonlite`, `dplyr`, `ggplot2`, `mongolite`, `corrplot` | `SparkR` / `sparklyr` chưa cài — chưa cần vì R đọc JSON + MongoDB |
+| **R** | R 4.6.2 tại `C:\Program Files\R\R-4.6.2\bin\Rscript.exe` | Thư viện người dùng `D:\R-library` cho thống kê bootstrap & paired tests |
+| **winutils.exe** | `D:\recsys_data\tools\hadoop\bin\winutils.exe` (112.640 B) | Bắt buộc để Spark ghi/đọc Parquet trên Windows |
+| **hadoop.dll** | `D:\recsys_data\tools\hadoop\bin\hadoop.dll` (85.504 B) | Bắt buộc kèm winutils; thiếu file này → `UnsatisfiedLinkError: NativeIO$Windows.access0` |
+| `HADOOP_HOME` | `D:\recsys_data\tools\hadoop` | Set trong process bởi `src/utils/spark_utils.ensure_hadoop_home()` |
 
 ---
 
-## 3. Docker & Hadoop
+## 3. Docker, Hadoop & Môi trường thực thi cục bộ
 
-| Thành phần | Trạng thái |
-|---|---|
-| Docker engine | ✅ 28.3.3, linux, mem ~15.5 GB |
-| Hadoop cluster | ✅ **5 container đang chạy** — image `bde2020/hadoop-*:2.0.0-hadoop3.2.1-java8` |
-| | `namenode`, `datanode`, `resourcemanager`, `nodemanager`, `historyserver` |
-| Local `spark-submit` | ❌ không có → chạy qua `pyspark` local mode hoặc container |
-| Local `hadoop`/`Rscript` | ❌ không có |
+| Thành phần | Trạng thái hiện tại | Ghi chú vận hành |
+|---|---|---|
+| Chế độ thực thi chính | **PySpark local (`local[4]`)** | Driver 6GB, chạy trực tiếp trên Windows host trong `.venv` |
+| Local `.venv` | `d:\Master Exers\Big Data\Recomendation_System\.venv` | Khởi tạo với `--system-site-packages` để dùng PySpark 4.2.0 và Java 24 host |
+| Jupyter Server | `http://localhost:8888/` | Root tại workspace; đã đăng ký kernel `Python 3.14 (BigData RecSys .venv)` |
+| Docker engine | 28.3.3 (Linux container) | Dùng khi cần chạy Hadoop cluster hoặc MapReduce job container |
+| Hadoop cluster | `bde2020/hadoop-*:2.0.0-hadoop3.2.1-java8` | Tùy chọn (đã kiểm định MapReduce Java). Khi chạy local notebook/pipeline, không bắt buộc giữ container bật |
+| Local `spark-submit` | ❌ không có binary riêng | Sử dụng API `pyspark.sql.SparkSession` trực tiếp trong script Python/Jupyter |
+| Local `hadoop.dll` / `winutils.exe` | ✅ **đã cài 2026-11-15** tại `D:\recsys_data\tools\hadoop\bin\` | `df.write.parquet` và đọc thư mục Parquet **đều chạy được**; cần **cả hai** file, thiếu một là fail |
 
 **Dùng lại được, không cần cài lại.** Cluster đã verify healthy 2026-11-03.
 
@@ -72,9 +77,9 @@
 |---|---|---|
 | `percentile_approx` | Spark 4.x nhận quantile **0.0–1.0** (3.x là 0–100) | `F.expr("percentile_approx(timestamp, 0.8)")` |
 | `F.slice` | Trả **array**, không phải số | `F.aggregate(slice(arr, 1, n), 0D, (acc,x) -> acc+x)` |
-| Ghi Parquet | `HADOOP_HOME and hadoop.home.dir are unset` (thiếu `winutils.exe`) | Ghi bằng **pyarrow**, không dùng `df.write.parquet` |
-| Đọc Parquet (thư mục) | `UnsatisfiedLinkError: NativeIO$Windows.access0` | Đọc **file đơn** `…/part-00000.parquet` |
-| Đọc Parquet (file) | ✅ OK 25.000.095 rows | dùng cách này |
+| Ghi Parquet | `HADOOP_HOME and hadoop.home.dir are unset` (thiếu `winutils.exe`) | ✅ **ĐÃ SỬA** — `HADOOP_HOME` + `bin\winutils.exe` + `bin\hadoop.dll`; `df.write.parquet` OK |
+| Đọc Parquet (thư mục) | `UnsatisfiedLinkError: NativeIO$Windows.access0` (có `winutils.exe` nhưng thiếu `hadoop.dll`) | ✅ **ĐÃ SỬA** — thêm `hadoop.dll` + prepend `bin` vào `PATH`; `spark.read.parquet(dir)` OK |
+| Đọc Parquet (file) | ✅ OK 25.000.095 rows | vẫn dùng được nếu chỉ có 1 file |
 | Đọc CSV | ✅ OK 25.000.095 rows | dùng khi cần |
 | `recommendForAllUsers` | OOM (162.541 × 59.047) | numpy top-K chunk 2.000 user |
 | **Timezone khi đối chiếu** | MapReduce dùng `SimpleDateFormat` + **UTC**, Spark `year(from_unixtime())` dùng **local (UTC+7)** → lệch 24.778/323.775 key (7,65%) | Set `.config("spark.sql.session.timeZone", "UTC")` cho Spark |
@@ -89,7 +94,8 @@
 | `D:\recsys_data\raw\ml-25m\` | dataset gốc MovieLens | 1.664 MB… |
 | `D:\recsys_data\raw\ml-25m\ratings.csv` | 25.000.095 dòng | 678.260.987 B |
 | `D:\recsys_data\raw\ml-25m.zip` | file tải gốc | 261.978.986 B |
-| `D:\recsys_data\parquet\ratings\part-00000.parquet` | cache Parquet | 176.0 MB, 31 row-groups |
+| `D:\recsys_data\parquet\ratings\part-00000.parquet` | cache Parquet | 175.961.682 B, 31 row-groups |
+| `D:\recsys_data\splits\<strategy>\{train,test}\` | 3 split đã materialize (notebook 04) | **735.030.695 B** tổng (8 partition train / 4 test mỗi split) |
 | `D:\recsys_data\spark_tmp\` | Spark temp | ~1.5 GB (dọn khi > 2 GB) |
 | `D:\recsys_data\poc\` | kết quả PoC (`poc3_results.json`) | |
 
@@ -194,6 +200,23 @@
 - Nếu repository yêu cầu version khác Python 3.14/PySpark 4.2, ưu tiên environment tương thích repository; không sửa code trước smoke test.
 - Không giả định Paper 01 dùng Spark/Hadoop. Chỉ ghi khi README hoặc methods xác nhận.
 
+### Deadline execution profile
+
+Project experiment chạy bằng environment đã verify của project: Python 3.14, PySpark 4.2.0, local mode, MovieLens-25M project dataset, MostPopular và ALS. Đây là `method-informed implementation`, không phải Paper 01 faithful reproduction.
+
+Environment Paper 01 `paper01-tf114` chỉ dùng cho repository smoke test. BPR smoke test đã mất 489,40 giây cho 1 epoch và 10 user trên CPU; không chạy BPR 300 epoch trong critical path. Ghi kết quả này vào phụ lục runtime limitation.
+
+Bảng chính deadline:
+
+```text
+3 split × 2 model × 3 seed
+random80_20 | temporal_global | leave_one_out
+MostPopular | ALS
+seed: 42, 2024, 7
+```
+
+Mỗi run phải ghi: protocol ID, split, model, seed, HR/NDCG, leakage diagnostics, popularity metrics, wall-clock, CPU/RAM/Spark/Java và classification.
+
 ### Protocol checklist
 
 | Thành phần | Paper 01 cần xác minh | Project không được thay thế bằng |
@@ -216,7 +239,7 @@
 
 ### Output and stop conditions
 
-Reports: `docs/Project/Plans/Implementation/`. Temporary clone/data: `D:\recsys_papers\`. Logs: `logs/paper01\`. Do not mix with project `results/`, `reports/`, MongoDB `recsys`.
+Reports: `docs/Project/Plans/Research/Implementation/`. Temporary clone/data: `D:\recsys_papers\`. Logs: `logs/paper01\`. Do not mix with project `runs/`, `D:\recsys_data\poc\`, MongoDB `recsys`.
 
 Stop and log `blocked` when dependency, dataset, GPU/RAM, repository link or license prevents faithful run. Command passing alone is only `smoke_test_pass`, not reproduction success.
 

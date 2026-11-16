@@ -1,7 +1,7 @@
 # Metrics — Định nghĩa chỉ số đánh giá
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-04
+**Cập nhật:** 2026-11-15 (bổ sung §4.5 — hai đường tính, hai bộ số)
 
 Mọi chỉ số dưới đây được tính **theo từng chiến lược chia tập** → điểm mấu chốt của đề tài là so sánh cùng một mô hình, cùng một dữ liệu, **ba cách chia**.
 
@@ -169,9 +169,13 @@ G = (2 Σ_{i=1..n} i·e_i) / (n · Σ e_i) − (n+1)/n
 
 ---
 
-## 4. Bảng so sánh kết quả (đo thật 2026-11-04)
+## 4. Bảng so sánh kết quả — đường script, đo thật 2026-11-04
 
-Nguồn: `results/poc6_<split>.json` → MongoDB `recsys.audit_metrics` → `reports/metrics_summary.csv`.
+Nguồn: `D:\recsys_data\poc\poc6_<split>.json` → MongoDB `recsys.audit_metrics`.
+Bảng CSV `reports/*.csv` cũ đã bị gỡ khỏi repo; số dưới đây vẫn là số đo của đường script.
+
+> **Cảnh báo:** bảng này là **đường tính thứ nhất** (script, 2026-11-04). Đường tính thứ hai
+> (notebook 06+08, 2026-11-15) cho bộ số hơi khác — xem **§4.5** trước khi trích số vào báo cáo.
 
 | Split | Model | NDCG@10 | Hit@10 | catalog_cov | longtail_cov | Gini | bias_ratio |
 |---|---|---|---|---|---|---|---|
@@ -217,8 +221,9 @@ Nguồn: `results/poc6_<split>.json` → MongoDB `recsys.audit_metrics` → `rep
 
 ## 4.4 Tầng kiểm định thống kê (đo thật 2026-11-04)
 
-Nguồn: `scripts/11_peruser_ndcg.py` → `scripts/12_stats_tests.py` → `reports/stats_<split>.json`
-+ `reports/stats_summary.csv`.
+Nguồn (đường A): `scripts/11_peruser_ndcg.py` → `scripts/12_stats_tests.py` → `reports/stats_<split>.json`.
+Các file `reports/stats_*` **đã bị gỡ khỏi repo** — số trong §4.4 giữ nguyên làm bản ghi lịch sử; chạy lại hai script trên để tái tạo.
+Đường B (notebook 08) sinh `runs/<run_id>/outputs/peruser_ndcg_<split>.npz` — cùng định nghĩa chỉ số, khác đường top-K.
 
 ### 4.4.1 Vì sao cần per-user
 
@@ -303,10 +308,68 @@ python scripts\12_stats_tests.py                    # ~2 phút / split
 
 ---
 
+## 4.5 Hai đường tính — hai bộ số (bổ sung 2026-11-15)
+
+Cùng một protocol (`project_protocol_v1`, seed 42, `rating ≥ 4,0`, K=10) nhưng có **hai đường code** cho ra số **hơi khác nhau**. Phải biết mình đang trích đường nào.
+
+| | Đường A — script | Đường B — notebook |
+|---|---|---|
+| Thời điểm đo | 2026-11-04 | 2026-11-15 |
+| Code | `scripts/04_audit_spark.py`, `scripts/11_peruser_ndcg.py` | `notebooks/jupyter/06`, `08` → `src/audit/popularity.py`, `src/audit/als_rec.py` |
+| Tập user ALS | subsample 30.000 | subsample 30.000 (`orderBy("userId").limit(30000)`) |
+| Đường top-K | Spark `F.aggregate` | numpy `topk_numpy` trên `U·Vᵀ` |
+| Nguồn số | `D:\recsys_data\poc\poc6_*.json` | `runs/<run_id>/outputs/*_summary.json` |
+| Truy vết | log file | `runs/` + checkpoint JSON + notebook `.executed.ipynb` |
+
+### 4.5.1 Đối chiếu NDCG@10
+
+| Split | Pop (A) | Pop (B) | ALS (A) | ALS (B) | ΔA | ΔB |
+|---|---:|---:|---:|---:|---:|---:|
+| `random80_20` | 0,0869 | 0,0852 | 0,2584 | 0,2556 | +0,1715 | +0,1704 |
+| `temporal_global` | 0,0455 | 0,0455 | 0,1364 | 0,1311 | +0,0909 | +0,0856 |
+| `leave_one_out` | 0,0183 | 0,0183 | 0,0474 | 0,0467 | +0,0291 | +0,0284 |
+
+### 4.5.2 Đối chiếu chỉ số thiên lệch
+
+| Split | Model | cov (A) | cov (B) | Gini (A) | Gini (B) | bias (A) | bias (B) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `random80_20` | Popularity | 0,000177 | 0,000177 | 0,9998 | 0,9998 | 158,64 | 158,5625 |
+| `random80_20` | ALS | 0,061389 | 0,059388 | 0,9827 | 0,9890 | 12,26 | 12,6285 |
+| `temporal_global` | Popularity | 0,000290 | 0,000290 | 0,9997 | 0,9997 | 101,26 | 101,2576 |
+| `temporal_global` | ALS | 0,056629 | 0,060519 | 0,9713 | 0,9780 | 11,20 | 10,6271 |
+| `leave_one_out` | Popularity | 0,000170 | 0,000170 | 0,9998 | 0,9998 | 165,27 | 165,2696 |
+| `leave_one_out` | ALS | 0,061765 | 0,059659 | 0,9812 | 0,9879 | 12,41 | 12,7596 |
+
+### 4.5.3 Vì sao lệch — và đường nào là chuẩn
+
+Lệch **tuyệt đối nhỏ** (NDCG ≤ 0,0053; bias ratio ≤ 0,57). Nguyên nhân: đường A tính NDCG bằng `F.aggregate` trên tập user đánh giá do Spark chọn; đường B chọn user bằng `orderBy("userId").limit(30000)` rồi tính top-K bằng numpy. Hai tập user khác nhau một chút → trung bình khác một chút.
+
+**Đường B là chuẩn từ 2026-11-15** khi báo cáo, vì:
+1. Notebook để lại `runs/<run_id>/` + checkpoint + `.executed.ipynb` — truy vết được từng bước.
+2. Metric có fixture kiểm tra độc lập (notebook 07, 5 ca, tolerance `1e-12`).
+3. `seen_exclusion` được assert (`check_seen_exclusion`) — đường A không có assert này.
+
+**Không được** trộn số A và B trong cùng một bảng. Kết luận định tính (không đảo chiều, hiệu ứng co lại, `longtail_coverage = 0`) **giống nhau ở cả hai đường**, nên luận điểm trung tâm không phụ thuộc vào việc chọn đường nào.
+
+### 4.5.4 Công thức NDCG — kiểm tra chéo
+
+Cài đặt chuẩn: [`src/audit/metrics.py`](../../../src/audit/metrics.py). Fixture: `FIXTURES` trong cùng file, assert ở notebook `07_ndcg_manual_check` (5 ca, gồm ca biên `ranked` ngắn hơn K và ca `IDCG = 0`). Chạy lại fixture:
+
+```powershell
+cd "D:\Master Exers\Big Data\Recomendation_System"
+python scripts\run_notebook.py notebooks\jupyter\07_ndcg_manual_check.ipynb
+```
+
+### 4.5.5 `leave_one_out` — 99,9988% là artifact, không phải lỗi
+
+Định nghĩa **toàn cục** so test của mọi user với `max(train.timestamp)` của **toàn bộ** tập train. Với LOO mỗi user chỉ giữ 1 tương tác cuối làm test, nên test của user A gần như luôn sớm hơn tương tác mới nhất của user B đang hoạt động. Con số 99,9988% **không nói gì về rò rỉ nhân quả** — chỉ định nghĩa **tương đối theo user** mới có ý nghĩa (= 0,0000%, đúng thiết kế LOO).
+
+---
+
 ---
 
 ## 5. Nguyên tắc báo cáo
 
-1. **Mọi số phải truy được** về `results/audit_<timestamp>.json` + `logs/audit_<timestamp>.log`.
+1. **Mọi số phải truy được** về `runs/<run_id>/manifest.json` + `runs/<run_id>/checkpoints/` + `logs/notebooks/<run_id>.log` (đường B), hoặc `D:\recsys_data\poc\poc6_<split>.json` + `logs/audit_<timestamp>.log` (đường A). Nêu rõ đường nào.
 2. **Không so sánh chéo split bằng NDCG thuần** — tập test khác nhau về bản chất. Phải đi kèm chỉ số cấp dữ liệu (`unseen_item_pct`, `temporal_violation_pct`) để giải thích **tại sao** NDCG khác nhau.
 3. **Độ lớn quan trọng hơn thứ hạng tuyệt đối**: kết luận chính là *thứ hạng mô hình có đảo chiều không* dưới 3 split, và *popularity bias có biến mất không*.

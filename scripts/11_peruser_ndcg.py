@@ -48,9 +48,9 @@ ap.add_argument("splits", nargs="*",
 A = ap.parse_args()
 
 spark = (SparkSession.builder
-         .appName("RecSysPerUser").master("local[8]")
+         .appName("RecSysPerUser").master("local[4]")
          .config("spark.sql.shuffle.partitions", "8")
-         .config("spark.driver.memory", "8g")
+         .config("spark.driver.memory", "6g")
          .config("spark.local.dir", TMP)
          .config("spark.ui.showConsoleProgress", "false")
          .config("spark.sql.session.timeZone", "UTC")

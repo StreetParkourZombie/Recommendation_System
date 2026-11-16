@@ -143,9 +143,9 @@ def run_mapreduce_once():
 def make_spark():
     from pyspark.sql import SparkSession
     return (SparkSession.builder
-            .appName("PerfBenchmark").master("local[8]")
+            .appName("PerfBenchmark").master("local[4]")
             .config("spark.sql.shuffle.partitions", "8")
-            .config("spark.driver.memory", "8g")
+            .config("spark.driver.memory", "6g")
             .config("spark.local.dir", r"D:\recsys_data\spark_tmp")
             .config("spark.ui.showConsoleProgress", "false")
             .config("spark.sql.session.timeZone", "UTC")

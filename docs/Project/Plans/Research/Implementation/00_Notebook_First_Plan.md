@@ -61,7 +61,7 @@ Mỗi notebook theo nhịp: (1) mục tiêu/điều kiện đầu vào, (2) khá
 | 06 | `06_mostpopular_baseline.ipynb` | Baseline MostPopular: đếm item trên **train**, tie-break `movieId`, tính NDCG/Hit/coverage/Gini/bias_ratio. | Top-10 đơn định; NDCG khớp baseline; `mostpopular_{split}.json`. |
 | 07 | `07_ndcg_manual_check.ipynb` | Kiểm tra tay NDCG/DCG/Hit/Gini trên 5 ca cố định + fixture loại item đã thấy. Không cần dữ liệu lớn. | Metric khớp tính tay với dung sai 1e-12; `metric_fixtures.json`. |
 | 08 | `08_als_implicit.ipynb` | ALS implicit (rank 16, maxIter 8, alpha 10.0) fit trên train, top-K bằng NumPy chunk 2.000 user, loại item đã thấy. | Top-K không chứa item đã thấy; NDCG khớp baseline; `als_{split}.json` + `peruser_ndcg_{split}.npz`. |
-| 09 | `09_compare_and_reversal.ipynb` | So sánh 2 model × 3 split; xác định model thắng và có đảo chiều không; interaction plot; viết câu trả lời RQ1. | Bảng đầy đủ; kết luận đảo chiều có/không kèm giới hạn; `comparison.json`, `reversal_table.csv`, `interaction_plot.png`, `rq1_answer.md`. |
+| 09 | `09_compare_and_reversal.ipynb` | So sánh 5 model × 3 split; xác định model thắng, đảo chiều theo split và đảo chiều ngôi đầu (L7); interaction plot; viết câu trả lời RQ1. | Bảng đầy đủ; kết luận đảo chiều có/không kèm giới hạn; `comparison.json`, `reversal_table.csv`, `interaction_plot.png`, `rq1_answer.md`. |
 | 10 | `10_statistics_and_uncertainty.ipynb` | Paired differences, 95% CI, p-value, effect size, test assumptions, multiple comparisons. | Pair the same users; report statistic/p/CI/effect size and limits. Do not treat 25M interactions as independent samples. |
 | 11 | `11_popularity_bias_audit.ipynb` | Popularity from train; test bias as split strategy changes while model/relevance/group/candidate protocol stays fixed. | Every bias metric has definition, denominator, aggregation and popularity source. |
 | 12 | `12_spark_cost_benchmark.ipynb` | Only after metric correctness: wall time, shuffle, memory/disk if available, input size, hardware. | Record cache/resource profile; never call local Spark cluster scalability. |
@@ -122,7 +122,7 @@ Không tạo cả bộ notebook trước khi Notebook 00 chạy được. Bắt 
 2. Tạo/chạy riêng `00_environment_check.ipynb`; xác nhận Java, PySpark, Spark local và paths.
 3. Tạo `01_download_and_verify_dataset.ipynb`; tải raw GroupLens, xác minh archive và manifest.
 4. Tạo `02_read_data_with_spark.ipynb`; đọc schema, count và profile.
-5. Dừng, đọc kết quả/checkpoint trước khi viết notebook split. Chưa clone paper repo, chưa chạy ALS/SASRec, chưa bật Hadoop.
+5. Dừng, đọc kết quả/checkpoint trước khi viết notebook split. Đã chạy ALS/SASRec; Hadoop không dùng cho SASRec local.
 
 ## Guardrails
 

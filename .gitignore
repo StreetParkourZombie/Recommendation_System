@@ -94,3 +94,4 @@ results/
 # ---- Hệ thống / services ----
 mongod.lock
 *.pid
+environments/01_TOIS2022_DataLeakage_RS_OfflineEvaluation/dataLeakageRec/BPR/checkpoints/movielens_5_0-0.data-00000-of-00001

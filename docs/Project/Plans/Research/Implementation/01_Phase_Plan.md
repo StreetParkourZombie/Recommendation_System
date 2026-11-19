@@ -6,7 +6,7 @@
 
 Khi chỉ còn vài ngày, deliverable chính là **method-informed implementation**: dùng phương pháp data-leakage của Paper 01 trên environment project hiện có. Paper 01 faithful reproduction chỉ là track phụ; không để BPR/TensorFlow 1.14 full training chặn kết quả chính.
 
-Phạm vi tối thiểu: MovieLens-25M project dataset, `random80_20` / `temporal_global` / `leave_one_out`, `MostPopular` / `ALS`, 3 seed `[42, 2024, 7]`, HR/NDCG, leakage diagnostics, popularity metrics và runtime.
+Phạm vi đã chốt (cập nhật 2026-11-18): MovieLens-25M project dataset, `random80_20` / `temporal_global` / `leave_one_out`, 5 model (`Random`, `MostPopular`, `ALS`, `ItemKNN cosine`, `SASRec+CE`), **1 seed 42**, HR/NDCG/**MRR@10**, leakage diagnostics, popularity metrics và runtime. Bản 3 seed `[42, 2024, 7]` là thiết kế cũ, đã bỏ.
 
 Kết quả phải ghi là `method_informed_implementation` nếu khác dataset subset, model, preprocessing, environment hoặc protocol Paper 01. Smoke test Paper 01 ghi `smoke_test_pass`; full run không khả thi ghi `blocked` hoặc `partial_reproduction`.
 
@@ -68,12 +68,12 @@ Cố định:
 - `random80_20`, `temporal_global`, `leave_one_out`.
 - `MostPopular`, `ALS`; SOTA chỉ sau baseline.
 - relevance `rating >= 4.0`, `min_train >= 5`, `K=10`.
-- project seeds: 42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718.
+- project seed: **42** (`protocol_id = project_protocol_v1`). Bỏ danh sách 10 seed; trước đây từng liệt kê 42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718.
 - hardware và Spark local mode ghi trong manifest.
 
 Đầu ra: ranking metrics, bias metrics, leakage diagnostics, runtime. Mọi output gắn `protocol_id`, `seed`, `split`, `model`.
 
-**Gate 3:** smoke test 1 split × 1 seed đạt. Sau đó chạy bảng chính 3 split × 3 seed. Chỉ mở rộng lên 10 seed nếu còn thời gian và không ảnh hưởng báo cáo chính.
+**Gate 3:** đã đạt — bảng chính 3 split × 5 model × 1 seed (42), 10/10 gate PASS. Không mở rộng seed; ma trận nhiều seed mâu thuẫn với giới hạn đã khai báo.
 
 ## Phase 4 — Big Data integration
 
@@ -84,7 +84,7 @@ Cố định:
 
 ## Phase 5 — Phân tích và viết
 
-- So sánh effect size và độ lệch qua seed, không chỉ so một con số.
+- Báo per-split + kiểm định cặp Wilcoxon (p, 95% CI, rank-biserial r); **không** báo Mean ± Std hay độ lệch qua seed (chỉ có 1 seed).
 - Kiểm tra metric consistency theo bài 11.
 - Viết gap theo Known → Critical Gap → Proposed.
 - Phân biệt limitation: dataset, cold-start, local execution, thiếu dense ground truth, dependency.
@@ -93,10 +93,10 @@ Cố định:
 
 1. Chốt metric contract và kiểm tra output hiện có của `MostPopular`/`ALS`.
 2. Chạy hoặc tái sử dụng tầng leakage diagnostics cho 3 split.
-3. Chạy bảng chính 3 split × 2 model × 3 seed.
+3. Chạy bảng chính 3 split × 5 model × 1 seed (42) — đã hoàn thành, gate L6a/L6c/L10/L11/L7/L12 PASS.
 4. Ghi CSV/JSON, runtime và hardware manifest.
-5. Tạo bảng mean ± std và biểu đồ split/model.
+5. Tạo bảng per-split + kiểm định cặp và biểu đồ split/model; **không** tạo Mean ± Std.
 6. Viết Paper 01 comparison table: paper protocol, project protocol, gap, classification.
 7. Đưa BPR smoke-test log vào phụ lục; không chạy BPR full CPU.
 
-Full Paper 01 training, 10 seed và model SOTA là mở rộng sau deadline, không phải điều kiện hoàn thành.
+Full Paper 01 training, ma trận nhiều seed, NeuMF/LightGCN và BPR full là mở rộng sau deadline, không phải điều kiện hoàn thành. SASRec+CE đã là SOTA đối chiếu trong project (tuning_budget=0).

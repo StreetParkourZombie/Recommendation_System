@@ -1,0 +1,370 @@
+% !TEX TS-program = xelatex
+% Biên dịch bằng XeLaTeX để dùng được font Times New Roman của hệ thống
+
+\documentclass[14pt,a4paper]{extreport}
+
+% ==========================================
+% 1. CÁC GÓI LỆNH CƠ BẢN VÀ FONT CHỮ
+% ==========================================
+
+% --- FONT CHỮ TIMES NEW ROMAN ---
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+% --- KÍCH THƯỚC CHỮ NỘI DUNG: 13PT (theo mẫu) ---
+\renewcommand{\normalsize}{\fontsize{13pt}{15.6pt}\selectfont}
+\normalsize
+
+\usepackage{graphicx}  
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{shapes.geometric, shapes.multipart, shapes.misc, arrows.meta, positioning, calc, backgrounds, fit}
+
+\usepackage{pdfpages}
+\usepackage{tabularx}  
+\usepackage{array}     
+\usepackage{multirow}  
+\usepackage{longtable}
+% \usepackage{arydshln} % Gỡ bỏ: gây lỗi với tabularx (cột X) và không dùng nét đứt trong báo cáo
+\usepackage{pdflscape}
+\usepackage{placeins} % \FloatBarrier: giữ bảng/hình nằm đúng trong mục của nó
+\usepackage[normalem]{ulem} 
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+% --- ĐỊNH DẠNG CHÚ THÍCH BẢNG & HÌNH (cỡ chữ 12 theo mẫu, in đậm + nghiêng) ---
+\DeclareCaptionFont{capsize}{\fontsize{12pt}{14.4pt}\selectfont}
+\captionsetup{font={capsize,bf,it}, labelsep=period}
+% Bảng: tên đặt PHÍA TRÊN, canh TRÁI
+\captionsetup[table]{position=above, justification=raggedright, singlelinecheck=false}
+% Hình: tên đặt PHÍA DƯỚI, canh GIỮA
+\captionsetup[figure]{position=below, justification=centering, singlelinecheck=false}
+
+% --- CÁC GÓI LỆNH TOÁN HỌC, BẢNG BIỂU & THUẬT TOÁN ---
+\usepackage{amsmath}   
+\usepackage{amsthm}    
+\usepackage{amsfonts}  
+\usepackage{booktabs}
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
+% Việt hóa môi trường Thuật toán
+\floatname{algorithm}{Thuật toán}
+\algrenewcommand\algorithmicrequire{\textbf{Đầu vào:}}
+\algrenewcommand\algorithmicensure{\textbf{Đầu ra:}}
+
+% --- ĐỊNH NGHĨA CÁC MÔI TRƯỜNG ---
+\newtheorem{dfn}{Định nghĩa}[chapter]
+\newtheorem{exm}{Ví dụ}[chapter]
+\newtheorem{lma}{Bổ đề}[chapter]
+
+% --- ĐÁNH SỐ CHƯƠNG BẰNG SỐ Ả-RẬP (Chương 1, 2, 3) THEO MẪU ---
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
+\renewcommand{\thetable}{\arabic{chapter}.\arabic{table}}
+\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}}
+
+% Việt hóa số thứ tự hiển thị (Ví dụ: Định nghĩa 1.1, Ví dụ 1.2)
+\renewcommand{\thedfn}{\arabic{chapter}.\arabic{dfn}}
+\renewcommand{\theexm}{\arabic{chapter}.\arabic{exm}}
+\renewcommand{\thelma}{\arabic{chapter}.\arabic{lma}}
+
+% Đánh số phương trình gắn với số chương Á Rập theo mh05 (ví dụ: (1.1), (2.1))
+\numberwithin{equation}{chapter}
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{equation}}
+
+% Việt hóa các tiêu đề mặc định
+\renewcommand{\contentsname}{MỤC LỤC}
+\renewcommand{\listfigurename}{DANH MỤC CÁC HÌNH VẼ, ĐỒ THỊ}
+\renewcommand{\listtablename}{DANH MỤC CÁC BẢNG}
+\renewcommand{\chaptername}{Chương}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+
+% ==========================================
+% 2. CĂN LỀ & GIÃN DÒNG (THEO MẪU)
+% ==========================================
+% Căn lề: trái 3cm; phải 1,5cm; trên 1,5cm; dưới 1,5cm; header/footer 1cm
+\usepackage[a4paper, top=1.5cm, bottom=1.5cm, left=3.0cm, right=1.5cm, headheight=15pt, headsep=0.5cm, footskip=1.0cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.2} % Giãn dòng 1,2 theo mẫu
+\usepackage{indentfirst}
+\setlength{\parindent}{1.0cm} % Lùi đầu dòng 1cm theo mẫu
+\setlength{\parskip}{3pt}     % Spacing Before 3pt, After 0pt theo mẫu
+
+% ==========================================
+% 3. ĐỊNH DẠNG TIÊU ĐỀ (CHƯƠNG, MỤC) THEO MẪU
+% ==========================================
+\usepackage{titlesec}
+
+% Chương có số: "Chương N" và tiêu đề viết HOA trên 2 dòng, cỡ 16pt, đậm, canh giữa
+\titleformat{\chapter}[display]
+  {\centering\bfseries\fontsize{16pt}{19.2pt}\selectfont}
+  {Chương \thechapter}
+  {0.5em}
+  {\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+% Chương KHÔNG có số (Tóm tắt, Mục lục, Phụ lục, Kết luận...): cỡ 16pt
+\titleformat{name=\chapter,numberless}[block]
+  {\centering\bfseries\fontsize{16pt}{19.2pt}\selectfont}
+  {}
+  {0pt}
+  {\MakeUppercase}
+
+% Đánh số tới cấp 4 (1.1.1.1) trong nội dung; Mục lục hiện tối đa cấp 3
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+% Mục (1.1): cỡ 13pt, đậm, đứng, canh trái, viết dạng câu (Sentence case)
+\titleformat{\section}
+  {\bfseries\fontsize{13pt}{15.6pt}\selectfont}
+  {\thesection.}{0.5em}{}
+% Tiểu mục (1.1.1): cỡ 13pt, đậm, đứng (không in hoa)
+\titleformat{\subsection}
+  {\bfseries\fontsize{13pt}{15.6pt}\selectfont}
+  {\thesubsection.}{0.5em}{}
+% Tiểu mục cấp 4 (1.1.1.1): cỡ 13pt, in thường, đứng
+\titleformat{\subsubsection}
+  {\normalfont\fontsize{13pt}{15.6pt}\selectfont}
+  {\thesubsubsection.}{0.5em}{}
+
+% Khoảng cách trước/sau tiêu đề: Before 3pt, After 0pt theo mẫu
+\titlespacing{\section}{0pt}{3pt}{0pt}
+\titlespacing{\subsection}{0pt}{3pt}{0pt}
+\titlespacing{\subsubsection}{0pt}{3pt}{0pt}
+
+% ==========================================
+% 3b. KHUNG HƯỚNG DẪN HIỂN THỊ TRONG BẢN MẪU
+% ==========================================
+% Khung này tóm tắt yêu cầu nội dung của từng mục (theo tài liệu hướng dẫn
+% viết báo cáo tiểu luận). Học viên đọc khung này để biết cần viết gì, sau đó
+% XOÁ khung trước khi nộp bài, chỉ giữ lại phần nội dung đã viết.
+\usepackage{framed}
+\usepackage{xcolor}
+\definecolor{huongdanrule}{gray}{0.6}
+\renewcommand\FrameCommand{{\color{huongdanrule}\vrule width 1.6pt}\hspace{8pt}}
+\newenvironment{huongdan}{%
+  \begin{leftbar}\begin{itshape}\fontsize{11pt}{13.2pt}\selectfont
+  \noindent\textbf{\upshape Hướng dẫn viết mục này:} }{%
+  \end{itshape}\end{leftbar}\par\vspace{2pt}
+}
+
+% ==========================================
+% 4. ĐÁNH SỐ TRANG (HEADER)
+% ==========================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyhead[C]{\thepage} 
+\renewcommand{\headrulewidth}{0pt} 
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% ==========================================
+% 5. TÙY CHỈNH MỤC LỤC & DANH MỤC
+% ==========================================
+\usepackage{tocloft}
+
+% --- Mục lục ---
+\renewcommand{\contentsname}{MỤC LỤC}
+\renewcommand{\cfttoctitlefont}{\hfill\bfseries\fontsize{16pt}{19.2pt}\selectfont}
+\renewcommand{\cftaftertoctitle}{\hfill}
+
+% Giãn dòng cho mục lục
+\renewcommand{\cftparskip}{0pt}
+\setlength{\cftbeforechapskip}{8pt}
+\setlength{\cftbeforesecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{3pt}
+
+% --- ĐỒNG NHẤT CỠ CHỮ 13 CHO TẤT CẢ CÁC MỤC ---
+
+% 1. Cấp Chương (In đậm, cỡ chữ 13)
+\renewcommand{\cftchappresnum}{CHƯƠNG }
+\renewcommand{\cftchapaftersnum}{.}
+\setlength{\cftchapnumwidth}{6.5em} 
+\renewcommand{\cftchapfont}{\bfseries\fontsize{13pt}{15.6pt}\selectfont} 
+\renewcommand{\cftchappagefont}{\bfseries\fontsize{13pt}{15.6pt}\selectfont}
+\renewcommand{\cftchapleader}{\bfseries\cftdotfill{\cftdotsep}}
+
+% 2. Cấp Section / Mức 2 (In đậm, sát lề trái, cỡ chữ 13)
+\renewcommand{\cftsecfont}{\bfseries\fontsize{13pt}{15.6pt}\selectfont}
+\renewcommand{\cftsecpagefont}{\bfseries\fontsize{13pt}{15.6pt}\selectfont}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsecnumwidth}{2.8em}
+
+% 3. Cấp Subsection / Mức 3 (In thường, sát lề trái, cỡ chữ 13)
+\renewcommand{\cftsubsecfont}{\normalfont\fontsize{13pt}{15.6pt}\selectfont}
+\renewcommand{\cftsubsecpagefont}{\normalfont\fontsize{13pt}{15.6pt}\selectfont}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftsubsecindent}{0pt}
+\setlength{\cftsubsecnumwidth}{3.6em}
+
+% --- Danh mục Bảng & Hình vẽ ---
+\renewcommand{\listtablename}{DANH MỤC CÁC BẢNG}
+\renewcommand{\cftlottitlefont}{\hfill\bfseries\fontsize{16pt}{19.2pt}\selectfont}
+\renewcommand{\cftafterlottitle}{\hfill}
+
+\renewcommand{\listfigurename}{DANH MỤC CÁC HÌNH VẼ, ĐỒ THỊ}
+\renewcommand{\cftloftitlefont}{\hfill\bfseries\fontsize{16pt}{19.2pt}\selectfont}
+\renewcommand{\cftafterloftitle}{\hfill}
+
+% --- DANH MỤC BẢNG/HÌNH TRÌNH BÀY DẠNG BẢNG (TT | Nội dung | Trang) THEO mh05 ---
+% Đọc tự động từ tệp .lot/.lof và đổ vào một longtable có viền.
+\makeatletter
+\newcommand{\mhdanhmuc}[1]{%
+  \begingroup
+  \renewcommand*{\addvspace}[1]{}%
+  \renewcommand*{\numberline}[1]{##1 & }%
+  \renewcommand*{\contentsline}[4]{##2 & ##3 \tabularnewline \hline}%
+  {\fontsize{13pt}{15.6pt}\selectfont
+  \begin{longtable}{|>{\centering\arraybackslash}m{1.2cm}|>{\raggedright\arraybackslash}m{11.8cm}|>{\centering\arraybackslash}m{1.5cm}|}
+  \hline
+  \textbf{TT} & \multicolumn{1}{c|}{\textbf{Nội dung}} & \textbf{Trang} \tabularnewline
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{TT} & \multicolumn{1}{c|}{\textbf{Nội dung}} & \textbf{Trang} \tabularnewline
+  \hline
+  \endhead
+  \@input{\jobname.#1}%
+  \end{longtable}}%
+  \endgroup
+  % Mở lại tệp .#1 để ghi (như \@starttoc) nhằm tái tạo danh mục ở lần dịch sau
+  \if@filesw
+    \expandafter\newwrite\csname tf@#1\endcsname
+    \immediate\openout\csname tf@#1\endcsname\jobname.#1\relax
+  \fi
+}
+\makeatother
+
+% --- DANH MỤC TỪ VIẾT TẮT TỰ ĐỘNG ---
+% Lệnh \tvt{VIẾT TẮT}{Ý nghĩa đầy đủ} dùng ngay tại nơi từ viết tắt xuất hiện
+% lần đầu trong nội dung (Chương 1, 2, 3...). Mỗi từ chỉ được ghi vào danh mục
+% một lần (lần xuất hiện đầu tiên); bảng tổng hợp được SẮP XẾP THEO THỨ TỰ ABC
+% (tăng dần) của từ viết tắt, không phụ thuộc thứ tự xuất hiện trong bài viết.
+% Bảng ở trang "DANH MỤC TỪ VIẾT TẮT" (lệnh \dstuvt) sẽ tự tổng hợp lại toàn bộ
+% khi biên dịch lại (cần dịch 2 lần để danh mục cập nhật đầy đủ, giống Mục lục).
+\newcommand{\dstuvt}{%
+  {\fontsize{13pt}{15.6pt}\selectfont
+  \renewcommand{\arraystretch}{1.3}
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{12.5cm}@{}}
+  \textbf{Từ viết tắt} & \textbf{Ý nghĩa} \\
+  \IfFileExists{\jobname.vt}{\input{\jobname.vt}}{}
+  \end{longtable}}%
+}
+\ExplSyntaxOn
+\seq_new:N \g_tvt_keys_seq
+\prop_new:N \g_tvt_defs_prop
+\iow_new:N \g_tvt_iow
+\newcommand{\tvt}[2]{%
+  \prop_if_in:NnF \g_tvt_defs_prop {#1}
+    {
+      \seq_gput_right:Nn \g_tvt_keys_seq {#1}
+      \prop_gput:Nnn \g_tvt_defs_prop {#1} {#2}
+    }
+  #1%
+}
+% Cuối tài liệu: sắp xếp các từ viết tắt theo ABC rồi ghi ra file .vt
+% (lần biên dịch sau, \dstuvt đọc file này và in bảng đã được sắp xếp)
+\cs_new_protected:Npn \tvt_write_sorted:
+  {
+    \if@filesw
+      \seq_gsort:Nn \g_tvt_keys_seq
+        {
+          \str_compare:nNnTF {##1} > {##2}
+            { \sort_return_swapped: } { \sort_return_same: }
+        }
+      \iow_open:Nn \g_tvt_iow { \jobname.vt }
+      \seq_map_inline:Nn \g_tvt_keys_seq
+        {
+          \prop_get:NnN \g_tvt_defs_prop {##1} \l_tmpa_tl
+          \iow_now:Nx \g_tvt_iow
+            { \exp_not:n {##1} ~&~ \exp_not:V \l_tmpa_tl ~ \exp_not:n {\\} }
+        }
+      \iow_close:N \g_tvt_iow
+    \fi
+  }
+\AtEndDocument{ \tvt_write_sorted: }
+\ExplSyntaxOff
+
+% ==========================================
+% BẮT ĐẦU NỘI DUNG VĂN BẢN
+% ==========================================
+\begin{document}
+
+% --- I. PHẦN TRANG BÌA (Không đánh số) ---
+\includepdf[pages=-]{trangbia.pdf}
+
+% --- II. CÁC PHẦN ĐẦU (Đánh số La-mã: i, ii, iii...) ---
+% Trình tự: Nhận xét GV -> Lời cam đoan -> Lời cảm ơn -> Tóm tắt (bắt buộc)
+% -> Danh mục từ viết tắt / bảng / hình -> Mục lục
+\pagenumbering{roman}
+
+% 1. Nhận xét của giảng viên hướng dẫn (để trống -- GV điền sau khi chấm)
+\include{nhanxet}
+
+% 2. Lời cam đoan (ký tên, ghi rõ ngày tháng)
+\include{loicamdoan}
+
+% 3. Lời cảm ơn (ngắn gọn, không quá 1/2 trang)
+\include{loicamon}
+
+% 4. Tóm tắt tiểu luận (BẮT BUỘC PHẢI CÓ)
+\include{tomtat}
+
+% 5. Danh mục từ viết tắt
+\include{danhmuckyhieu}
+
+% 6. Danh mục Bảng
+\phantomsection
+\addcontentsline{toc}{chapter}{DANH MỤC CÁC BẢNG}
+\chapter*{DANH MỤC CÁC BẢNG}
+\mhdanhmuc{lot}
+\clearpage
+
+% 7. Danh mục Hình vẽ, đồ thị
+\phantomsection
+\addcontentsline{toc}{chapter}{DANH MỤC CÁC HÌNH VẼ, ĐỒ THỊ}
+\chapter*{DANH MỤC CÁC HÌNH VẼ, ĐỒ THỊ}
+\mhdanhmuc{lof}
+\clearpage
+
+% 8. Mục lục
+\phantomsection
+\addcontentsline{toc}{chapter}{\textbf{MỤC LỤC}}
+\tableofcontents
+\clearpage
+
+% --- III. NỘI DUNG CHÍNH: 3 CHƯƠNG + KẾT LUẬN (Đánh số Ả-rập: 1, 2, 3...) ---
+\clearpage
+\pagenumbering{arabic}
+
+\include{chuong1}   % Chương 1: Hệ thống hóa lý thuyết (20%, 4-6 trang)
+\include{chuong2}   % Chương 2: Xác lập nền tảng và ứng dụng công cụ (30%, 6-9 trang)
+\include{chuong3}   % Chương 3: Xây dựng đề cương nghiên cứu chi tiết (45%, 9-14 trang)
+\include{ketluan}   % KẾT LUẬN (5%, 1-2 trang, không đánh số chương)
+
+% --- IV. TÀI LIỆU THAM KHẢO ---
+\clearpage
+\renewcommand{\bibname}{TÀI LIỆU THAM KHẢO}
+\phantomsection
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+
+% Toàn bộ tiểu luận BẮT BUỘC dùng chuẩn trích dẫn IEEE (theo Bài 05):
+% đánh số [1], [2]... theo thứ tự xuất hiện trong văn bản.
+% Yêu cầu 15-20 tài liệu; >= 50% là bài báo khoa học 5 năm gần nhất.
+\bibliographystyle{ieeetr}
+% Danh sách dưới đây chỉ hiển thị các tài liệu THỰC SỰ được \cite trong nội dung
+% (xem ví dụ tại chuong1.tex, chuong2.tex, chuong3.tex). Học viên xoá 5 tài liệu
+% mẫu trong tailieuthamkhao.bib và thay bằng tài liệu tham khảo thật của đề tài.
+\bibliography{tailieuthamkhao}
+
+% --- V. PHỤ LỤC (nếu có) ---
+\include{phuluc}
+
+\end{document}

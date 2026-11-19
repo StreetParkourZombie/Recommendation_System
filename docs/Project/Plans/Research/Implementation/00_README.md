@@ -52,10 +52,13 @@ Tải code không đồng nghĩa với reproduction thành công. Mỗi reposito
 
 ## Trạng thái hiện tại
 
+> [!NOTE]
+> Cập nhật 2026-11-19: pipeline đã chạy xong notebook 12/13; 5 model × 3 split, 20 cặp kiểm định, slide + plan đã regenerate. Hướng dẫn chạy/đối chiếu: `06_Huong_Dan_Chay_SASRec_va_MRR.md`.
+
 - PDF và text 14 bài đã có ở `docs/References/Papers/`.
 - `Exploration/` trước đây trống; bộ hồ sơ cạnh đây là tài liệu đọc đầu tiên.
 - Protocol project đã khóa ở `configs/experiment_protocol_v1.json`.
-- Chưa được phép chạy full matrix trước khi hoàn tất hồ sơ 01-04 và smoke test repository 01-03.
+- Đã qua: hồ sơ 01-04 + full matrix 5 model × 3 split (10/10 gate PASS); SASRec+CE đã đo 3 split, run `20261118_144646_13_sasrec_ce_8225755a`.
 
 ## Definition of Done
 
@@ -65,15 +68,15 @@ Project được xem là đủ cho deadline khi có:
 
 - `method_informed_implementation` trên MovieLens-25M project dataset.
 - Ba split: `random80_20`, `temporal_global`, `leave_one_out`.
-- Hai model: `MostPopular`, `ALS`.
-- 3 seed: `[42, 2024, 7]` hoặc số seed thực tế đã ghi rõ.
+- Model đã đăng kí: sàn `Random` + `MostPopular`, kinh điển `ALS` + `ItemKNN cosine`, SOTA đối chiếu `SASRec+CE`. **Trạng thái 2026-11-19: 5/5 đã chạy; SASRec+CE = 3 split trên GPU local, `tuning_budget=0`, eval subset user; không so runtime với 4 baseline CPU.**
+- **1 seed (42)** — đã chốt, ghi rõ trong mọi artifact (`protocol_id = project_protocol_v1`); ma trận nhiều seed bị bỏ vì mâu thuẫn với giới hạn đã khai báo trên slide.
 - HR/NDCG, leakage diagnostics, popularity metrics, runtime.
-- CSV/JSON raw outputs, hardware/environment manifest và bảng mean ± std.
+- CSV/JSON raw outputs, hardware/environment manifest; thay bảng mean ± std bằng **bảng per-split + kiểm định cặp Wilcoxon (p, 95 % CI, rank-biserial r)** vì chỉ có 1 seed.
 - Paper 01 comparison table và difference ledger.
-- BPR smoke-test result ở phụ lục; không yêu cầu BPR full CPU.
+- BPR **không nằm trong danh sách đăng kí** → không chạy, không có smoke test. EASE cũng bị loại (chỉ nhắc ở dạng phủ định).
 
 ### Full reproduction mở rộng
 
-Paper 01 faithful reproduction, 10 seed, NeuMF/SASRec/LightGCN và full BPR là mở rộng sau deadline. Không để các mục này chặn deliverable chính.
+Paper 01 faithful reproduction, nhiều seed, NeuMF/LightGCN và full BPR là mở rộng sau deadline (không thuộc danh sách đã đăng kí). Không để các mục này chặn deliverable chính.
 
 Mọi kết quả phải phân loại `faithful_reproduction`, `partial_reproduction`, `method_informed_implementation` hoặc `blocked`.

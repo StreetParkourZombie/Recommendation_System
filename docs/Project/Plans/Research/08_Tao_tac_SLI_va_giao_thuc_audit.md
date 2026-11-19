@@ -195,7 +195,7 @@ này **tự chặn** những kết luận mà nhiều bài báo hiện đang đ�
 | **GO** | Đo và giải thích tác động của chiến lược chia tập đến tín hiệu đo và thiên lệch phổ biến trong hệ thống gợi ý trên Spark | 100% | SLI, NDCG@10, popularity bias ratio |
 | **SO1** (Data) | Khảo sát, chuẩn hóa MovieLens ml-25m; sinh 3 chiến lược split; hiện thực MapReduce Java đếm phổ biến | 20% | 25.000.095 tương tác, 3 split, 323.737 key |
 | **SO2** (Model) | **Đề xuất SLI (tương đối theo user, 3 ngưỡng) và giao thức audit 3 bước** | **40%** | SLI tính được cho cả 3 split; khác biệt LOO 99,9988% vs 0% |
-| **SO3** (Đối chuẩn) | Chạy 3 tầng baseline (Random/MostPopular · ALS/ItemKNN · SASRec+/EASE) trên 3 split, 10 seed | 20% | NDCG@10 Mean ± Std; Wilcoxon p < 0,05 |
+| **SO3** (Đối chuẩn) | Chạy các tầng baseline đã đăng kí (Random/MostPopular · ALS/ItemKNN · SASRec+CE) trên 3 split, **1 seed 42** (giới hạn đã khai báo, không phải 10 seed) | 20% | NDCG@10 per split; 5/5 baseline có số; Wilcoxon 20 cặp p + 95% CI + rank-biserial r |
 | **SO4** (Ablation) | Phân tích độ nhạy: đổi ngưỡng relevant, đổi subsample, so 2 định nghĩa SLI | 20% | Bảng độ nhạy; SLI ổn định qua các cấu hình |
 
 ---

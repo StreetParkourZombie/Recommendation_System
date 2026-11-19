@@ -1,4 +1,4 @@
-﻿# 01 — Đề tài và Kế hoạch nghiên cứu
+# 01 — Đề tài và Kế hoạch nghiên cứu
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
 **Phục vụ đồng thời:** IT252BIDA (Xử lý dữ liệu lớn) + IT252STRM (Phương pháp nghiên cứu khoa học)
@@ -59,7 +59,7 @@ Lý do khoảng trống này còn mở:
 | **Critical Gap** | Tuy nhiên các nghiên cứu hiện có **chưa đồng thời** đo (i) đảo chiều thứ hạng mô hình, (ii) mức độ biến mất của popularity bias bằng chỉ số định lượng, và (iii) chi phí vận hành ở quy mô Big Data — trên cùng một pipeline và cùng bộ metric, nên chưa biết các hiệu ứng này **cộng hưởng hay triệt tiêu nhau**                                                                                                                                                                                     | ~90 |
 | **Proposed**     | Đề tài này lấp khoảng trống đó: dựng một **audit framework** chạy trên PySpark 4.2.0 + HDFS + MapReduce (Python) + MongoDB, trên MovieLens ml-25m (25.000.095 tương tác, 162.541 người dùng, 59.047 mục), so sánh **3 chiến lược split** × **nhiều mô hình nền**, đo đồng thời NDCG/Recall, catalog coverage, Gini của exposure, tỷ lệ exposure long-tail, và chi phí vận hành; kết quả là **bằng chứng định lượng** cho một **giao thức đánh giá** (evaluation protocol) đề xuất | ~80 |
 
-**Tổng: 200–250 từ.** Bằng chứng định lượng sẽ lấy từ **PoC Spark đang chạy** (mục 7), nguồn trích dẫn `[1]` = TOIS 2022, `[2]` = TOIS 2023, `[3]` = RecSys 2025.
+**Tổng: 200–250 từ.** Bằng chứng định lượng **đã có** từ pipeline notebook (10/10 gate PASS, 4 baseline × 3 split, run id trong `docs/Project/Main/Document_Indexing.md`), nguồn trích dẫn `[1]` = TOIS 2022, `[2]` = TOIS 2023, `[3]` = RecSys 2025.
 
 ---
 
@@ -86,8 +86,8 @@ Lý do khoảng trống này còn mở:
 | **Where**    | Nền tảng xử lý dữ liệu lớn cục bộ: HDFS (5 container Hadoop 3.2.1) + PySpark 4.2.0 + MongoDB + R + Streamlit; dữ liệu MovieLens ml-25m (GroupLens, Đại học Minnesota)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | **When**     | Dữ liệu phim 1995-01-09 → 2019-11-21 (24,8 năm); thời gian nghiên cứu 11/2026 → 06/2027 (học kỳ 2, 2026–2027)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | **Why**      | Vì split sai tạo rò rỉ dữ liệu và **giấu** thiên lệch phổ biến, dẫn tới quyết định triển khai sai và bài báo với kết luận sai                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **How**      | Audit framework: 3 chiến lược split × **3 tầng baseline bắt buộc** × {NDCG@K, Recall@K, MRR} × {catalog coverage, Gini exposure, long-tail exposure, thời gian/bộ nhớ}. **Tầng baseline:** sàn (Random, MostPopular) · kinh điển (ALS, ItemKNN, BPR) · SOTA ≤2 năm (SASRec+ / EASE) — chi tiết `05C_Baseline_3_tang_DSRM.md`. Kiến trúc: HDFS ingest (CSV→Parquet) → MapReduce (**Java**, đã chạy thật 323.737 key) tính popularity/coverage → PySpark ALS → MongoDB (item profile + metrics) → R (thống kê, kiểm định) → Streamlit (dashboard). Tái lập: 10 seed, khai báo CPU/RAM + wall-clock, ngân sách tinh chỉnh bằng nhau cho mọi mô hình |
-| **How Much** | 25.000.095 tương tác · 162.541 user · 59.047 item · 3 chiến lược split · 4 mô hình · 6+ chỉ số đo · 3 dataset (1 chính + 2 cross-domain) · ngân sách tính toán: laptop (RAM 16 GB, disk C 4–16 GB, D 17–19 GB), **không dùng GPU**, không dùng cloud; SOTA chạy bằng EASE (closed-form, CPU) nếu SASRec+ vượt ngân sách                                                                                                                                                                                                                                                                                                                                                      |
+| **How**      | Audit framework: 3 chiến lược split × **3 tầng baseline bắt buộc** × {NDCG@K, Recall@K, MRR} × {catalog coverage, Gini exposure, long-tail exposure, thời gian/bộ nhớ}. **Tầng baseline theo danh sách đăng kí:** sàn (Random, MostPopular) · kinh điển (ALS, ItemKNN cosine) · SOTA ≤2 năm (SASRec + cross-entropy) — chi tiết `05C_Baseline_3_tang_DSRM.md`. Kiến trúc: HDFS ingest (CSV→Parquet) → MapReduce (**Java**, đã chạy thật 323.737 key) tính popularity/coverage → PySpark ALS → MongoDB (item profile + metrics) → R (thống kê, kiểm định) → Streamlit (dashboard). So sánh công bằng: cùng dữ liệu, cùng phần cứng, seed cố định 42, code công khai; 5/5 baseline đã chạy đủ trên FULL 162.541 user |
+| **How Much** | 25.000.095 tương tác · 162.541 user · 59.047 item · 3 chiến lược split · 5 model đã chạy (Random, MostPopular, ALS, ItemKNN) + 1 SOTA tham chiếu (SASRec+CE, GPU local RTX 4050 6 GB — notebook 13 đã chạy 3 split, run `20261118_144646_13_sasrec_ce_8225755a`) · 6+ chỉ số đo · kiểm định cặp Wilcoxon 20 cặp (p + 95% CI + rank-biserial r) · ngân sách tính toán: laptop MSI i7-13620H (10c/16t, 32 GB DDR5, **GPU RTX 4050 Laptop 6 GB**), 4 baseline chạy CPU, SASRec+CE chạy GPU local, không dùng cloud; 1 seed (42) là giới hạn đã khai báo |
 
 ---
 
@@ -182,7 +182,7 @@ Chỉ số (mỗi ô):
 ### 7.3 Kết quả PoC — **ĐÃ ĐO THẬT 04/11/2026**
 
 Nguồn: `results/poc6_<split>.json` → MongoDB `recsys.audit_metrics` → `reports/metrics_summary.csv`.
-Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam 0,05, alpha 10, seed 42, mẫu 30.000 user).
+Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam 0,05, alpha 10, seed 42, **FULL 162.541 user — run 2026-11-17**, subsample 30.000 chỉ là run lịch sử 15/11).
 
 **Tầng 1 — chỉ số cấp dữ liệu**
 
@@ -230,7 +230,7 @@ Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam
 
 - ALS > Popularity ở cả 3 split.
 - NDCG@10 của ALS: 0,2584 (random) → 0,1364 (temporal) → 0,0474 (LOO) = **chênh lệch 5,45 lần**.
-- → Bổ sung: B3 nói "thứ hạng có thể đảo chiều"; kết quả của em cho thấy **thứ hạng không đảo ở 2 mô hình này, nhưng kết luận về mức hiệu quả thì đảo chiều theo độ lớn** — nguy cơ kết luận sai vẫn hiện hữu.
+- → Bổ sung (cập nhật 2026-11-18 sau khi có ItemKNN): B3 nói "thứ hạng có thể đảo chiều". Kết quả: **thứ hạng không đảo khi so với sàn** (ALS và ItemKNN đều hơn MostPopular/Random hàng trăm lần), **nhưng ngôi đầu đổi chỗ giữa hai model kinh điển ở 2/3 split** (ItemKNN dẫn `random80_20` +0,0098 và `temporal_global` +0,0077; ALS dẫn `leave_one_out` −0,0008) — `best_model_reversals_found = 2`. Effect size |r| = 0,005–0,030 nên khác biệt gần như không về thực hành.
 
 **Phát hiện mới (đóng góp chính):**
 
@@ -282,9 +282,9 @@ Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam
 | Rủi ro                                  | Mức            | Xử lý                                                                                                           |
 | ---------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------- |
 | **Disk C chỉ còn 4.2 GB**        | 🔴 Cao          | Đã dọn temp; dữ liệu lớn nằm ở `D:\recsys_data` (17.2 GB free). Spark temp dir → đặt trên D         |
-| ALS trên 20M dòng chạy lâu           | 🟢 Đã xử lý | ALS implicit fit ~100s/split với mẫu 30.000 user; `maxIter=8`, `rank=16`                                    |
+| ALS trên 20M dòng chạy lâu           | 🟢 Đã xử lý | ALS implicit fit FULL 162.541 user ~35–38s/split (run 2026-11-17); `maxIter=8`, `rank=16` + `topk_numpy` chunked |
 | **R chưa cài**                   | 🟢 Đã xử lý | R 4.6.2 đã cài 04/11 + 5 package; `06_analysis_r.R` chạy thành công                                       |
 | **MongoDB service stopped**        | 🟢 Đã xử lý | `mongod` đang chạy, port 27017 listen — không cần quyền admin                                             |
 | MapReduce timezone lệch Spark           | 🟢 Đã xử lý | Set `spark.sql.session.timeZone=UTC` — G3 pass 100%                                                            |
-| Thiếu mô hình thứ 3-4 trong ma trận | 🟡 TB           | Cân nhắc thêm ItemKNN / SVD; nếu trượt deadline giữ 2 mô hình (Popularity + ALS) và nói rõ giới hạn |
+| Thiếu mô hình thứ 3-4 trong ma trận | 🟢 Đã xử lý | Đã đủ 5 model đăng kí: thêm Random (`20261118_144717_..._d8644ac1`) và ItemKNN (`20261118_150305_..._0b7511ee`); SASRec+CE đã chạy 3 split trên GPU local RTX 4050, run `20261118_144646_13_sasrec_ce_8225755a` |
 

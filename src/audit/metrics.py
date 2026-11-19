@@ -79,6 +79,21 @@ def recall_at_k(ranked: Sequence[int], relevant: Iterable[int], k: int = DEFAULT
     return sum(1 for item in top if item in rel) / len(rel)
 
 
+def mrr_at_k(ranked: Sequence[int], relevant: Iterable[int], k: int = DEFAULT_K) -> float:
+    """MRR@K: 1/rank của item relevant đầu tiên trong top-K (0 nếu không có).
+
+    Độ đo thứ bậc theo bài giảng PPNCKH Bài 04 (Phần 3, RecSys):
+    MRR = (1/Q) * sum(1/rank_i) — macro trung bình trên user, cùng quy ước NDCG.
+    """
+    rel = set(relevant)
+    if not rel:
+        return 0.0
+    for position, item in enumerate(list(ranked)[:k]):
+        if item in rel:
+            return 1.0 / (position + 1)
+    return 0.0
+
+
 def mean_metric(
     recommendations: dict[int, Sequence[int]],
     truth: dict[int, Iterable[int]],

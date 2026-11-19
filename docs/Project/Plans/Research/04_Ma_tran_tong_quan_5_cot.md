@@ -55,7 +55,7 @@
 
 1. **Known:** S1 + S2 (bias đã biết, có metric chuẩn) + S3 + S4 + S12 + S5 (split ảnh hưởng kết quả, thứ hạng đảo chiều) + S11 (metric không nhất quán) + S6 (thiếu convergent validity).
 2. **Critical Gap:** chỉ vào bảng 6 cột — "chưa nghiên cứu nào đo **đồng thời** (i) đảo chiều thứ hạng, (ii) mức biến mất của popularity bias, (iii) chi phí vận hành, trên **một** pipeline Big Data cố định với **một** dataset ở quy mô ≥ 10M tương tác". Kèm bằng chứng PoC (mục 7.3 file `01`). Nêu rõ S13/S14 làm được lớp kiến trúc nhưng **không** làm lớp đo lường.
-3. **Proposed:** audit framework 3 split × 2 model × 6+ chỉ số, MovieLens ml-25m, Spark/HDFS/MapReduce Java, MongoDB, R, Streamlit + tầng kiểm định thống kê (bootstrap, Wilcoxon, Cohen's dz).
+3. **Proposed:** audit framework 3 split × 4 baseline đã đăng kí (Random, MostPopular, ALS, ItemKNN) × 6+ chỉ số, MovieLens ml-25m, Spark/HDFS/MapReduce Java, MongoDB, R, Streamlit + tầng kiểm định thống kê (bootstrap, Wilcoxon, Cohen's dz).
 
 ---
 

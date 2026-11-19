@@ -102,5 +102,5 @@ Như vậy:
 
 Vẫn OK: Parquet 176 MB nhỏ hơn nhiều so với 12.7 GB. Nhưng ALS map 162.541 × 59.047 (rank 16) sẽ cần ~1-2 GB cho item factors. Nên:
 - Giữ `spark.driver.memory=8g`, `spark.sql.shuffle.partitions=8` (đã set trong script hiện tại).
-- Lấy mẫu 30.000 user như PoC đã làm (đã ghi trong memory 04/11).
+- Lấy mẫu 30.000 user như PoC đã làm (đã ghi trong memory 04/11) — **nay chạy FULL 162.541 user (run 2026-11-17)**.
 - Biến **cấu hình tài nguyên** thành một dòng trong bảng đối chuẩn, y như [14] làm với AMD A4-5000.

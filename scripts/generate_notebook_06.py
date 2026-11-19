@@ -127,6 +127,7 @@ run.checkpoint(
 
 Với MostPopular, mọi user nhận cùng 10 item, nên chỉ cần đếm item nào trong 10 item đó là relevant cho từng user. Code dưới dùng đúng `src.audit.metrics` mà notebook 07 sẽ kiểm tra tay — không viết công thức NDCG riêng ở đây."""),
     code("""metrics_by_split = {}
+peruser_by_split = {}
 
 for strategy in split_lib.STRATEGIES:
     started = time.perf_counter()
@@ -149,6 +150,7 @@ for strategy in split_lib.STRATEGIES:
     dcg_mean, _ = metrics.mean_metric(recommendations, truth, metrics.dcg_at_k, spark_utils.TOP_K)
     hit_mean, _ = metrics.mean_metric(recommendations, truth, metrics.hit_at_k, spark_utils.TOP_K)
     recall_mean, _ = metrics.mean_metric(recommendations, truth, metrics.recall_at_k, spark_utils.TOP_K)
+    mrr_mean, _ = metrics.mean_metric(recommendations, truth, metrics.mrr_at_k, spark_utils.TOP_K)
 
     metrics_by_split[strategy] = {
         'model': 'MostPopular',
@@ -157,14 +159,17 @@ for strategy in split_lib.STRATEGIES:
         'dcg10': round(dcg_mean, 4),
         'hit_rate10': round(hit_mean, 4),
         'recall10': round(recall_mean, 4),
+        'mrr10': round(mrr_mean, 4),
         'eval_users': len(ndcg_per_user),
         'relevant_test_items': sum(len(v) for v in truth.values()),
         'topk': topk,
         'elapsed_seconds': round(time.perf_counter() - started, 1),
     }
 
+    peruser_by_split[strategy] = ndcg_per_user
+
     print(f'--- {strategy} ---')
-    print(f"  ndcg@10={ndcg_mean:.4f}  dcg@10={dcg_mean:.4f}  hit@10={hit_mean:.4f}  recall@10={recall_mean:.4f}")
+    print(f"  ndcg@10={ndcg_mean:.4f}  dcg@10={dcg_mean:.4f}  hit@10={hit_mean:.4f}  recall@10={recall_mean:.4f}  mrr@10={mrr_mean:.4f}")
     print(f'  eval users={len(ndcg_per_user):,}  relevant test items={sum(len(v) for v in truth.values()):,}')
     run.log('POPULARITY_METRICS', strategy=strategy, metrics=metrics_by_split[strategy])
 
@@ -224,6 +229,13 @@ for strategy in split_lib.STRATEGIES:
     )
     paths[strategy] = str(path)
     print('saved:', path)
+
+    # per-user NDCG cho kiem dinh cap (notebook 12) — cung dinh dang voi notebook 08/10
+    users_array = np.array([u for u, _ in peruser_by_split[strategy]], dtype=np.int64)
+    scores_array = np.array([s for _, s in peruser_by_split[strategy]], dtype=np.float32)
+    npz_path = outputs_dir / f'peruser_ndcg_{strategy}.npz'
+    np.savez_compressed(npz_path, userId=users_array, ndcg=scores_array)
+    print('saved:', npz_path, f'({users_array.size:,} users)')
 
 summary = {
     'protocol_id': spark_utils.PROTOCOL_ID,

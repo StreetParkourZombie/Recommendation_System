@@ -15,7 +15,7 @@ os.makedirs(OUT, exist_ok=True)
 fig, ax = plt.subplots(figsize=(11, 5.6), dpi=160)
 ax.axis("off")
 layers = [
-    ("TẦNG 1 — LƯU TRỮ", "MovieLens 25M (678 MB) → Parquet (pyarrow 26s)\n→ HDFS 3.2.1 · 5 container", "#e8f0fe", "#1a56db"),
+    ("TẦNG 1 — LƯU TRỮ", "MovieLens 25M (678 MB) → Parquet (pyarrow 26s)\n→ Spark DataFrame cục bộ (HDFS đã dùng lúc chạy MapReduce 2026-11-04)", "#e8f0fe", "#1a56db"),
     ("TẦNG 2 — XỬ LÝ LỚN", "MapReduce Java: 323.737 key · G3 PASS 100%\nPySpark local[4]: 3 split → 735 MB · audit · MostPopular · ALS implicit", "#e6f6ea", "#1e7b34"),
     ("TẦNG 3 — LƯU TRỮ METRIC", "MongoDB 8.0.12 · recsys.audit_metrics (42 field) · item_profile (62.423 docs)", "#fff4e0", "#b45309"),
     ("TẦNG 4 — TRỰC QUAN", "R 4.6.2 (7 figures) · Streamlit dashboard · Wilcoxon / bootstrap CI", "#f3e8ff", "#6b21a8"),

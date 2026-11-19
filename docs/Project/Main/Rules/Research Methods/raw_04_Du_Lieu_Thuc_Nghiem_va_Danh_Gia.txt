@@ -1,0 +1,426 @@
+Phương pháp nghiên cứu khoa học trong CNTT
+BÀI 04: DỮ LIỆU, THỰC NGHIỆM & ĐÁNH GIÁ TRONG KHOA HỌC MÁY TÍNH
+TS. Trần Minh Thái • Khoa CNTT, HUFLIT
+
+Nội dung chính:
+1. Chống rò rỉ dữ liệu, xử lý khuyết & mất cân bằng
+2. Phân chia K-Fold, đối chuẩn & Ablation Study
+3. Độ đo cho Tabular, CV, NLP/LLM, RecSys, Security
+4. Kiểm định t-test, Wilcoxon, Friedman & 95% CI
+5. Bảng kết quả, đánh đổi hiệu năng & rủi ro
+
+---
+PHẦN 1: CHUẨN BỊ DỮ LIỆU KHÔNG RÒ RỈ
+
+Ba nguồn rò rỉ dữ liệu cần kiểm tra:
+1. Rò rỉ tiền xử lý:
+   - Lỗi: Fit Scaler/Imputer trên toàn bộ dữ liệu
+   - Cách sửa: Chỉ fit trên Train, transform trên Test
+
+2. Rò rỉ thời gian:
+   - Lỗi: Chia ngẫu nhiên làm lẫn quá khứ và tương lai
+   - Cách sửa: Dùng Temporal Walk-Forward
+
+3. Rò rỉ trùng lặp:
+   - Lỗi: Cùng khách hàng/bệnh nhân ở cả 2 tập
+   - Cách sửa: Dùng GroupKFold tách theo đối tượng
+
+Ảnh hưởng rò rỉ đến độ đo:
+- Có rò rỉ: AUC gần 0.99-1.00 do lộ thông tin tập test
+- Không rò rỉ: Lab đạt AUC=0.88, thực tế giữ mức 0.86
+- Hội đồng thường nghi ngờ khi thấy AUC=1.0
+
+Pipeline chuẩn Scikit-learn:
+```python
+pipe = Pipeline([
+    ('imp', SimpleImputer()),
+    ('sc', RobustScaler()),
+    ('clf', XGBClassifier())
+])
+scores = cross_val_score(pipe, X, y, cv=5)
+```
+
+Nguyên tắc Fit–Transform:
+- .fit() chỉ chạy trên phần dữ liệu huấn luyện
+- .transform() áp dụng lại lên tập kiểm thử
+- Cross-validation tự động tách biệt từng fold
+
+Xử lý giá trị khuyết (Missing Values):
+- MCAR: Khuyết ngẫu nhiên hoàn toàn
+- MAR: Phụ thuộc biến quan sát khác
+- MNAR: Phụ thuộc chính giá trị bị thiếu
+
+Cách điền:
+- Median: Phù hợp khi dữ liệu lệch
+- KNN/MICE: Ước lượng từ các biến liên quan
+- Missing Indicator: Thêm cột đánh dấu ô khuyết
+- Hạn chế Mean: Dễ làm sai lệch phương sai
+
+Xử lý ngoại lai (Outliers):
+- IQR: Ngoài [Q1−1.5×IQR, Q3+1.5×IQR]
+- Z-Score: Các điểm có |Z| > 3
+- Isolation Forest: Phát hiện bất thường đa chiều
+- Lỗi nhập liệu (Tuổi=200) → Loại hoặc sửa
+- Quan sát hiếm (Gian lận) → Giữ lại phân tích
+- Winsorization: Giới hạn tại phân vị 1%–99%
+
+So sánh phép chuẩn hóa:
+| Phương pháp     | Cơ sở tính    | Khi nào dùng                          |
+|----------------|---------------|---------------------------------------|
+| StandardScaler | Mean & Std    | Phân phối gần chuẩn, ít ngoại lai    |
+| MinMaxScaler   | Min & Max     | Đưa về [0,1]; nhạy với giá trị cực trị|
+| RobustScaler   | Median & IQR  | Dữ liệu có nhiều ngoại lai            |
+| Log (log1p)    | log(1 + x)    | Giảm độ lệch cho phân phối đuôi dài  |
+
+Xử lý mất cân bằng lớp:
+- SMOTE: Sinh dữ liệu tổng hợp từ lớp thiểu số
+- Random Under-sampling: Giảm lớp đa số
+- Class weights: Tăng trọng số lớp hiếm
+- Nguyên tắc: KHÔNG sinh dữ liệu trên toàn tập → gây rò rỉ
+
+---
+PHẦN 2: PHÂN CHIA DỮ LIỆU & ĐỐI CHUẨN
+
+Chọn cách chia dữ liệu phù hợp:
+1. Dữ liệu độc lập (I.I.D):
+   - Các mẫu không phụ thuộc nhau
+   - Dùng: Stratified K-Fold (K=5, 10)
+   - Giữ nguyên tỷ lệ nhãn ở mọi fold
+
+2. Chuỗi thời gian:
+   - Dữ liệu có thứ tự thời gian (Logs)
+   - Dùng: Temporal Walk-Forward
+   - Không xáo trộn ngẫu nhiên
+
+3. Dữ liệu theo nhóm:
+   - Nhiều mẫu thuộc cùng 1 người/phiên
+   - Dùng: GroupKFold theo định danh
+   - Tránh lộ thông tin chủ thể
+
+Chia chuỗi thời gian:
+- Expanding Window (Mở rộng):
+  Train [1..T] → Test [T+1]
+  Train [1..T+1] → Test [T+2]
+  Phù hợp: Dữ liệu tích lũy ổn định
+
+- Rolling Window (Cửa sổ trượt):
+  Giữ độ dài cửa sổ Train cố định
+  Bỏ bớt dữ liệu quá cũ
+  Phù hợp: Dữ liệu thay đổi phân phối (Drift)
+
+Dùng tập dữ liệu đối chuẩn (Benchmarks):
+- Lợi ích:
+  * Được cộng đồng khoa học sử dụng rộng rãi
+  * Dễ đối chiếu với kết quả SOTA đã công bố
+  * Tra cứu tại paperswithcode.com/datasets
+- Kho dữ liệu phổ biến:
+  * Kaggle: Dữ liệu thực tế nhiều lĩnh vực
+  * UCI ML: Kho dữ liệu bảng kinh điển
+  * Hugging Face: Kho NLP & đa phương thức
+
+Ba nguyên tắc so sánh công bằng (Fair Benchmarking):
+1. Cùng ngân sách tinh chỉnh:
+   - Baseline cũng phải được tìm siêu tham số
+   - Không so mô hình đã tune với baseline mặc định
+
+2. Cùng dữ liệu & phần cứng:
+   - Dùng chung phép chia Train/Val/Test
+   - Đo thời gian trên cùng máy tính/GPU
+
+3. Mã nguồn tái lập:
+   - Ưu tiên mã gốc của tác giả baseline
+   - Cố định Random Seed và công khai mã
+
+Nghiên cứu bóc tách thành phần (Ablation Study):
+- Vì sao cần:
+  * Chứng minh từng cải tiến thực sự có đóng góp
+  * Loại trừ khả năng tăng điểm do tăng tham số
+  * Yêu cầu phổ biến của hội đồng ThS và IEEE/ACM
+- Cách thực hiện:
+  * Đo bản đầy đủ → Bỏ Module A → Bỏ Loss mới
+  * Nếu bỏ A làm F1 giảm 4% → A có giá trị rõ ràng
+  * Trình bày thành bảng so sánh các biến thể
+
+---
+PHẦN 3: HỆ THỐNG ĐỘ ĐO 5 LĨNH VỰC
+
+Tổng quan độ đo theo 5 lĩnh vực KHMT:
+1. Dữ liệu bảng (Tabular):
+   - Phân loại: F1-Macro, PR-AUC, MCC
+   - Hồi quy: MAE, RMSE, R²
+   - Phân cụm: Silhouette, DBI
+
+2. Thị giác máy tính (CV):
+   - Phân loại: Top-1/Top-5 Accuracy
+   - Phát hiện: IoU, mAP@0.5:0.95 (COCO)
+   - Phân vùng/Sinh: Dice, FID
+
+3. NLP, LLM, RecSys:
+   - NLP/LLM: BLEU, ROUGE, Pass@k, RAG Triad
+   - RecSys: MRR, NDCG@k, Diversity
+
+4. An ninh mạng:
+   - DR, FAR, Latency P99
+
+Ma trận nhầm lẫn (Confusion Matrix):
+- Bốn ô cơ bản:
+  * TP: Dự đoán đúng ca mục tiêu (gian lận/bệnh)
+  * TN: Dự đoán đúng ca bình thường
+  * FP (Báo nhầm): Gây phiền cho người dùng
+  * FN (Bỏ lọt): Gây thiệt hại lớn về tài chính/an toàn
+- Là cơ sở tính Precision, Recall, F1, MCC
+- Nguyên tắc: Ưu tiên giảm lỗi có chi phí cao hơn
+
+Nghịch lý Độ chính xác (Accuracy Paradox):
+- Vì sao Accuracy gây hiểu nhầm:
+  Dữ liệu 99:1 (990 thường, 10 gian lận)
+  Đoán tất cả là 'Thường' → Accuracy 99.0%
+  Thực tế: Bỏ lọt toàn bộ 10 ca gian lận
+- Cách đánh giá đúng:
+  * Không dùng Accuracy đơn lẻ khi dữ liệu lệch
+  * Dùng F1-Macro, MCC và PR-AUC
+  * Đo được khả năng nhận diện lớp thiểu số
+
+Độ đo phân loại:
+| Độ đo      | Công thức                       | Khi nào dùng                        |
+|------------|--------------------------------|-------------------------------------|
+| F1-Macro   | Trung bình F1 từng lớp         | Lớp hiếm 1% có vai trò ngang 99%   |
+| F1-Micro   | Gộp TP,FP,FN toàn tập → tính  | Bị chi phối bởi lớp đa số          |
+| MCC        | Dùng cả 4 ô TP,TN,FP,FN        | Tin cậy nhất cho dữ liệu lệch nhãn |
+
+ROC-AUC vs PR-AUC:
+- ROC-AUC (FPR vs TPR):
+  * FPR = FP/(FP+TN)
+  * Khi TN rất lớn, FPR nhỏ → điểm dễ cao >0.95
+  * Phù hợp: Khi hai lớp cân bằng
+
+- PR-AUC (Recall vs Precision):
+  * Không đưa TN vào công thức
+  * Khi FP tăng, Precision giảm ngay → phản ánh thật
+  * Phù hợp: Khi lớp hiếm <5%
+
+Độ đo Hồi quy & Phân cụm:
+- MAE, RMSE & R²:
+  * MAE: Cùng đơn vị mục tiêu, ít nhạy ngoại lai
+  * RMSE: Phạt nặng sai số lớn
+  * R² ∈ [0,1]: Mức giải thích phương sai
+
+- Silhouette Score:
+  * s = (b−a)/max(a,b) ∈ [−1,+1]
+  * Đo độ gọn trong cụm và tách giữa các cụm
+  * s>0.7: Phân cụm rõ nét
+
+- DBI & Calinski-Harabasz:
+  * DBI: Càng nhỏ (gần 0) càng tốt
+  * CH Index: Càng lớn càng tốt
+
+Độ đo Thị giác Máy tính (CV):
+- Phân loại ảnh:
+  * Top-1 Acc: Nhãn xác suất cao nhất đúng
+  * Top-5 Acc: Nhãn đúng thuộc Top 5 dự đoán
+  * mAcc: Trung bình độ chính xác từng lớp
+
+- Phát hiện vật thể:
+  * IoU: Area(A∩B)/Area(A∪B)
+  * mAP@0.5: Tính tại 1 ngưỡng IoU=0.50
+  * mAP@0.5:0.95 (COCO): Trung bình 10 ngưỡng
+
+- Phân vùng ảnh (Segmentation):
+  * Dice: 2|A∩B|/(|A|+|B|) — y tế
+  * mIoU: Trung bình IoU các lớp ngữ nghĩa
+
+- Mô hình sinh ảnh (GenAI):
+  * FID: Khoảng cách phân phối ảnh sinh vs thật (càng thấp càng chân thực)
+  * IS (Inception Score): Độ nét & đa dạng
+
+Độ đo NLP:
+- Dịch máy, Tóm tắt:
+  * BLEU (Dịch): Precision theo n-gram
+  * ROUGE-1/2/L (Tóm tắt): Recall theo từ/LCS
+  * Hạn chế: Chưa bắt được từ đồng nghĩa
+
+- Hỏi đáp (QA) & Mô hình ngôn ngữ:
+  * Exact Match (EM): Khớp 100% đáp án
+  * Token F1: Độ giao thoa từ vựng
+  * Perplexity (PPL): Càng nhỏ càng tự nhiên
+
+Đánh giá LLM:
+- Sinh mã: Pass@k:
+  Xác suất có ≥1 lời giải qua hết unit tests trong k mẫu
+  Chuẩn: HumanEval, MBPP
+
+- Hệ thống RAG Triad:
+  * Context: Đúng ngữ cảnh
+  * Groundedness: Bám sát nguồn
+  * Answer: Trả lời đúng câu hỏi
+
+- LLM-as-a-Judge:
+  * Dùng mô hình mạnh chấm theo rubric
+  * Kiểm thiên kiến: Đảo vị trí, chuẩn độ dài, đối chiếu người thật
+
+Hệ gợi ý (RecSys):
+- Độ đo thứ bậc (Ranking):
+  * MRR: (1/Q)∑(1/rank_i) — vị trí đúng đầu tiên
+  * NDCG@k: Chiết khấu logarit theo vị trí log₂(rank+1)
+  * Tiêu chuẩn tại hội thảo RecSys & SIGIR
+
+- Các chỉ số bổ sung:
+  * Diversity: Độ đa dạng danh sách gợi ý
+  * Novelty: Gợi ý mục ít phổ biến (đuôi dài)
+  * Serendipity: Gợi ý mới mẻ ngoài dự đoán
+
+Độ đo An ninh mạng & Chi phí vận hành:
+- An ninh mạng:
+  * Detection Rate (DR): TP/(TP+FN)
+  * False Alarm (FAR): FP/(FP+TN) <0.1%
+  * FAR cao làm quá tải đội ngũ vận hành SOC
+
+- Chi phí vận hành:
+  * Latency P99: Thời gian phản hồi <100ms
+  * Throughput: Số giao dịch/giây (TPS, FPS)
+  * Tài nguyên: FLOPs và dung lượng VRAM GPU
+
+---
+PHẦN 4: THỐNG KÊ SUY LUẬN & KIỂM ĐỊNH
+
+Vì sao chỉ so sánh điểm trung bình là chưa đủ?
+- Rủi ro chênh lệch ngẫu nhiên:
+  Mô hình A: F1=85.2% vs Baseline: 84.0%
+  Chênh +1.2% có thể do may mắn khi chia fold
+  Không kiểm định thì chưa đủ cơ sở kết luận hơn
+
+- Vai trò Thống kê suy luận:
+  * Tính xác suất ngẫu nhiên (p-value)
+  * Cung cấp căn cứ định lượng cho sự cải thiện
+  * Là yêu cầu phổ biến ở các hội nghị CORE A*
+
+Nguyên lý Kiểm định Giả thuyết Thống kê:
+- Hai giả thuyết so sánh:
+  * H0 (Không): μ_A − μ_B ≤ 0 (không khác biệt)
+  * H1 (Đối): μ_A − μ_B > 0 (A tốt hơn có ý nghĩa)
+  * Dùng dữ liệu qua K folds để kiểm tra bác bỏ H0
+
+- Mức ý nghĩa α & Quy tắc quyết định:
+  * α=0.05: Ngưỡng sai lầm loại I tối đa 5%
+  * p<0.05: Bác bỏ H0 (độ tin cậy ≥95%)
+  * p<0.01: Ngưỡng chặt cho bài toán quan trọng
+
+Kiểm định tham số: Paired Student's t-test:
+- Công thức:
+  d_i = A_i - B_i (Fold i)
+  t = mean(d)/(std(d)/sqrt(N))
+  df = N - 1
+
+- Python:
+  from scipy import stats
+  stats.shapiro(d)  # p>0.05?
+  stats.ttest_rel(A, B)
+
+- Điều kiện áp dụng:
+  * Hai mô hình chạy trên cùng các fold
+  * Hiệu số d_i tuân theo phân phối chuẩn
+  * Kiểm tra trước: Shapiro-Wilk test
+
+Khoảng tin cậy (Confidence Interval - CI):
+- Ý nghĩa 95% CI:
+  Ví dụ: Δ F1-score = [0.5%, 2.3%]
+  Có 95% khả năng cải thiện thật nằm trong khoảng trên
+  Khoảng không chứa 0 → có bằng chứng cải thiện
+
+- Công thức:
+  CI = mean(d) ± t_crit × SE
+  SE = std(d)/sqrt(N)
+  t_crit từ bảng t-distribution (df=N-1)
+
+- Nguyên tắc trình bày:
+  * Ghi cả Mean ± Std và 95% CI trong bảng
+  * Dùng CI để so sánh độ lớn hiệu ứng
+
+Độ lớn hiệu ứng (Effect Size):
+- Cohen's d:
+  d = mean(diff)/std(diff)
+  |d| ≥ 0.8: Lớn
+  |d| ≥ 0.5: Trung bình
+  |d| ≥ 0.2: Nhỏ
+  Dùng cho Paired t-test
+
+- Rank-Biserial r:
+  Tương tự cho Wilcoxon Signed-Rank
+  r ∈ [−1, +1]
+  r ≥ 0.7: Hiệu ứng lớn
+
+Kiểm định phi tham số:
+- Wilcoxon Signed-Rank (2 mô hình):
+  * Dùng khi hiệu số không chuẩn hoặc N<30
+  * Xếp hạng |d_i|, ít bị ảnh hưởng bởi ngoại lai
+  * Python: scipy.stats.wilcoxon(A, B)
+
+- Friedman & Nemenyi (k≥3 mô hình):
+  * Demšar (JMLR 2006): Không chạy t-test nhiều cặp
+  * Xếp hạng k thuật toán trên nhiều tập dữ liệu
+  * Hậu kiểm Nemenyi + biểu đồ CD Diagram
+
+---
+PHẦN 5: BẢNG ĐỐI CHUẨN & HOÀN THIỆN ĐỀ CƯƠNG
+
+Cấu trúc bảng đối chuẩn thực nghiệm chuẩn IEEE/ACM:
+- Các cột thông tin chính:
+  * Cột 1: Nhóm mô hình (Sàn, SOTA, Đề xuất)
+  * Cột 2-3: Độ đo chính (Mean ± Std)
+  * Cột 4-5: Chi phí vận hành (Latency ms, FPS, VRAM)
+
+- Quy ước trình bày:
+  * In đậm (Bold) giá trị tốt nhất mỗi cột
+  * Gạch chân (Underline) giá trị tốt nhì
+  * Đánh dấu (*) nếu vượt trội với p<0.05
+
+Phân tích đánh đổi kỹ thuật (Trade-offs):
+- Bài toán đánh đổi độ chính xác–tốc độ:
+  * Tăng +0.8% F1 nhưng trễ tăng 20ms → 800ms
+  * Mô hình quá nặng khó triển khai trên Edge/Mobile
+  * Cần chọn điểm cân bằng phù hợp bài toán
+
+- Đường biên Pareto (Pareto Frontier):
+  * Pareto Optimal: Không thể tăng F1 mà không tăng trễ
+  * Biểu đồ 2 trục: F1 (cao) vs Latency (thấp)
+  * Chỉ ra mô hình đề xuất nằm ở vùng tối ưu hơn
+
+Ma trận nhận diện và khắc phục rủi ro thực nghiệm:
+| Rủi ro       | Dấu hiệu                            | Khắc phục                          |
+|-------------|-------------------------------------|-------------------------------------|
+| Overfitting | Train rất cao, Val/Test thấp       | Dropout, Early Stopping, L2        |
+| Data Drift  | Hiệu năng giảm trên dữ liệu mới    | Domain Adaptation, cập nhật định kỳ|
+| CUDA OOM    | Lỗi tràn bộ nhớ GPU khi chạy       | Giảm Batch, Gradient Accumulation, FP16|
+| Không hội tụ| Loss dao động mạnh/không giảm      | Cosine LR, Gradient Clipping       |
+
+Cấu trúc 3 phần Chương Thực nghiệm trong Luận văn:
+1. Thiết lập thực nghiệm:
+   - Dữ liệu, tỷ lệ chia, cấu hình GPU
+   - Danh sách Baselines & siêu tham số
+
+2. Kết quả & Đối chuẩn:
+   - Bảng Mean ± Std kèm kiểm định p<0.05
+   - Biểu đồ so sánh & đường biên Pareto
+
+3. Ablation & Thảo luận:
+   - Bảng bóc tách từng module đóng góp
+   - Phân tích ca lỗi & giới hạn mô hình
+
+Yêu cầu tối thiểu cho Đề cương:
+- Pipeline sạch, cách chia dữ liệu & SMOTE
+- Bộ độ đo chuyên ngành & khung Ablation
+- Kiểm định t-test/Wilcoxon & bảng SOTA
+- Script Python mẫu chạy Pipeline + kiểm định
+- Phiếu tự đánh giá Rubric (mục tiêu ≥70/100)
+
+---
+Tóm tắt Bài 04:
+✓ Dữ liệu sạch: Tránh rò rỉ, xử lý khuyết & lệch nhãn
+✓ Thực nghiệm chuẩn: Chia dữ liệu đúng, Baselines & Ablation
+✓ Thống kê: Hiểu p-value, 95% CI, t-test, Wilcoxon, Friedman
+
+Chuẩn bị cho Bài 05:
+- Đầu vào: Bảng số liệu & biểu đồ từ Bài 04
+- Nội dung Bài 05: Văn phong, CARS, LaTeX/Overleaf & bảo vệ
+- Chuẩn bị: Tạo sẵn tài khoản Overleaf cá nhân
+

@@ -52,7 +52,7 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
 | `regParam` | 0.05 | mặc định hợp lý |
 | `seed` | 42 | tái lập |
 | `coldStartStrategy` | `drop` | bỏ user không có factor |
-| subsample users | 30.000 (PoC) → tăng dần | tránh OOM ở `recommendForAllUsers` |
+| subsample users | FULL 162.541 (2026-11-17); subsample 30.000 là PoC lịch sử | topk_numpy chunked tránh OOM ở `recommendForAllUsers` |
 
 **Vì sao không dùng `recommendForAllUsers`:** 162.541 user × 59.047 item là cartesian quá lớn → OOM. Thay bằng **top-K bằng numpy** (`U @ V.T` chia chunk 2000 user/lần), trừ item user đã xem. Vẫn là đúng toán học của ALS, chỉ khác cách lấy top-K.
 
@@ -64,16 +64,16 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
 | Tầng | Mô hình | Code | Seed | Phần cứng | Trạng thái |
 |---|---|---|---|---|---|
 | **Sàn (truyền thống)** | `Random`, `MostPopular` | PySpark built-in + MapReduce Java (đã chạy 04/11, 323.737 key) | 42 | máy anh | ✅ có sẵn |
-| **Kinh điển** | `ALS` (MF), `ItemKNN` cosine, `BPR` | `pyspark.ml.recommendation.ALS`; BPR: `github.com/beta-team/beta-recsys` | 42 + 10 seed | máy anh | ✅ ALS xong · ⏳ ItemKNN |
-| **SOTA (≤2 năm)** | `SASRec+` (full CE) hoặc `EASE` | `github.com/pmixer/SASRec.pytorch` · `github.com/antklen/sasrec-bert4rec-recsys23` · EASE: `rs_metrics` / `MS Recommenders` | 42 | CPU được, GPU nhanh hơn | ⏳ chưa chạy |
+| **Kinh điển** | `ALS` (MF), `ItemKNN` cosine | `pyspark.ml.recommendation.ALS`; ItemKNN: `src/audit/itemknn.py` (scipy sparse, cosine trên co-count) | 42 (1 seed — giới hạn đã khai báo) | máy anh | ✅ ALS xong (FULL) · ✅ ItemKNN xong (run `20261118_150305_..._0b7511ee`, 503 s) |
+| **SOTA (≤2 năm)** | `SASRec` + cross-entropy (đúng danh sách đăng kí) | `github.com/pmixer/SASRec.pytorch` · `github.com/antklen/sasrec-bert4rec-recsys23` | 42 | GPU local RTX 4050 Laptop 6 GB | ✅ đã chạy 3 split trên GPU local RTX 4050, seed 42, `tuning_budget=0`; không gọi là model thắng |
 | **Bổ sung (tùy chọn)** | `ALS + time-aware re-rank` | tự viết: `exp(-λ·Δt)` cho item xem lâu | 42 | máy anh | ⏳ nếu còn thời gian |
 
 **Ngân sách tinh chỉnh phải bằng nhau cho mọi mô hình, gồm baseline.** Bắt chước đúng [03] RecSys'25:
 hidden 32–256 · self-attention blocks 1–3 · heads 1–4 · dropout 0.1–0.5 · batch 256 · seq_len 128 ·
 Adam lr 1e-3 · max 300 epoch · early stop patience 10 (BERT4Rec 20).
 
-**Nếu không đủ GPU:** dùng **EASE** — [11] RecSys'21 (CORE A) dùng chính nó trên **ML-20M + global timestamp
-split** để tính metric, nên vừa là SOTA tái lập được trên CPU, vừa đối chuẩn đúng protocol của mình.
+**Không có phương án EASE:** EASE **không nằm trong danh sách baseline đã đăng kí** (`docs/About/Reseach_Method_Submission.md`) nên đề tài **không chạy**. SASRec+CE đã chạy được trên GPU local RTX 4050, nên giữ cả 5 model đã đăng kí và **khai báo giới hạn** "tầng SOTA đã reproduce 3 split trên GPU local (không tuning) trong giai đoạn này" (xem `docs/Project/Main/Drawbacks.md` §3.5).
+
 
 **Không dùng [13] và [14] làm mốc so sánh số** — dataset private, không repo, không seed
 (chi tiết `05C_Baseline_3_tang_DSRM.md` §3).
@@ -83,7 +83,7 @@ split** để tính metric, nên vừa là SOTA tái lập được trên CPU, v
 | Trường | Nội dung |
 |---|---|
 | Mã nguồn | commit hash repo mình + 3 link repo baseline |
-| Seed | `[42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718]` — 10 seed, báo Mean ± Std |
+| Seed | **1 seed duy nhất: 42** (giới hạn đã khai báo trong đề cương + slide 14). Ma trận nhiều seed **không chạy** — xem `docs/Project/Main/Drawbacks.md` §1.4. Báo per-split, không báo Mean ± Std bừa. |
 | CPU / GPU / RAM | `lscpu`, `nproc`, `free -h`, `spark.version`, `java -version` → `logs/hardware.txt` |
 | Thời gian chạy | wall-clock mỗi mô hình × mỗi split (`time.perf_counter()`) |
 | Ngân sách tinh chỉnh | số cấu hình thử cho **mỗi** mô hình, kể cả baseline (vd 30) |
@@ -117,9 +117,9 @@ split** để tính metric, nên vừa là SOTA tái lập được trên CPU, v
 | `scripts/05_store_mongodb.py` | ghi metrics + item profile vào MongoDB |
 | `scripts/06_analysis_r.R` | SparkR: thống kê mô tả, kiểm định, biểu đồ |
 | `scripts/07_dashboard.py` | Streamlit đọc MongoDB |
-| `scripts/17_itemknn.py` | **ItemKNN cosine** bằng RDD (`cartesian` → `topByKey(100)` → `join`) — tầng kinh điển |
+| `src/audit/itemknn.py` | **ItemKNN cosine** bằng `scipy.sparse` (co-count → cosine, k=100, min_co=2) — tầng kinh điển, ✅ đã chạy trong notebook 11. Bản RDD `cartesian`/self-join không dùng được (timeout 3600 s) |
 | `scripts/18_hardware_log.py` | **Ghi cấu hình phần cứng** (`nproc`, `free -h`, `lscpu`, `java -version`, `spark.version`) → `logs/hardware.txt` — tiêu chí (6) của Bài 03 |
-| `scripts/19_baseline_3tang.py` | Chạy 3 tầng baseline × 3 split × 10 seed → Mean ± Std |
+| `scripts/19_baseline_3tang.py` | (dự kiến, không dùng) — đường thực tế là `notebooks/jupyter/06,08,10,11` cho 4 baseline × 3 split × seed 42, ghép ở `09`, kiểm định ở `12` |
 
 **PoC đã chốt (file `_poc3_spark.py`)** — sẽ chuyển thành `scripts/04_audit_spark.py` khi pipeline chính thức.
 
@@ -134,7 +134,7 @@ split** để tính metric, nên vừa là SOTA tái lập được trên CPU, v
    - `<out>/results/manifest.json` — phiên bản Spark, dataset checksum, tham số, thời gian chạy
 3. **Checksum dataset** lưu trong `data/raw/CHECKSUMS.sha256` (chỉ hash, không commit dữ liệu).
 4. Không dùng `F.rand` không seed; không dùng `current_date` trong logic.
-5. **10 seed** cho mọi mô hình (kể cả baseline): `[42, 2024, 7, 1337, 2025, 11, 88, 99, 314, 2718]` → báo Mean ± Std, không báo 1 lần chạy.
+5. **Seed: 42 cho mọi mô hình** (1 seed — giới hạn đã khai báo, không phải 10 seed). Vì không có Mean ± Std, mọi kết luận chênh lệch phải kèm **kiểm định cặp per-user** (Wilcoxon + 95% CI + effect size r) — notebook 12, 20 cặp.
 6. **Khai báo phần cứng** mỗi lần chạy: `scripts/18_hardware_log.py` → `logs/hardware.txt` (tiêu chí 6 của Bài 03).
 7. **Ngân sách tinh chỉnh bằng nhau** giữa mô hình đề xuất và baseline — ghi rõ số cấu hình thử.
 8. **Ba tầng baseline** (sàn / kinh điển / SOTA) — xem §1.5 và `05C_Baseline_3_tang_DSRM.md`.
@@ -163,9 +163,9 @@ Khi không đủ thời gian hoặc phần cứng cho full Paper 01, deliverable
 
 - Dataset: MovieLens-25M project dataset, ghi rõ khác subset Paper 01.
 - Split: `random80_20`, `temporal_global`, `leave_one_out`.
-- Model: `MostPopular` và `ALS`; EASE hoặc ItemKNN chỉ thêm khi còn thời gian.
+- Model: 4 baseline đã đăng kí và **đã chạy đủ** — `Random`, `MostPopular` (sàn), `ALS`, `ItemKNN` cosine (kinh điển); `SASRec`+CE (SOTA) đã chạy trên GPU local RTX 4050.
 - Metrics: HR/NDCG theo metric contract project, leakage diagnostics, catalog/popularity metrics và wall-clock runtime.
-- Seeds: 3 seed `[42, 2024, 7]` cho bảng chính; 10 seed là mở rộng, không phải gate.
+- Seeds: **1 seed 42** cho toàn bộ bảng chính (giới hạn đã khai báo). Ma trận seed là mở rộng, không phải gate, và **không nằm trong phạm vi đã đăng kí**.
 - Hardware/software: dùng environment project hiện có và ghi manifest thực tế.
 
 ### Phân loại kết quả
@@ -185,10 +185,10 @@ Không chạy BPR 300 epoch trên CPU trong critical path. Smoke test BPR đã m
 
 | Điều kiện | Hành động |
 |---|---|
-| ALS trên 20M dòng > 20 phút | giảm `maxIter` xuống 5, hoặc subsample 30K user (đã có sẵn trong PoC) |
+| ALS trên 20M dòng > 20 phút | fit FULL mất ~37s/split thực tế (run 17/11) + `topk_numpy` chunked |
 | `recommendForAllUsers` OOM | **luôn** dùng numpy top-K (đã sửa trong PoC) |
 | R cài > 30 phút lỗi | bỏ R, dùng Python, ghi rõ trong phụ lục đề cương |
 | Deadline 06/11 tới mà chưa xong Tầng 2+3 | chốt dataset chính, bỏ cross-domain |
-| Deadline 07/11 tới mà chưa xong Tầng 4 | **vẫn phải giữ đủ 3 tầng baseline** — bỏ time-aware re-rank, giữ Popularity + ALS + EASE |
-| Không chạy được SASRec+ (thiếu GPU/thời gian) | dùng **EASE** làm điểm SOTA — [11] RecSys'21 đã dùng EASE trên ML-20M + global timestamp split |
-| ItemKNN quá chậm trên ml-25m | dùng **BPR** (`beta-team/beta-recsys`) làm tầng kinh điển thay thế |
+| Deadline 07/11 tới mà chưa xong Tầng SOTA | **vẫn phải giữ đủ 3 tầng baseline** — tất cả 5 model đã đăng kí đã chạy đủ 3 split; tầng SOTA khai báo "đã reproduce 3 split trên GPU local RTX 4050 (không tuning)" |
+| Không chạy được SASRec+CE (thiếu GPU/thời gian) | **không thay bằng EASE** (không đăng kí) — giữ 5 model, khai báo giới hạn tầng SOTA trong đề cương và slide 13/14 |
+| ItemKNN quá chậm trên ml-25m | ✅ đã xử lý: v1 Spark self-join timeout 3600 s → v2 `scipy.sparse` trên driver, 503 s cho 3 split (run `20261118_150305_..._0b7511ee`) |

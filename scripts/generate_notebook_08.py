@@ -51,9 +51,9 @@ Cách làm thay thế: lấy ma trận hệ số `U` (user × 16) và `V` (item 
 
 Trước khi lấy top-K phải gán `-inf` cho item user **đã thấy trong train** — nếu không, mô hình sẽ gợi ý lại phim user vừa xem, làm NDCG tăng giả tạo.
 
-### Vì sao subsample 30.000 user
+### Vì sao trước đó subsample 30.000 user — và nay đã chạy FULL
 
-Fit ALS trên toàn bộ 162.541 user mất ~10 phút mỗi split, chủ yếu ở bước fit. Notebook này chọn 30.000 user đầu theo `userId` tăng dần — **đơn định**, không phụ thuộc partition — để có kết quả trong ~2 phút/split. Đây là quyết định có ghi trong manifest, không phải cắt bớt ngầm. Khi chạy bảng chính thức phải tăng lên và ghi lại.»"""),
+Lần đầu (run 2026-11-15) notebook chỉ fit 30.000 user đầu theo `userId` tăng dần — **đơn định**, không phụ thuộc partition — để có kết quả trong ~2 phút/split; quyết định có ghi trong manifest, không cắt bớt ngầm. Lần chạy FULL (run 2026-11-17, `20261117_185700_08_als_implicit_7be22080`): ALS fit toàn bộ 162.541 user trên ~20–25M dòng/split, fit ~35–38s mỗi split — nhanh hơn dự báo. NDCG chênh 1% so với subsample (0,2556 → 0,2581 random80_20): subsample trước đủ đại diện. Số chính thức của đề tài là số FULL.»"""),
     md("""## 1. Nạp split, audit và Spark session"""),
     code("""from pathlib import Path
 import json
@@ -87,6 +87,7 @@ run = NotebookRun(
         'k': spark_utils.TOP_K,
         'relevance_threshold': spark_utils.RELEVANCE_THRESHOLD,
         'subsample_users': spark_utils.SUBSAMPLE_USERS,
+        'fit_scope': 'FULL 162,541 users (run 2026-11-17) — subsample 30,000 chỉ dùng ở run 2026-11-15',
         'splits': SPLITS_TO_RUN,
     },
 )
@@ -126,15 +127,18 @@ for strategy in SPLITS_TO_RUN:
 
     train_df, test_df = split_lib.load_split(strategy, spark_utils.SPLITS_DIR)
 
-    # subsample don dinh theo userId tang dan
-    sub_users = als_rec.subsample_users(train_df, spark_utils.SUBSAMPLE_USERS)
-    train_sub = train_df.join(F.broadcast(sub_users), 'userId').persist()
-    test_sub = test_df.join(F.broadcast(sub_users), 'userId').persist()
+    # FULL: dùng thẳng split (run 2026-11-17); subsample 30k đã comment — chỉ bật khi cần chạy nhanh
+    # sub_users = als_rec.subsample_users(train_df, spark_utils.SUBSAMPLE_USERS)
+    # train_sub = train_df.join(F.broadcast(sub_users), 'userId').persist()
+    # test_sub  = test_df.join(F.broadcast(sub_users), 'userId').persist()
+
+    train_sub = train_df.persist()
+    test_sub  = test_df.persist()
 
     # implicit: chi tuong tac tich cuc
     train_positive = train_sub.filter(F.col('rating') >= F.lit(spark_utils.RELEVANCE_THRESHOLD)).persist()
     n_train, n_test, n_pos = train_sub.count(), test_sub.count(), train_positive.count()
-    print(f'  subsample train={n_train:,} test={n_test:,} positive={n_pos:,}')
+    print(f'  FULL train={n_train:,} test={n_test:,} positive={n_pos:,}')
 
     U, ui, V, vi, fit_seconds = als_rec.fit_als_implicit(
         train_positive,
@@ -164,6 +168,7 @@ for strategy in SPLITS_TO_RUN:
     ndcg_mean, ndcg_per_user = metrics.mean_metric(recommendations, truth, metrics.ndcg_at_k, spark_utils.TOP_K)
     hit_mean, _ = metrics.mean_metric(recommendations, truth, metrics.hit_at_k, spark_utils.TOP_K)
     recall_mean, _ = metrics.mean_metric(recommendations, truth, metrics.recall_at_k, spark_utils.TOP_K)
+    mrr_mean, _ = metrics.mean_metric(recommendations, truth, metrics.mrr_at_k, spark_utils.TOP_K)
 
     catalog = pop_lib.train_popularity(train_sub)
     flat_recs = [int(i) for items in recommendations.values() for i in items]
@@ -176,9 +181,10 @@ for strategy in SPLITS_TO_RUN:
         'ndcg10': round(ndcg_mean, 4),
         'hit_rate10': round(hit_mean, 4),
         'recall10': round(recall_mean, 4),
+        'mrr10': round(mrr_mean, 4),
         'eval_users': len(ndcg_per_user),
-        'subsample_train_rows': n_train,
-        'subsample_test_rows': n_test,
+        'train_rows': n_train,
+        'test_rows': n_test,
         'positive_train_rows': n_pos,
         'rank': 16, 'max_iter': 8, 'reg': 0.05, 'alpha': 10.0,
         'seed': spark_utils.DEFAULT_SEED,
@@ -190,7 +196,7 @@ for strategy in SPLITS_TO_RUN:
     }
     peruser_by_split[strategy] = ndcg_per_user
 
-    print(f"  ndcg@10={ndcg_mean:.4f}  hit@10={hit_mean:.4f}  recall@10={recall_mean:.4f}")
+    print(f"  ndcg@10={ndcg_mean:.4f}  hit@10={hit_mean:.4f}  recall@10={recall_mean:.4f}  mrr@10={mrr_mean:.4f}")
     print(f'  total {total_seconds:.1f}s')
     run.log('ALS_RESULT', strategy=strategy, result=als_by_split[strategy])
 
@@ -224,7 +230,7 @@ for strategy in SPLITS_TO_RUN:
 print()
 if mismatches:
     print('MISMATCH:', mismatches)
-    print('Kiem tra: subsample 30k user, fit tren positive only, chunk 2000, seen exclusion.')
+    print('Kiem tra: fit FULL dataset, tren positive only, chunk 2000, seen exclusion.')
 else:
     print('NDCG khop ket qua do that (dung sai 0.01).')
 
@@ -278,6 +284,7 @@ summary = {
     'model': 'ALS_implicit',
     'params': {'rank': 16, 'maxIter': 8, 'regParam': 0.05, 'alpha': 10.0, 'implicitPrefs': True, 'seed': spark_utils.DEFAULT_SEED},
     'subsample_users': spark_utils.SUBSAMPLE_USERS,
+    'fit_scope': 'FULL 162,541 users (run 2026-11-17) — subsample 30,000 chỉ dùng ở run 2026-11-15',
     'k': spark_utils.TOP_K,
     'relevance_threshold': spark_utils.RELEVANCE_THRESHOLD,
     'results': als_by_split,

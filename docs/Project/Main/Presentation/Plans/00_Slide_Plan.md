@@ -1,8 +1,8 @@
 # Kế hoạch tạo slide thuyết trình PPNCKH — bảo vệ đề cương
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-16
-**Mục đích:** DỰ PHÒNG — giảng viên PPNCKH đã nói rõ môn thiên về **soạn tài liệu / lý thuyết / trình bày khoa học**, không bắt buộc chạy hết pipeline. Slide phải dựng được **kể cả khi thực nghiệm bị dừng ở trạng thái hiện tại** (đã có PoC + notebook flow 6/6 gate PASS).
+**Cập nhật:** 2026-11-18
+**Mục đích:** Bảo vệ đề cương PPNCKH. Slide khớp artifact cuối: 5 model, 20 cặp kiểm định, SASRec+CE GPU local, 1 seed, 3 split. 
 
 **Căn cứ:**
 - [HD Chuan bi thuyet trinh.pdf](file:///d:/Master%20Exers/Big%20Data/Recomendation_System/docs/References/HUFLIT/Research_Methods/HD%20Chuan%20bi%20thuyet%20trinh.pdf) (TS. Trần Minh Thái — 12 slide mẫu, tỷ trọng C1 20% / C2 30% / C3 45% / KL 5% + Q&A)
@@ -16,11 +16,11 @@
 
 | Hạng mục | Quyết định |
 |---|---|
-| Số slide | **14** (trong khoảng 10–20 cho phép) |
+| Số slide | **15** (trong khoảng 10–20 cho phép) |
 | Công cụ | `python-pptx` — script sinh slide (`scripts/generate_slides.py`) + dùng 1 slide mẫu của file HD làm reference layout (Title and Content / Two Content, footer `x / 15`) |
-| Cỡ chữ | **≥ 24pt** toàn bộ body; title 32–40pt; bảng tối thiểu 20pt (ngoại lệ duy nhất, do bảng số) |
+| Cỡ chữ | Title 30pt; thân slide 11–17pt; bảng dày 9–13pt. Chưa đạt mức ≥24pt của hướng dẫn. Muốn đạt: đẩy bảng dày sang phụ lục, thân slide chỉ giữ 3 số chính. |
 | Nền | Sáng (trắng / trắng ngà), một accent màu; không animation |
-| Ngôn ngữ | Tiếng Việt; thuật ngữ kỹ thuật giữ tiếng Anh (SLI, NDCG@10, coverage…) |
+| Ngôn ngữ | Tiếng Việt, cách nói dễ hiểu. Tên chỉ số/mô hình giữ nguyên khi cần tra cứu (SLI, NDCG@10, MRR@10, SASRec); giải thích bằng tiếng Việt ngay bên cạnh. |
 | Trực quan | Sơ đồ + bảng thay đoạn văn; mỗi slide ≤ 2 khối thông tin |
 | Speaker notes | Mỗi slide có notes (script nói + dự phòng Q&A), dù file mẫu không yêu cầu — vì người trình bày cần |
 
@@ -33,7 +33,7 @@
 | 1 | Tiêu đề đề tài + sinh viên + GVHD | — | `01_De_tai_va_Ke_hoach.md` §1 |
 | 2 | Bố cục trình bày (C1 20% · C2 30% · C3 45% · KL 5%) | — | copy cấu trúc HD slide 2 |
 | 3 | **DIKW áp dụng vào đề tài** | C1 20% | mục §4 dưới đây |
-| 4 | **Phương pháp tư duy** (phân tích – tổng hợp – quy nạp – phản chứng) | C1 20% | mục §5 |
+| 4 | **Phương pháp tư duy** (3 cách: diễn dịch – quy nạp – suy đoán; phản chứng là bước kiểm chứng thêm) | C1 20% | mục §5 |
 | 5 | **W5H2** — bài toán thực tiễn | C2 30% | `01_De_tai…` §4 |
 | 6 | **Quản lý tài liệu — 14 bài đã thu thập + kiểm tra độ uy tín** (chụp trang PDF + SCImago/CORE) | C2 30% | `docs/References/Papers/_manifest.json` |
 | 7 | **Ma trận tổng hợp tài liệu** (5 bài Q1/CORE A*) + khoảng trống | C2 30% | `04_Ma_tran_tong_quan_5_cot.md`, `07_Gap_3_phan…` |
@@ -63,7 +63,7 @@
 | **Knowledge** | Quy luật: (i) rò rỉ phải đo **tương đối theo user**, đo toàn cục cho kết luận ngược (LOO: 99,9988% vs 0%); (ii) đổi rò rỉ lấy dịch chuyển miền (mất 96,1% mẫu); (iii) giảm thiên lệch ≠ xử lý thiên lệch (longtail_coverage = 0 cả 6 tổ hợp) |
 | **Wisdom** | **SLI + giao thức audit 3 bước** — công cụ giúp nhà nghiên cứu/công ty ra quyết định "split này có tin được không" trước khi đọc số metric |
 
-> Phương pháp tư duy (slide 4): **phân tích** (mổ xẻ 3 split × 6 metric) → **tổng hợp** (giao thức audit) → **quy nạp** (từ 25M tương tác về quy luật) → **phản chứng** (phản ví dụ LOO: định nghĩa toàn cục sai). Ghi chú khung: tư duy phản biện của Popper — một phản ví dụ đủ để bác một định nghĩa.
+> Phương pháp tư duy (slide 4): đúng 3 cách theo báo cáo/bài giảng — **diễn dịch** (lý thuyết chung → trường hợp cụ thể; TOIS 2022 → kiểm tra 3 split), **quy nạp** (nhiều quan sát → quy luật chung — **chủ đạo**, vì kết luận rút từ dữ liệu thật), **suy đoán** (dữ kiện lạ → giả thuyết rồi kiểm chứng). **Phản chứng không phải phương pháp thứ 4** — chỉ là bước kiểm chứng thêm: phản ví dụ LOO bác định nghĩa rò rỉ toàn cục.
 
 ### Slide 5 — W5H2 (nén thành bảng 6 ô, mỗi ô 1 dòng)
 
@@ -146,43 +146,45 @@ CSV 25M → Parquet (pyarrow 26s)
    → [TẦNG 3] MongoDB: audit_metrics 42 field, item_profile 62.423 docs
    → [TẦNG 4] R (7 figures) + Streamlit dashboard + kiểm định Wilcoxon/bootstrap
 ```
-> Ghi dưới sơ đồ: *đã chạy thật — MapReduce SUCCESS, G3 PASS 100%, 6/6 notebook gate PASS*.
+> Ghi dưới sơ đồ: *đã chạy thật — MapReduce SUCCESS, G3 PASS 100%, 10/10 notebook gate PASS (04–12)*.
 
 ### Slide 11 — Chỉ số + Baseline
 
 - **Chỉ số tầng dữ liệu:** SLI = (công thức, 1 dòng) + 3 ngưỡng phân loại (an toàn < 0,05 / nhẹ < 0,30 / nghiêm trọng ≥ 0,30)
 - **Chỉ số ranking:** NDCG@10 = DCG/IDCG (công thức 2 dòng); Hit@10
 - **Chỉ số công bằng:** catalog coverage, Gini exposure, popularity-bias ratio, longtail_coverage
-- **Baseline 3 tầng (bắt buộc Bài 03):** sàn (MostPopular, Random) · kinh điển (ALS implicit, ItemKNN) · SOTA (SASRec+ hoặc EASE CPU nếu thiếu GPU)
+- **Baseline 3 tầng (bắt buộc Bài 03):** sàn (MostPopular, Random) · kinh điển (ALS implicit, ItemKNN) · đối chuẩn mới (SASRec+CE GPU local). EASE không đăng ký nên không chạy.
 
 ### Slide 12 — Kết quả sơ bộ (chứng minh khả thi — KHÔNG phải kết quả cuối)
 
-Bảng 3 cột × 3 chỉ số chính (từ `01` §7.3 + notebook 09):
+Bảng 5 model × 3 cách chia (từ artifact cuối):
 
-| | random 80/20 | temporal | leave-one-out |
+| Model | NDCG random | NDCG thời gian | NDCG LOO |
 |---|---|---|---|
-| SLI (tương đối) | 98,91% | 0% | 0% |
-| NDCG@10 ALS | 0,2556 | 0,1311 | 0,0467 |
-| `eval_rel_users` | 158.692 | 6.219 | 96.003 |
+| ItemKNN | 0,2679 | 0,1409 | 0,0461 |
+| ALS | 0,2581 | 0,1332 | 0,0469 |
+| SASRec+CE (GPU) | 0,0163 | 0,0188 | 0,0067 |
+| MostPopular | 0,0852 | 0,0455 | 0,0183 |
+| Random | 0,0003 | 0,0009 | 0,0001 |
 
-> 3 nhận xét 1 dòng mỗi cái: (1) split đẹp nhất rò rỉ nặng nhất; (2) split sạch nhất mất 96,1% mẫu; (3) thứ hạng không đảo ở 2 mô hình nhưng độ lớn đổi **5,5×**. **Ghi rõ dòng disclaimer:** *"Số liệu sơ bộ, seed đơn (42), method-informed implementation — chứng minh khả thi, không phải kết luận cuối."*
+> 3 nhận xét: (1) split đẹp nhất rò rỉ nặng nhất (98,91%); (2) split sạch nhất mất 96,1% mẫu đánh giá; (3) ItemKNN dẫn ở random/temporal, ALS dẫn ở LOO nhưng `p=0,153` → không kết luận. **Disclaimer bắt buộc:** *"1 seed (42), SASRec là đối chuẩn `tuning_budget=0`, không Mean±Std, không đo bộ nhớ; số liệu chứng minh khả thi, chưa phải kết luận cuối."*
 
 ### Slide 13 — Hiệu quả + ROI + Kế hoạch 5 giai đoạn + rủi ro
 
 - **Hiệu quả dự kiến (định lượng):** giao thức audit chặn **3/3 cặp so sánh** không hợp lệ (tỷ lệ mẫu 25,5×/1,65×/15,4× > ngưỡng 1,2) → tránh kết luận sai trước khi công bố. SLI tính được trong ~2 phút cho split mới.
-- **ROI:** chi phí = 1 laptop, không GPU; thời gian còn lại ≤ X ngày; đầu ra = 3 tạo tác (SLI dạng Concepts+Models, giao thức 3 bước dạng Methods, pipeline tái lập dạng Instantiations) — đạt yêu cầu Bài 03 "đóng góp dạng 2 + 3".
-- **Kế hoạch 5 giai đoạn** (đến 06/2027): G1 hoàn thiện thực nghiệm (thêm 3 seed) → G2 phân tích thống kê mở rộng → G3 viết báo cáo + dashboard demo → G4 rà soát phản biện nội bộ → G5 bảo vệ cuối kỳ. Mỗi giai đoạn có mốc + output.
+- **ROI:** chi phí = 1 laptop i7-13620H/32 GB/RTX 4050 6 GB, không cloud; đầu ra = 3 tạo tác (thước đo SLI, cách kiểm tra 3 bước, pipeline chạy lại được) — đạt yêu cầu Bài 03 "đóng góp dạng 2 + 3".
+- **Kế hoạch 5 giai đoạn** (đến 06/2027): G1 xong SASRec GPU + bảng 3 split × 5 model → G2 xong Wilcoxon/CI/độ lớn, 20/20 cặp → G3 báo cáo + thử giao diện → G4 phản biện nội bộ → G5 bảo vệ. Không cam kết thêm seed trong kế hoạch hiện tại.
 - **Rủi ro** (4 dòng từ `06` §4): thiếu SOTA → EASE; hạ tầng lỗi → giữ trục khoa học (PySpark local); thiếu thời gian → cắt cross-domain; seed đơn → khai báo giới hạn.
 
 ### Slide 14 — Tự đánh giá (KL 5%)
 
 | | Trạng thái |
 |---|---|
-| Dữ liệu | ✅ hợp pháp, ẩn danh, đã verify SHA-256 |
-| Năng lực | ✅ PySpark + Hadoop + MapReduce Java + MongoDB + R + Streamlit — tất cả đã chạy thật |
-| Nguồn lực & thời gian | ✅ laptop, không GPU; khung PoC có sẵn |
-| Giới hạn (nói thẳng) | `local[4]` không phải cluster; ALS subsample 30k/162.541 user; 1 seed; 2 baseline; NDCG không so cặp giữa split |
-| Hướng mở rộng | Cross-domain (Amazon/Steam), thêm SOTA, ma trận 10 seed |
+| Dữ liệu | Hợp pháp, ẩn danh, đã kiểm tra sha256, dùng cho nghiên cứu |
+| Kỹ thuật | PySpark + MapReduce Java + MongoDB + R + Streamlit; MapReduce chạy thật 2026-11-04 |
+| Thời gian & máy | Laptop RTX 4050 6 GB; G1–G5 đến 06/2027 |
+| Giới hạn (nói thẳng) | `local[4]` không phải cụm; container đã gỡ; 5/5 model chạy (SASRec GPU, tập người con); không so CPU/GPU; 1 seed; không Mean±Std; không đo bộ nhớ; không so NDCG giữa split |
+| Hướng mở rộng | Sang tập khác (Amazon/Steam); thêm seed; chỉnh SASRec; đo bộ nhớ; nếu có thời gian thêm Friedman/Nemenyi |
 
 ### Slide 15 — Q&A + Tài liệu tham khảo
 
@@ -207,31 +209,57 @@ Bảng 3 cột × 3 chỉ số chính (từ `01` §7.3 + notebook 09):
 
 | Yêu cầu (HD slide) | Có ở slide | Trạng thái |
 |---|---|---|
-| Bố cục 4 phần đúng tỷ trọng | 2 | ⬜ |
-| DIKW áp dụng đề tài, không chép định nghĩa | 3 | ⬜ |
-| Phương pháp tư duy | 4 | ⬜ |
-| W5H2 + chuỗi phát biểu vấn đề | 5 | ⬜ |
-| ≥ 5 bài báo, IEEE, Q1/Q2 hoặc CORE A*/A/B + ảnh chụp + SCImago/CORE | 6, 15 | ⬜ |
-| Ma trận (Tài liệu/Phương pháp/Kết quả/Hạn chế) + gap | 7 | ⬜ |
-| Tiêu đề [Phương pháp]+[Mục tiêu]+[Phạm vi] | 8 | ⬜ |
-| GO/SO gắn RQ | 8 | ⬜ |
-| FINER (F/I/N/E/R từng ô có bằng chứng) | 9 | ⬜ |
-| Quy trình 4 bước + công thức độ đo + Baseline | 10, 11 | ⬜ |
-| Hiệu quả định lượng + ROI + kế hoạch 5 giai đoạn + rủi ro | 13 | ⬜ |
-| Tự đánh giá: dữ liệu/năng lực/nguồn lực/giới hạn | 14 | ⬜ |
-| Q&A slide cuối | 15 | ⬜ |
-| Cỡ chữ ≥ 24pt, nền sáng, sơ đồ/bảng thay văn dài | toàn bộ | ⬜ |
-| Footer `x / 15` (đánh số mọi slide) | toàn bộ | ⬜ |
+| Bố cục 4 phần đúng tỷ trọng | 2 | ✅ |
+| DIKW áp dụng đề tài, không chép định nghĩa | 3 | ✅ |
+| Phương pháp tư duy | 4 | ✅ |
+| W5H2 + chuỗi phát biểu vấn đề | 5 | ✅ |
+| ≥ 5 bài báo, IEEE, Q1/Q2 hoặc CORE A*/A/B + ảnh chụp + SCImago/CORE | 6, 15 | ✅ |
+| Ma trận (Tài liệu/Phương pháp/Kết quả/Hạn chế) + gap | 7 | ✅ |
+| Tiêu đề [cách làm]+[mục tiêu]+[phạm vi] | 8 | ✅ |
+| Mục tiêu gắn câu hỏi; thêm biến và H0/H1 | 8 | ✅ |
+| FINER (mỗi ô có bằng chứng) | 9 | ✅ |
+| Quy trình 4 tầng + công thức độ đo + 5 baseline | 10, 11 | ✅ |
+| Kiểm định Wilcoxon/CI/độ lớn; 20/20 cặp | 11, 12 | ✅ |
+| Hiệu quả định lượng + chi phí + kế hoạch 5 giai đoạn + rủi ro | 13 | ✅ |
+| Tự đánh giá: dữ liệu/năng lực/nguồn lực/giới hạn | 14 | ✅ |
+| Q&A slide cuối + repo URL | 15 | ✅ |
+| Nền sáng, sơ đồ/bảng thay văn dài, không tràn/overlap | toàn bộ | ✅ |
+| Cỡ chữ ≥ 24pt | toàn bộ | ⚠️ Chưa; bảng 9–13pt để tránh tràn |
+| Footer `x / 15` (đánh số mọi slide) | toàn bộ | ✅ |
 
 ## 6. Rủi ro khi dựng slide + ứng phó
 
 | Rủi ro | Ứng phó |
 |---|---|
 | Bảng số nhiều → slide rối | Mỗi bảng ≤ 5 dòng; số chỉ giữ 4 chữ số có nghĩa; chi tiết để speaker notes |
-| Đề tài có phần kỹ thuật nặng (SLI, pipeline) dễ bị hỏi sâu | Mỗi slide kỹ thuật có 3 câu hỏi dự phòng trong notes (SLI toàn cục vs tương đối? vì sao LOO không rò rỉ? 30k subsample có đại diện không?) |
+| Đề tài có phần kỹ thuật nặng (SLI, pipeline) dễ bị hỏi sâu | Mỗi slide kỹ thuật có câu hỏi dự phòng trong notes (SLI toàn cục vs tương đối? vì sao LOO không rò rỉ? 1 seed có đủ không? SASRec có phải model thắng không?) |
 | Người nghe không biết RecSys là gì | Slide 3 Data tầng mở đầu bằng 1 câu định nghĩa hệ thống gợi ý thực tế (Netflix/YouTube) |
 | Đề tài nộp 2 môn (BIDA + STRM) dễ gây nhầm trọng tâm | Slide 1 ghi rõ: trình bày cho **PPNCKH** — trọng tâm quy trình nghiên cứu, không phải demo hạ tầng |
 
 
+## 7. Ghi nhận chỉnh slide 2026-11-18
 
+- Script sinh slide: `scripts/generate_slides.py`.
+- File slide: `docs/Project/Main/Presentation/Slides/PPNCKH_DeCuong_15slides.pptx` (15 slide, đã kiểm tra geometry: không shape tràn slide, không overlap bỏ qua nền header).
+- Text đối chiếu: `logs/scratch/slide_audit_20261118/PPNCKH_DeCuong_15slides_final.txt`.
+- Thân slide dùng từ dễ hiểu; thuật ngữ đầy đủ nằm trong speaker notes.
+- S8: bỏ `3+ seed`, ghi `1 seed (đã khai báo giới hạn)`; thêm biến độc lập/phụ thuộc/kiểm soát và H0/H1.
+- S7: nêu rõ đóng góp là hệ thống + thực nghiệm; không nhận phương pháp mới hay miền mới.
+- S11/S12: SASRec là đối chuẩn SOTA chạy lại, `tuning_budget=0`, không phải model thắng; disclaimer 1 seed, không Mean±Std, không đo bộ nhớ.
+- S13/S15: thêm repo `https://github.com/StreetParkourZombie/Recommendation_System`.
+- S14: thêm bốn nhóm an toàn dữ liệu/thiết kế/đo lường/thống kê ở mức tóm tắt.
+- Deck `PPNCKH_DeCuong_15slides_Self-Adjustion.pptx` cũ, lỗi thời; không dùng làm bằng chứng.
+- Hạn chế còn lại: cỡ chữ bảng dày 9–13pt, chưa đạt ≥24pt. Giữ để tránh tràn/overlap; nếu hội đồng bắt buộc ≥24pt, chuyển bảng sang phụ lục.
 
+## Chốt slide 4 — bản thân thiện người xem (2026-11-19)
+
+Slide 4 đã đổi từ dạng bullets sang **3 thẻ màu ngang hàng**, mỗi thẻ gồm: nhãn ngắn, tên cách, 3 bước suy nghĩ, ô «Ví dụ thật». Mũi tên nối 3 thẻ; thanh tóm tắt ở cuối slide.
+
+- Thẻ 1 — `Diễn dịch`: «có quy luật sẵn → áp xuống trường hợp trước mặt → thấy khác thì sửa cách hiểu».
+- Thẻ 2 — `Quy nạp` **CHỦ ĐẠO**: «nhìn nhiều trường hợp → rút quy luật chung → kết luận từ dữ liệu thật». Chủ đạo vì kết luận chính rút từ dữ liệu thật.
+- Thẻ 3 — `Suy đoán`: «thấy điểm bất thường → đoán nguyên nhân hợp lý → đếm lại để kiểm chứng».
+- `Phản chứng` vẫn là bước kiểm chứng thêm, không phải phương pháp thứ 4.
+- Tên kỹ thuật (`TOIS`, `offline`, `random 80/20`, `leave-one-out`, `LOO`, `SLI`, `split`, `seed`, `ALS`, `NDCG`) chuyển hết vào ghi chú trình bày; thân slide dùng cách nói thường: «nghiên cứu 2022», «trộn ngẫu nhiên», «giữ lượt cuối», «cùng mốc thời gian», «mô hình gợi ý».
+- Số liệu giữ nguyên nguồn: `98,91%`, `0%`, `0,2584 → 0,0474` (đường script 2026-11-04 / `Metrics.md` mục 4), `25 triệu lượt chấm`. Không trộn `0,2581 → 0,0469` của đường notebook/FULL.
+- Generator: helper `add_thinking_card`, modifier excluded `decor_*` khỏi kiểm tra chồng chéo; chạy `scripts/generate_slides.py` cho kết quả `15 slides, layout checked`.
+- Không sửa `.tex`, không chạy lại notebook.

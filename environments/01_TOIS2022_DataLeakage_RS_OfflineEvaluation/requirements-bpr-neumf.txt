@@ -1,0 +1,6 @@
+# BPR and NeuMF legacy runtime dependencies
+numpy==1.18.5
+scipy==1.4.1
+Keras==2.3.0
+h5py==2.10.0
+

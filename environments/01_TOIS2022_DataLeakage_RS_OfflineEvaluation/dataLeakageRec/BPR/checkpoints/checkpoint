@@ -1,0 +1,2 @@
+model_checkpoint_path: "movielens_5_0-0"
+all_model_checkpoint_paths: "movielens_5_0-0"

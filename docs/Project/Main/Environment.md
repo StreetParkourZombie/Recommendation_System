@@ -10,8 +10,9 @@
 | Hạng mục | Giá trị |
 |---|---|
 | OS | Windows_NT 10.0.26200 (x64) |
-| RAM | 31.7 GB tổng (10.8 GB free tại lúc đo) |
-| CPU | local[8] cho Spark |
+| RAM | 31.7 GB tổng (10.8 GB free tại lúc đo) — DDR5 |
+| CPU | Intel Core i7-13620H (10 core / 16 thread) — Spark chạy `local[4]` |
+| **GPU** | **NVIDIA GeForce RTX 4050 Laptop, 6 GB VRAM** (6.141 MiB), driver **610.78** (nvidia-smi OK) — dùng cho tầng SOTA SASRec+CE (notebook 13); 4 baseline vẫn chạy CPU |
 | Disk C | 265.4 GB used / **12.8 GB free** |
 | Disk D | 161.1 GB used / **15.5 GB free** |
 | Shell | PowerShell |
@@ -28,10 +29,12 @@
 | Python Host | 3.14.5 (`C:\Users\PC\AppData\Local\Python\pythoncore-3.14-64`) | Môi trường hệ thống chứa PySpark |
 | Python Project venv | 3.14.5 (`D:\Master Exers\Big Data\Recomendation_System\.venv`) | Môi trường cục bộ có link site-packages |
 | Jupyter Kernel | `Python 3.14 (BigData RecSys .venv)` (`recsys-project-venv`) | Kernel chuẩn dành riêng cho notebook dự án |
-| PySpark | **4.2.0** | Cấu hình chạy `local[4]` (hoặc `local[8]`), driver 6g |
+| PySpark | **4.2.0** | Cấu hình chạy `local[4]`, driver 6g (notebook 11 dùng 10g) |
 | pyarrow | **26.0.0** | Ingest CSV → Parquet gốc (không cần JVM, 26s cho 25M dòng) |
 | pandas | 3.0.3 | PySpark cảnh báo chưa hỗ trợ đầy đủ pandas ≥ 3.0.0 (vẫn hoạt động tốt cho profile) |
 | numpy | có | Dùng cho chunking và tính top-K |
+| scipy | 1.18 | `src/audit/itemknn.py` — co-occurrence cosine trên CSR sparse (driver) |
+| **PyTorch** | **2.14.1+cu126** (cài offline 2026-11-18 14:25 từ wheel local; `torch.version.cuda = 12.6`, `cuda.is_available() = True`) | Dùng cho `src/audit/sasrec.py` + notebook 13; smoke module + smoke notebook đều PASS, full 3 split đã chạy. Verify: `.\.venv\Scripts\python.exe -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"`. Wheel: `D:\recsys_data\wheels\torch-2.14.1+cu126-cp314-cp314-win_amd64.whl`. **Không** cần `pytorch_lightning`. Chi tiết: `Implementation/06_Huong_Dan_Chay_SASRec_va_MRR.md` |
 | pymongo | có | Kết nối lưu trữ kết quả MongoDB |
 | streamlit | có | Web UI demo |
 | Java | `jdk-24` tại `C:\Program Files\Java\jdk-24` (host) · **OpenJDK 1.8.0_232** trong container Hadoop | |
@@ -110,7 +113,7 @@
 |---|---|---|
 | `_dl_ml.py` | tải ml-25m | ✅ đã chạy |
 | `_ml_to_parquet.py` | CSV → Parquet (pyarrow streaming) | ✅ đã chạy (26s) |
-| `_poc3_spark.py` | PoC audit framework 3 tầng × 3 split | 🔄 đang chạy |
+| `_poc3_spark.py` | PoC audit framework 3 tầng × 3 split | ⏸️ PoC lịch sử (10/11) — đường chính thức hiện nay là `notebooks/jupyter/04→12` + `src/audit/` |
 | `_t_parquet_read.py` | test các cách đọc Parquet | ✅ đã chạy |
 | `_deploy_plan.ps1` | deploy 7 file plan → `D:\...\Plans` | ✅ đã chạy |
 
@@ -124,6 +127,7 @@
 | 2 | Cài R + SparkR | winget / installer | trung bình (seminar) |
 | 3 | Đặt `HADOOP_HOME` trỏ container Hadoop | biến môi trường | thấp (local mode chạy được) |
 | 4 | Dọn `spark_tmp` khi > 2 GB | xoá thư mục con cũ | thấp |
+| 5 | Cài PyTorch CUDA (cu126) để chạy notebook 13 | ✅ xong 2026-11-18 14:25 — `2.14.1+cu126`, smoke PASS; còn lại full notebook 13 | — |
 
 ---
 
@@ -209,10 +213,10 @@ Environment Paper 01 `paper01-tf114` chỉ dùng cho repository smoke test. BPR 
 Bảng chính deadline:
 
 ```text
-3 split × 2 model × 3 seed
+3 split × 5 model × 1 seed (42) — ma trận thực tế đã chạy
 random80_20 | temporal_global | leave_one_out
-MostPopular | ALS
-seed: 42, 2024, 7
+MostPopular | Random | ALS | ItemKNN | SASRec_CE
+seed: 42
 ```
 
 Mỗi run phải ghi: protocol ID, split, model, seed, HR/NDCG, leakage diagnostics, popularity metrics, wall-clock, CPU/RAM/Spark/Java và classification.
@@ -223,7 +227,7 @@ Mỗi run phải ghi: protocol ID, split, model, seed, HR/NDCG, leakage diagnost
 |---|---|---|
 | Dataset | MovieLens subset và time interval | full 25M project dataset |
 | Split | leave-last-one-out theo paper | `random80_20` project |
-| Models | BPR, NeuMF, SASRec, LightGCN | ALS/MostPopular |
+| Models | BPR, NeuMF, SASRec, LightGCN | Random, MostPopular, ALS, ItemKNN (SASRec+CE: torch cài xong, smoke PASS, full 3 split đã chạy) |
 | Metrics | paper metric/cutoff | project metric nếu khác |
 | Seed | paper/repository hoặc `not_reported` | project seed 42 |
 | Runtime | paper/repository/hardware | local Spark runtime |

@@ -19,11 +19,16 @@ Script đơn khối `04_audit_spark.py` chạy 40–60 phút và chỉ in kết 
 05_audit_split_leakage   temporal_violation (toàn cục + user), unseen_item, cold_start → L5 PASS
    │
    ├── 06_mostpopular_baseline   Popularity top-K, NDCG/Hit/coverage/Gini/bias → L6a PASS
+   │                             (rerun 2026-11-18: lưu thêm peruser_ndcg_{split}.npz → nguyên liệu L12)
    ├── 07_ndcg_manual_check      5 fixture NDCG tính tay, tol 1e-12          → L6b PASS
-   └── 08_als_implicit           ALS implicit + numpy top-K + seen_exclusion  → L6c PASS
+   ├── 08_als_implicit           ALS implicit + numpy top-K + seen_exclusion  → L6c PASS
+   ├── 10_random_baseline        Random sàn (catalog uniform, seen excluded) → L10 PASS
+   └── 11_itemknn_baseline       ItemKNN cosine k=100, scipy sparse (min_co=2) → L11 PASS
                 │
                 ▼
-09_compare_and_reversal   comparison.json, reversal_table.csv, rq1_answer.md     → L7 PASS
+09_compare_and_reversal   comparison.json (5 model), reversal_table.csv, rq1_answer.md → L7 PASS
+12_paired_stats           đọc peruser_ndcg_*.npz, không chạy lại pipeline → Wilcoxon + 95% CI
+                          + rank-biserial r, 20 cặp (5 model) → L12 PASS
 ```
 
 | Nguyên tắc | Lý do |
@@ -33,7 +38,7 @@ Script đơn khối `04_audit_spark.py` chạy 40–60 phút và chỉ in kết 
 | Split materialize xuống đĩa một lần | 05/06/08 đọc cùng một file; không tính lại `F.rand` |
 | Mọi assert ghi vào `runs/<run_id>/checkpoints/<step>.json` | truy vết số về từng bước |
 
-**Không dùng GPU.** PySpark 4.2.0 trên Windows chạy CPU; `local[4]` dùng 4 core. `netlib-blas: dlopen(libopenblas.dll) failed` là cảnh báo lành tính — numpy fallback reference BLAS, chỉ chậm hơn.
+**Phần cứng theo tầng.** 4 baseline chạy **CPU**: PySpark 4.2.0 trên Windows, `local[4]` dùng 4 core; ItemKNN dùng scipy sparse trên driver. Tầng SOTA SASRec+CE chạy **GPU local** (RTX 4050 Laptop 6 GB, CUDA 12.6) qua notebook 13 — **vì vậy cấm so sánh runtime giữa SASRec và 4 baseline** (khác thiết bị, vi phạm yêu cầu so sánh công bằng của Bài giảng 04); `sasrec_summary.json` mang field `hardware.note = "KHONG so sanh runtime"`. `netlib-blas: dlopen(libopenblas.dll) failed` là cảnh báo lành tính — numpy fallback reference BLAS, chỉ chậm hơn.
 
 ---
 
@@ -51,7 +56,7 @@ official repository + paper protocol
 TRACK B — PROJECT CONTROLLED EXPERIMENT
 MovieLens-25M project preprocessing
   -> 3 project splits
-  -> MostPopular + ALS
+  -> Random, MostPopular, ALS, ItemKNN (4 baseline đã đăng kí)
   -> leakage + popularity bias + runtime
   -> Spark/HDFS/MongoDB/R/Streamlit
 
@@ -60,7 +65,7 @@ Không nối output Track A vào MongoDB project nếu chưa có mapping protoco
 
 ### Ranh giới model
 
-Paper 01: BPR, NeuMF, SASRec, LightGCN. Project: MostPopular và ALS ở phase controlled đầu. ALS result không được trình bày là Paper 01 reproduction.
+Paper 01: BPR, NeuMF, SASRec, LightGCN. Project (Track B): cả 5 baseline đăng kí đã chạy — Random, MostPopular (sàn) + ALS, ItemKNN cosine (kinh điển) + SASRec+CE (SOTA, GPU local, tuning_budget=0, eval subset user). ALS result không được trình bày là Paper 01 reproduction.
 
 ### Ranh giới dữ liệu
 
@@ -103,7 +108,9 @@ Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Ha
 │      → userFactors/itemFactors              (notebook 08)           │
 │  S7  top-K bằng numpy: U[s:e] @ V.T → argpartition (chunk 2000)   │
 │  S8  bias metrics: coverage, long-tail, Gini, popularity_bias_ratio│
-│  S8b so sánh 2 mô hình × 3 split, kiểm tra đảo chiều (notebook 09) │
+│  S8c Random baseline: uniform từ catalog train, seen excluded      │
+│      (notebook 10)                                                  │
+│  S8b so sánh 3 mô hình × 3 split, kiểm tra đảo chiều (notebook 09) │
 └──────────────────────────────────────────────────────────────────────┘
                               │
 ┌─ TẦNG 4 ─ LƯU TRỮ & TRỰC QUAN ──────────────────────────────────────┐
@@ -236,7 +243,7 @@ elig   = train.groupBy("userId").count().filter(F.col("count") >= 5).select("use
 als = ALS(userCol="userId", itemCol="movieId", ratingCol="rating",
           rank=16, maxIter=8, regParam=0.05, implicitPrefs=True, alpha=10.0,
           coldStartStrategy="drop", seed=42)
-m = als.fit(train_subsample)                                      # 30.000 user đầu theo userId
+m = als.fit(train_full)                                           # FULL 162.541 user (run 2026-11-17); subsample 30k là phương án lịch sử run 15/11
 U = np.array([r["features"] for r in m.userFactors.collect()])    # (n_user, 16)
 V = np.array([r["features"] for r in m.itemFactors.collect()])    # (n_item, 16)
 
@@ -360,16 +367,21 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
 |---|---|---|:---:|
 | L4 | 3 split ghi đĩa, `matches_expected=True`, `overlap=0` | ✅ PASS | `20261115_191009_04_build_splits_2a395f07` |
 | L5 | `temporal_violation_global_pct(random) > 95%` và `== 0` với temporal | ✅ PASS (98,9158% user-relative / 0,0000%) | `20261115_192229_05_audit_split_leakage_8e672786` |
-| L6a | MostPopular NDCG giảm đơn điệu random → temporal → LOO | ✅ PASS (0,0852 → 0,0455 → 0,0183) | `20261115_192522_06_mostpopular_baseline_c39572de` |
+| L6a | MostPopular NDCG giảm đơn điệu random → temporal → LOO | ✅ PASS (0,0852 → 0,0455 → 0,0183) | `20261115_192522_06_mostpopular_baseline_c39572de`; rerun `20261118_021147_06_mostpopular_baseline_6d59bb2c` (thêm npz per-user) |
 | L6b | 5 fixture NDCG khớp tính tay, tolerance `1e-12` | ✅ PASS | `20261115_190933_07_ndcg_manual_check_e1cc5714` |
-| L6c | ALS ≥ MostPopular cả 3 split + `seen_exclusion` PASS | ✅ PASS (3/3) | `20261115_192654_08_als_implicit_0c1385ff` |
-| L7 | `reversals_found == 0` hoặc liệt kê rõ cặp đảo chiều | ✅ PASS (0 ở 3/3 cặp) | `20261115_193151_09_compare_and_reversal_66fefc4f` |
+| L6c | ALS ≥ MostPopular cả 3 split + `seen_exclusion` PASS | ✅ PASS (3/3) | `20261115_192654_08_als_implicit_0c1385ff` (FULL: `20261117_185700_08_als_implicit_7be22080`, rerun FULL `20261117_234312_08_als_implicit_da15debf`) |
+| L10 | Random sàn: NDCG thấp nhất mọi split, `seen_exclusion` PASS, bias ≈ 1 | ✅ PASS (3/3) | `20261118_144717_10_random_baseline_d8644ac1` |
+| L7 | `reversals_found == 0` hoặc liệt kê rõ cặp đảo chiều | ✅ PASS (0 ở 3/3 cặp so với sàn; `best_model_reversals_found = 2`) | `20261118_151159_09_compare_and_reversal_1e0f72fa` (ghép **5 model**; bản 4 model: `20261118_022749_..._c9482d3f`) |
+| L11 | ItemKNN `seen_exclusion` PASS và NDCG > Random mọi split | ✅ PASS (3/3 seen; `knn_above_random` = true, 893,0× / 156,6× / 461,0× Random) | `20261118_150305_11_itemknn_baseline_0b7511ee` (503 s, scipy sparse driver-bound) |
+| L12 | Mọi cặp kiểm định: `n_paired >= 30`, báo đủ p + 95% CI + r | ✅ PASS (**20/20 cặp, 5 model**, min n=6.214; CI không chứa 0 ở 19/20, ngoại lệ ALS-vs-ItemKNN ở LOO p=0,153) | `20261118_151202_12_paired_stats_9b864f59` (bản 12 cặp: `20261118_022320_..._077f538e`) |
 
 > **G7 cảnh báo:** `eval_relevant_users` chênh rất lớn giữa split (158.692 / 6.219 / 96.003). NDCG **không** so cặp được giữa các split. Xem `Drawbacks.md` §3.3.
 
 ## 8. Tầng 6 — Kiểm định thống kê (bổ sung 2026-11-04)
 
 Đây là tầng **mới**, nằm sau tầng 5 (MongoDB) và trước khi trích xuất kết luận.
+
+> **Đường notebook-first (2026-11-18):** `notebooks/jupyter/12_paired_stats.ipynb` (gen bằng `scripts/generate_notebook_12.py`) là bản kiểm định chính thức của đề tài — đọc `peruser_ndcg_*.npz` do notebook 06/08/10/11 lưu, chạy **Wilcoxon signed-rank + 95% CI + rank-biserial r** cho từng cặp model trong **cùng một split**, xuất `paired_stats.json` (gate L12). Phần §8 dưới đây là đường script cũ (bootstrap/Kendall trên tập user nhỏ), giữ làm tham chiếu.
 
 ### 8.1 Vì sao cần
 
@@ -384,7 +396,7 @@ thì phải có **một giá trị cho mỗi user**.
 | S5.1 | Sinh per-user metrics                                | PySpark 4.2.0 + numpy              | `scripts/11_peruser_ndcg.py`         | ✅ chạy thật, 3 split |
 | S5.2 | Bootstrap CI + Wilcoxon + Cohen's dz + Kendall tau-b | numpy (vector hoá) + scipy 1.18.0 | `scripts/12_stats_tests.py`          | ✅ chạy thật, 3 split |
 | S5.3 | PRISMA 2020 flow                                     | SVG thuần (không cần Cairo)     | `scripts/13_prisma_flow.py`          | ✅ SVG                  |
-| S5.4 | Benchmark Big Data                                   | PySpark + YARN REST                | `scripts/14_perf_benchmark.py`       | 🔄 đang chạy          |
+| S5.4 | Benchmark Big Data                                   | PySpark + YARN REST                | `scripts/14_perf_benchmark.py`       | ⏸️ script lịch sử — RQ3 hiện lấy từ `fit_seconds`/`total_seconds` trong summary JSON, xem `Implementation/05_Benchmark_...md` |
 | S5.5 | Chụp dashboard                                      | Chrome DevTools Protocol           | `scripts/15_screenshot_dashboard.py` | ✅ PNG 1920×1260       |
 
 ### 8.3 Sơ đồ luồng (mở rộng)

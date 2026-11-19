@@ -14,9 +14,9 @@
 | Tầng 1 (metrics cấp dữ liệu) | Spark + HDFS | **PySpark local đọc Parquet trên D** | Không mất gì về khoa học — đây là phần bằng chứng mạnh nhất |
 | Tầng 2 (Popularity) | Spark | **Spark** | không |
 | Tầng 3 (ALS) | Spark | **Spark, numpy top-K** | không |
-| Tầng 4 (ItemKNN, re-rank) | Spark | **thay bằng BPR** (`beta-team/beta-recsys`) | vẫn đủ tầng kinh điển, không mất hàng bảng |
+| ItemKNN quá chậm trên Spark | Spark self-join (timeout 3600 s) | **`scipy.sparse` trên driver** (`src/audit/itemknn.py`, cosine k=100, min_co=2) | ✅ đã áp dụng — 503 s cho 3 split, đủ tầng kinh điển (ALS + ItemKNN) |
 | **3 tầng baseline** | Sàn + Kinh điển + SOTA | **không được bỏ tầng nào** — đây là yêu cầu bắt buộc của Bài 03 | nếu thiếu 1 tầng → đề cương bị trả |
-| SOTA (SASRec+) | PyTorch, cần GPU/thời gian | **EASE** (closed-form, CPU vài phút) — [11] RecSys'21 dùng đúng EASE trên ML-20M + global timestamp split | không mất gì: vẫn là SOTA có tiền lệ Q1/CORE A |
+| SOTA (SASRec+CE) | PyTorch, cần GPU/thời gian | **không có phương án EASE** (không đăng kí baseline) — nếu thiếu GPU thì **khai báo giới hạn**, giữ 5 model đã chạy | không mất tính trung thực; đề cương nói đúng những gì đã làm |
 | Lưu trữ | MongoDB | **Parquet + JSON** | mất demo MongoDB → ghi rõ trong phụ lục |
 | Phân tích | R + SparkR | **Python (scipy/pandas/matplotlib)** | mất seminar "R + Spark" → ghi rõ trong phụ lục |
 | Trực quan | Streamlit | **bảng Markdown + biểu đồ tĩnh** | mất demo dashboard |
@@ -31,10 +31,10 @@ Ba thứ này **không phải hạ tầng** — chúng là **thiết kế nghiê
 | Thứ được phép cắt | Thứ tuyệt đối không cắt |
 |---|---|
 | MongoDB → Parquet/JSON | 3 tầng baseline |
-| R → Python (scipy/matplotlib) | 10 seed + Mean ± Std |
+| R → Python (scipy/matplotlib) | kiểm định cặp Wilcoxon + 95% CI + rank-biserial r (notebook 12) |
 | Streamlit → bảng Markdown | Khai báo CPU/GPU/RAM + wall-clock |
-| ItemKNN → BPR | Ngân sách tinh chỉnh bằng nhau |
-| SASRec+ → EASE | File split công bố của [12] |
+| ItemKNN chậm trên Spark | đã xử lý: `scipy.sparse` driver-side, 503 s/3 split — **không thay bằng BPR** (không đăng kí) |
+| SASRec+CE đã chạy 3 split (xem `Metrics.md` §4.10) | khai báo "SOTA tham chiếu, đã reproduce 3 split trên GPU local (không tuning)" + 20 cặp kiểm định Wilcoxon trên 5 model |
 
 ---
 
@@ -44,7 +44,7 @@ Ba thứ này **không phải hạ tầng** — chúng là **thiết kế nghiê
 
 | Mức | Dữ liệu | Dùng cho |
 |---|---|---|
-| **M1** (mặc định) | 25.000.095 ratings, ALS subsample 30.000 user | kết quả chính |
+| **M1** (mặc định) | 25.000.095 ratings, ALS fit FULL 162.541 user (run 2026-11-17) | kết quả chính |
 | M2 | lọc `rating ≥ 3` (implicit positive) | kiểm tra độ nhạy với ngưỡng |
 | M3 | lọc `timestamp ≥ 2010-01-01` | kiểm tra độ nhạy với kỷ nguyên dữ liệu |
 
@@ -79,7 +79,7 @@ Ba thứ này **không phải hạ tầng** — chúng là **thiết kế nghiê
 | R2 | MongoDB không khởi động được (service) | Thấp | Mất demo MongoDB | `Start-Service MongoDB`; nếu lỗi → dùng `mongod` local như project `Multimodal_Social_Media_Analytics` đã làm | Tự quyết |
 | R3 | MapReduce (Python) chạy lỗi trên Windows | Trung bình | Mất 1 yêu cầu seminar | Chạy MapReduce **trong container** `bde2020/hadoop` (đã có sẵn, đang healthy) → đúng đề cương hơn | Tự quyết |
 | R4 | HDFS đọc từ PySpark local bị lỗi `winutils` | Trung bình | Không đọc được Parquet trên HDFS | Đặt `hadoop.home.dir` trỏ vào thư mục Hadoop trong container, hoặc đọc Parquet từ D (dữ liệu vẫn do MapReduce sinh ra từ HDFS) | Tự quyết |
-| R5 | Không kịp 4 model × 3 split | Trung bình | Bảng kết quả thiếu ô | Dự phòng §1 + §6 stop criteria trong `05_Ke_hoach_thuc_nghiem.md` | Tự quyết |
+| R5 | Không kịp 5 model × 3 split | Trung bình | Bảng kết quả thiếu ô | Dự phòng §1 + §6 stop criteria trong `05_Ke_hoach_thuc_nghiem.md` | Tự quyết |
 | R6 | Thầy yêu cầu thêm đề tài mới (đổi hướng lần 3) | Thấp | Lãng phí | **Báo khả thi sớm** (trước 05/11) kèm số liệu PoC thật để thầy ra quyết định có căn cứ | Cần hỏi anh |
 | R7 | Disk D đầy khi chạy nhiều thí nghiệm | Thấp | Crash | D có 8.4 GB free; Spark temp → `D:\recsys_data\spark_tmp`; xoá log cũ khi > 2 GB | Tự quyết |
 | R8 | Ban đêm/em ngủ → không chạy được việc dài | Cao | Chậm tiến độ | Viết script **chạy nền** (background) + báo cáo khi xong; không chờ trong turn | Tự quyết |

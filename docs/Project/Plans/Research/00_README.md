@@ -3,7 +3,7 @@
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
 **Phục vụ đồng thời:** IT252BIDA (Xử lý dữ liệu lớn) + IT252STRM (Phương pháp nghiên cứu khoa học)
 **Ngày lập:** 2026-11-03 · **Deadline đề cương:** 2026-11-08
-**Trạng thái:** Dataset chốt (MovieLens ml-25m) · PoC Spark đang chạy · novelty có bằng chứng định lượng sơ bộ
+**Trạng thái (2026-11-18):** Dataset chốt (MovieLens ml-25m) · pipeline notebook 01→12 chạy xong, **10/10 gate PASS** · 5 model đã chạy FULL 162.541 user × 3 split · novelty có bằng chứng định lượng (RQ1 `best_model_reversals_found = 2`, RQ2 bias_ratio, RQ3 bảng chi phí) · tầng SOTA (SASRec+CE) đã reproduce 3 split trên GPU local (không tuning) — notebook 13 đã viết để chạy GPU local RTX 4050 6 GB.
 
 ---
 
@@ -105,7 +105,7 @@ Recomendation_System/
 | 1 | Dataset + license | ✅ | `ml-25m`, SHA-256 `379d0b2e…9657c`, cite `10.1145/2827872` |
 | 2 | Pipeline chạy thật | ✅ | Parquet → HDFS → MapReduce (Java) → PySpark → MongoDB → R → Streamlit |
 | 3 | Gate G3 cross-check | ✅ **PASS 100%** | 323.737/323.737 key, tổng 25.000.095 |
-| 4 | PoC 3 split × 2 model | ✅ | `results/poc6_<split>.json` → MongoDB `recsys.audit_metrics` (6 docs / 42 field) |
+| 4 | PoC 3 split × 2 model (lịch sử 04/11; nay 5 model × 1 seed qua notebook) | ✅ | `results/poc6_<split>.json` → MongoDB `recsys.audit_metrics` (6 docs / 42 field) |
 | 5 | Per-user metrics | ✅ | `scripts/11_peruser_ndcg.py` → 29.337 / 1.363 / 17.704 user |
 | 6 | **Kiểm định thống kê** | ✅ | `scripts/12_stats_tests.py` → `reports/stats_summary.csv` (12 dòng) |
 | 7 | R trực quan | ✅ | R 4.6.2 → 7 PNG + 2 CSV (`recsys.audit_metrics_r`) |

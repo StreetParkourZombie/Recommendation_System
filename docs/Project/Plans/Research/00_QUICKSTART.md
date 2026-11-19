@@ -460,7 +460,7 @@ CSV → Spark read → Split → Parquet → Baseline → Metrics → JSON
 
 Tiếp theo đọc:
 - `01_De_tai_va_Ke_hoach.md` — Hiểu RQ1/RQ2/RQ3
-- `05_Ke_hoach_thuc_nghiem.md` — Ma trận 3 split × 3 model × 3 seed
+- `05_Ke_hoach_thuc_nghiem.md` — Ma trận 3 split × 5 model đã đăng kí (Random, MostPopular, ALS, ItemKNN, SASRec+CE) × 1 seed (42), 20 cặp Wilcoxon
 - `05C_Baseline_3_tang_DSRM.md` — Ba tầng baseline (sàn/kinh điển/SOTA)
 
 ---

@@ -1,0 +1,210 @@
+FILE: PPNCKH_DeCuong_15slides_Self-Adjustion.pptx
+SLIDES: 15
+
+===== SLIDE 1 =====
+HỌC PHẦN: PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC TRONG CÔNG NGHỆ
+THÔNG TIN (CNTT)
+Phân tích rò rỉ, thiên lệch phổ biến trong hệ thống gợi ý
+bằng kiểm toán chiến lược chia tập trên Spark
+Giảng viên: TS. Trần Minh Thái
+Khoa CNTT • Trường Đại học Ngoại ngữ - Tin học TP.HCM (HUFLIT)
+1 / 15
+
+===== SLIDE 2 =====
+2 / 15
+Bố cục trình bày
+Cơ sở lý thuyết
+DIKW & phương pháp tư duy áp dụng
+Bài toán & Tài liệu
+W5H2 · Bài uy tín · ma trận tổng hợp & khoảng trống
+Đề cương chi tiết
+GO/SO-RQ · FINER · quy trình · baseline · ROI
+Tự đánh giá khả thi & giới hạn
+01
+CHƯƠNG 1
+02
+CHƯƠNG 2
+03
+CHƯƠNG 3
+TỔNG KẾT
+--- NOTES ---
+Bố cục bám đúng tỷ trọng của file hướng dẫn: C1 20%, C2 30%, C3 45%, KL 5%. Phần nặng nhất là Chương 3 — thiết kế nghiên cứu.
+
+===== SLIDE 3 =====
+3 / 15
+Hệ thống tri thức DIKW
+Wisdom
+Làm gì tiếp
+Gói quy luật thành thước đo SLI (Split Leakage Index) cùng quy trình audit 3 bước: nhìn SLI trước, đọc metric sau; hai mẫu so sánh lệch hơn 1,2 lần thì chặn, không cho so.
+Knowledge
+Hiểu ra quy luật
+Cùng ALS & dữ liệu, đổi cách chia tập làm NDCG@10 rơi ~5,5 lần (0,2584 → 0,0474).
+Information
+Nhìn sâu hơn thấy gì
+0 dòng trùng
+~1,8M nhóm người chấm cùng 1 giây
+8,76% phim trong phần kiểm tra của split temporal là phim người dùng chưa từng chấm lần nào.
+Data
+Có gì trong tay
+25.000.095 lượt chấm điểm phim của 162.541 người dùng từ năm 1995 - 2019.
+Các thuộc tính: userID, movieID, rating, timestamp
+--- NOTES ---
+Dữ liệu thô là 25 triệu tương tác. Thông tin là thống kê đo được. Tri thức là quy luật chúng tôi rút ra: cách đo rò rỉ toàn cục cho kết luận ngược với thực tế với leave-one-out. Trí tuệ là đóng gói thành công cụ SLI + giao thức audit — người dùng cuối của công cụ là nhà nghiên cứu RS và doanh nghiệp quyết định triển khai mô hình.
+
+===== SLIDE 4 =====
+4 / 15
+Phân tích — mổ xẻ 3 chiến lược split × 6 chỉ số trên cùng dữ liệu
+mỗi split sinh ra bộ số khác nhau trên cùng mô hình, cùng dataset
+Tổng hợp — chắt lọc quy luật chung thành GIAO THỨC AUDIT 3 bước
+báo SLI trước metric · báo eval_rel_users song song · chặn so sánh khi mẫu lệch > 20%
+Quy nạp — từ 25M tương tác về quy luật chung (không suy diễn từ 1 case)
+khẳng định chỉ trên số đo thật, có manifest + checkpoint truy vết
+Phản chứng — tư duy phản biện của Popper: 1 phản ví dụ đủ để bác 1 định nghĩa
+phản ví dụ LOO: định nghĩa toàn cục gán 99,9988% rò rỉ trong khi thực tế là 0%
+Phương pháp tư duy áp dụng
+--- NOTES ---
+Bốn phương pháp tư duy, mỗi cái gắn một sản phẩm cụ thể của đề tài. Phản chứng là điểm mạnh nhất: một phản ví dụ đủ để bác định nghĩa toàn cục — đây là tư duy Popper, không phải ý kiến chủ quan.
+
+===== SLIDE 5 =====
+5 / 15
+ | Nội dung
+WHAT | Chiến lược chia tập (random 80/20 · temporal · leave-one-out) tác động đến tín hiệu đo + thiên lệch
+WHO | Nhà nghiên cứu RS dùng đánh giá offline; user long-tail bị che khuất
+WHERE / WHEN | Pipeline Spark/HDFS cục bộ; dữ liệu phim 1995–2019; nghiên cứu 11/2026–06/2027
+WHY | Split sai → rò rỉ → kết luận sai → quyết định triển khai sai
+HOW MUCH | ALS NDCG 0,2556 (random) → 0,0467 (LOO): chênh 5,5× trên cùng mô hình, cùng dữ liệu
+HOW | Audit 3 split × 2+ model × 6 metric trên 25M tương tác
+Phân tích bài toán theo W5H2
+--- NOTES ---
+Chuỗi phát biểu vấn đề: Thực trạng — đa số đánh giá trên random 80/20 chưa được kiểm chứng. Hậu quả — NDCG phóng đại ảo, thứ hạng có thể đảo chiều. Hạn chế tài liệu — đo từng khía cạnh riêng lẻ, không biết hiệu ứng cộng hưởng hay triệt tiêu. Giải pháp — SLI + giao thức audit.
+
+===== SLIDE 6 =====
+6 / 15
+Nhóm tạp chí / hội nghị | SCImago | CORE | Số bài
+ACM TOIS / TORS (Trans. Information Systems, Rec. Systems) | Q1 | A | 4
+ACM RecSys ('25, '26, '23, '21, '20) | Q1 | A* | 5
+ACM SIGIR '23 | Q1 | A* | 1
+Springer UMAI 2024 / J. Big Data 2019 | Q1 | —/C | 2
+Elsevier ESWA 2023 | Q1 | B | 1
+• 14/14 PDF là bản nhà xuất bản (verify /Creator: acmart · Springer · Elsevier)
+• 10/14 có DOI ACM DL; 9 bài CORE A*/A
+• Đã loại arXiv-only: 10.48550/arxiv.2011.07931 (không có bản tạp chí)
+• Think–Check–Submit: DOI resolve được; footer bản quyền ACM/Springer/Elsevier trên PDF
+• Manifest truy vết: _manifest.json (sha256 từng file, provenance từng bài)
+• Zotero/Mendeley: phân nhóm thẻ — leakage (5), bias (6), split (2), Big Data (2)
+Quản lý tài liệu & đánh giá độ uy tín
+--- NOTES ---
+Quy trình: (1) thu thập qua DOI từ OpenAlex/Unpaywall; (2) chỉ lấy bản nhà xuất bản, không preprint arXiv; (3) verify /Creator bằng pypdf để chắc bản thật; (4) tra SCImago + CORE; (5) ghi manifest với sha256. Kết quả: 14 bài, tất cả ≥ Q1 hoặc CORE B, 9 bài A*/A. Hội đồng có thể yêu cầu xem ảnh chụp — đã chuẩn bị 14 thumbnail trang đầu trong phụ lục.
+
+===== SLIDE 7 =====
+7 / 15
+Tài liệu | Phương pháp | Kết quả | Hạn chế → gap
+Wang et al. TOIS 2022 (Q1) | So sánh protocol có/không global timeline; 4 model DL | Leakage đổi accuracy + thứ hạng | Chưa định nghĩa CHỈ SỐ đo rò rỉ
+Abdollahpouri et al. TOIS 2023 (Q1) | Tách 4 yếu tố: data/algorithm/group/eval | Eval strategy giải thích mâu thuẫn bias | Chưa gắn quy mô Big Data
+Chen et al. RecSys '25 (A*) | SASRec+/BERT4Rec/GRU4Rec × 8 dataset | Split đổi thứ hạng sequential | Chỉ sequential RS; cần H100 GPU
+RecSys '26 (A*) | Convergent validity của thiết kế offline | Sparse ranking ≠ dense judgment | Chưa đo coverage/bias kèm rank
+RecSys '20 (A*) | So sánh split strategies | Split là lựa chọn thiết kế | Tiền thân, quy mô vừa
+Khoảng trống: CHƯA có nghiên cứu nào đo ĐỒNG THỜI (i) đảo chiều thứ hạng, (ii) mức biến mất của thiên lệch phổ biến, (iii) chi phí Big Data — trên CÙNG pipeline. Đo riêng lẻ thì không biết các hiệu ứng CỘNG HƯỞNG hay TRIỆT TIÊU nhau.
+Ma trận tổng hợp & khoảng trống nghiên cứu
+--- NOTES ---
+5 bài trung tâm. Điểm giao: gap là phép HOẶC của 3 hạn chế — không bài nào đo cả ba hiệu ứng trên cùng pipeline. Đây là chỗ đề tài chèn vào. Khoảng trống phát hiện từ 2 nguồn: thực tiễn doanh nghiệp (W5H2) và khảo sát tài liệu (hạn chế của từng bài).
+
+===== SLIDE 8 =====
+8 / 15
+Tiêu đề = [Phương pháp] + [Mục tiêu] + [Phạm vi]:  Kiểm toán chiến lược chia tập → đánh giá tác động đến tín hiệu đo & thiên lệch phổ biến → hệ thống gợi ý trên Big Data Spark/HDFS, MovieLens 25M
+SO | Mục tiêu cụ thể | Tỷ trọng | RQ khớp
+SO1 Data | Chuẩn hoá MovieLens 25M; sinh 3 split; MapReduce Java đếm phổ biến | 20% | —
+SO2 Model | Đề xuất SLI (tương đối theo user, 3 ngưỡng) + giao thức audit 3 bước | 40% | RQ1, RQ2
+SO3 Đối chuẩn | Chạy baseline 3 tầng trên 3 split, 3+ seed | 20% | RQ1
+SO4 Ablation | Độ nhạy: đổi ngưỡng relevant, subsample, 2 định nghĩa SLI | 20% | RQ2, RQ4
+RQ1: chiến lược chia có làm đảo chiều thứ hạng mô hình? · RQ2: thiên lệch phổ biến thay đổi bao nhiêu? · RQ3: chi phí vận hành? · RQ4: có giao thức đánh giá khả thi không? · RQ5 (mở rộng): cross-domain.
+Tiêu đề, mục tiêu và câu hỏi nghiên cứu
+--- NOTES ---
+SO2 chiếm 40% — đây là đóng góp tạo tác dạng Model + Method, đáp ứng yêu cầu đóng góp dạng 2 + 3 của môn. 4 RQ chính + RQ5 là hướng mở rộng, không nằm trong cam kết.
+
+===== SLIDE 9 =====
+9 / 15
+ | Bằng chứng cụ thể
+F — Khả thi | Dataset đã tải + đo; PoC chạy xong trước deadline; khung thực nghiệm có sẵn
+I — Thú vị | Trả lời "cách đo có đúng không" quan trọng hơn "model nào tốt hơn" — ảnh hưởng mọi bài báo RS
+N — Mới | SLI — phát hiện khái niệm: LOO toàn cục 99,9988% vs tương đối 0% — chưa có trong TOIS 2022
+E — Đạo đức | Dataset ẩn danh, license research-use, trích dẫn Harper & Konstan (10.1145/2827872), không redistribute
+R — Thiết thực | Đóng góp là GIAO THỨC đánh giá, không phải model mới — dùng được cho mọi dataset có timestamp
+Mô hình FINER
+--- NOTES ---
+Mỗi ô FINER không nói chung chung — mỗi ô có 1 bằng chứng thật. Điểm N là điểm mạnh nhất: phát hiện khái niệm chưa có trong bài nổi tiếng nhất về data leakage RecSys.
+
+===== SLIDE 10 =====
+10 / 15
+Đã chạy thật: MapReduce JOB_STATUS=SUCCESS · G3 cross-check PASS 100% (323.737/323.737 key) · 6/6 notebook gate PASS (04–09) · không dùng GPU.
+Quy trình thực hiện — kiến trúc 4 tầng
+--- NOTES ---
+Bốn tầng: lưu trữ (HDFS + Parquet), xử lý lớn (MapReduce Java + PySpark local[4]), lưu trữ metric (MongoDB), trực quan (R + Streamlit). Nhấn mạnh MapReduce viết bằng Java vì container không có Python — đúng yêu cầu seminar. Không dùng GPU — chạy CPU trên laptop.
+
+===== SLIDE 11 =====
+11 / 15
+TẦNG DỮ LIỆU — chỉ số mới của đề tài
+SLI (Split Leakage Index) = trung bình tỷ lệ rò rỉ THEO TỪNG USER, không phải tỷ lệ gộp toàn cục
+3 ngưỡng: an toàn < 0,05 · rò rỉ nhẹ 0,05–0,30 · nghiêm trọng ≥ 0,30
+TẦNG RANKING — chỉ số kinh điển
+NDCG@10 = DCG/IDCG (bị chặn bởi fixture 5 ca tính tay, tolerance 1e-12) · Hit@10
+TẦNG CÔNG BẰNG — chỉ số thiên lệch
+catalog coverage · Gini exposure · popularity-bias ratio · longtail_coverage
+BASELINE 3 TẦNG (bắt buộc) — sàn (MostPopular, Random) · kinh điển (ALS implicit, ItemKNN) · SOTA (SASRec+ hoặc EASE CPU)
+Chỉ số đánh giá & Baseline
+--- NOTES ---
+SLI là chỉ số đề tài đề xuất. NDCG có unit-test với fixture tính tay — bảo đảm công thức đúng không phụ thuộc code. Baseline 3 tầng là yêu cầu bắt buộc của môn, không được cắt.
+
+===== SLIDE 12 =====
+12 / 15
+ | random 80/20 | temporal_global | leave_one_out
+SLI (tương đối) | 98,91% | 0% | 0%
+NDCG@10 — ALS | 0,2556 | 0,1311 | 0,0467
+eval_rel_users | 158.692 | 6.219 | 96.003
+Kết quả sơ bộ — chứng minh khả thi
+--- NOTES ---
+3 nhận xét: (1) split cho kết quả đẹp nhất (random) rò rỉ nặng nhất — 98,91% tương tác test sớm hơn tương tác mới nhất của chính user đó; (2) split sạch nhất (temporal) mất 96,1% mẫu đánh giá — không có chiến lược miễn phí; (3) thứ hạng không đảo ở 2 mô hình này nhưng độ lớn hiệu ứng đổi 5,5×. DISCLAIMER bắt buộc đọc: số liệu sơ bộ, seed đơn (42), method-informed implementation — chứng minh khả thi, không phải kết luận cuối.
+
+===== SLIDE 13 =====
+13 / 15
+• Giao thức audit tự chặn 3/3 cặp so sánh không hợp lệ (mẫu lệch 25,5× / 1,65× / 15,4× > ngưỡng 1,2)
+• SLI tính được trong ~2 phút cho mọi split mới
+• 3 tạo tác: SLI (Concepts+Models) · giao thức 3 bước (Methods) · pipeline tái lập (Instantiations)
+• Chi phí: 1 laptop, KHÔNG GPU; đầu ra ≥ yêu cầu "đóng góp dạng 2 + 3"
+• Thiếu GPU cho SOTA → EASE (closed-form, CPU vài phút) — có tiền lệ RecSys '21
+• Hạ tầng lỗi → giữ trục khoa học (PySpark local đọc Parquet) — không mất gì về khoa học
+• Thiếu thời gian → cắt cross-domain (RQ5 thành hướng mở rộng)
+• Seed đơn → khai báo giới hạn rõ trong báo cáo
+Giai đoạn | Nội dung | Output | Mốc
+G1 | Hoàn thiện thực nghiệm (thêm 3 seed, EASE) | Bảng 3 split × 3 seed | 12/2026
+G2 | Kiểm định thống kê mở rộng | CI + Wilcoxon cho mọi cặp | 01/2027
+G3 | Viết báo cáo + dashboard demo | Báo cáo nháp + fig9 | 02/2027
+G4 | Phản biện nội bộ + sửa | Bản cuối | 03/2027
+G5 | Bảo vệ cuối kỳ | Slide + demo | 06/2027
+Hiệu quả, ROI và kế hoạch 5 giai đoạn
+--- NOTES ---
+Hiệu quả không nói định tính — có số: giao thức chặn 3/3 cặp so sánh sai. ROI: chi phí 1 laptop không GPU, đầu ra 3 tạo tác vượt yêu cầu tối thiểu. Kế hoạch 5 giai đoạn có mốc cụ thể đến 06/2027.
+
+===== SLIDE 14 =====
+14 / 15
+ | Trạng thái
+Dữ liệu | ✅ hợp pháp, ẩn danh, đã verify SHA-256, license research-use
+Năng lực kỹ thuật | ✅ PySpark + Hadoop + MapReduce Java + MongoDB + R + Streamlit — tất cả đã chạy thật
+Nguồn lực & thời gian | ✅ laptop, không GPU; khung PoC có sẵn; G1–G5 đến 06/2027
+Giới hạn | local[4] không phải cluster · ALS subsample 30k/162.541 user · 1 seed · 2 baseline · NDCG không so cặp giữa split
+Hướng mở rộng | Cross-domain (Amazon/Steam) · thêm SOTA · ma trận 10 seed
+Tự đánh giá khả thi & giới hạn
+--- NOTES ---
+Phần tự đánh giá chiếm 5% thời lượng nhưng quan trọng: nêu thẳng 5 giới hạn. local[4] là máy đơn, không phải cụm phân tán. ALS chỉ fit trên 30 nghìn user đầu theo userId, không phải toàn bộ 162 nghìn. Một seed. Hai baseline. NDCG giữa các split không so cặp được vì tập user khác nhau. Nói rõ trước — hội đồng không thể 'bắt lỗi' thứ đã được khai báo.
+
+===== SLIDE 15 =====
+15 / 15
+# | Tài liệu tham khảo (IEEE)
+[1] | Y. Wang et al., "A Critical Study on Data Leakage in Recommender System Offline Evaluation," ACM Trans. Inf. Syst., 41(3), Art. 75, 2022. DOI: 10.1145/3569930
+[2] | H. Abdollahpouri et al., "Reproducing Popularity Bias in Recommendation: The Effect of Evaluation Strategies," ACM Trans. Recomm. Syst., 2(1), Art. 5, 2023. DOI: 10.1145/3637066
+[3] | Y. Chen et al., "Time to Split: Exploring Data Splitting Strategies for Offline Evaluation of Sequential Recommenders," in Proc. RecSys '25, 2025, pp. 874–883. DOI: 10.1145/3705328.3748164
+[4] | "On the Convergent Validity of Offline Evaluation Designs for Recommender Systems," in Proc. RecSys '26, 2026. DOI: 10.1145/3773078.3831818
+[5] | F. M. Harper and J. A. Konstan, "The MovieLens Datasets: History and Context," ACM Trans. Interact. Intell. Syst., 5(4), Art. 19, 2015. DOI: 10.1145/2827872
+Trao đổi và Thảo luận (Q&A)
+--- NOTES ---
+Câu hỏi dự phòng hay gặp: (1) Vì sao LOO không rò rỉ? — vì test của mỗi user là tương tác muộn nhất CỦA USER ĐÓ, định nghĩa toàn cục lấy mốc của user B so với test của user A là vô nghĩa. (2) 30 nghìn user subsample có đại diện không? — không hoàn toàn, userId cấp theo thứ tự tham gia; đã khai báo là giới hạn, không ngoại suy. (3) local[4] có phải Big Data không? — xử lý 25M tương tác bằng Spark engine là đúng yêu cầu môn; phần phân tán thật là MapReduce trong Hadoop container (G3 PASS 100%). (4) Chỉ 2 baseline? — đúng yêu cầu tối thiểu; 3 tầng (sàn/kinh điển/SOTA) là phần G1 giai đoạn tiếp theo. (5) Số liệu có ổn định qua seed không? — chưa có bằng chứng; 1 seed đã khai báo giới hạn, 3 seed là G1.

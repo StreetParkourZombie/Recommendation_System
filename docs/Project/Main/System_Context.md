@@ -27,7 +27,7 @@ S2  HDFS ingest → MapReduce (Java) → popularity theo năm, coverage
    ▼
 S3  Spark: sinh 3 split → ghi xuống đĩa → audit metrics cấp dữ liệu (tầng 1)
    │  random80_20 | temporal_global | leave_one_out
-   │  D:\recsys_data\splits\<strategy>\{train,test}\part-*.parquet  (735 MB)
+│  S3b Spark: Popularity + ALS implicit + Random baseline (numpy top-K)   │  D:\recsys_data\splits\<strategy>\{train,test}\part-*.parquet  (735 MB)
    │  → temporal_violation (toàn cục + user-relative), unseen_item, cold_start
    ▼
 S3b Spark: Popularity baseline + ALS implicit (numpy top-K)
@@ -64,7 +64,7 @@ Notebook 04–09 là đường **quan sát được từng bước**; script v�
 
 - Không xây API server, không auth, không service thời gian thực.
 - **Không dùng deep learning.** Lý do: (a) đóng góp của đề tài là *đóng khung vấn đề đánh giá*, không phải kiến trúc mô hình; (b) tránh trùng đồ án ConvNeXt-Tiny/otoscopy của anh.
-- **Không so sánh state-of-the-art accuracy.** Mục tiêu là *audit framework*, 4 mô hình (Popularity, ItemKNN, ALS, ALS+re-rank) là đủ.
+- **So sánh accuracy có SOTA, nhưng không so runtime.** Mục tiêu là *audit framework*; cả 5 baseline đăng kí đã chạy: Random, MostPopular, ALS, ItemKNN cosine (CPU) + SASRec+CE (GPU local RTX 4050 6 GB). SASRec fit FULL user nhưng eval subset (`val_fraction_users=0.1`), `tuning_budget=0`, 1 seed — không gọi là model thắng. ALS+time-aware re-rank chỉ là phương án bổ sung tùy chọn, không nằm trong danh sách đăng kí.
 
 ---
 
@@ -159,7 +159,8 @@ Notebook 04–09 là đường **quan sát được từng bước**; script v�
 | [`MetErrors/python.md`](MetErrors/python.md) | error log: Jupyter kernel, PySpark 4.x API, Spark NPE |
 | [`../../notebooks/jupyter/README.md`](../../notebooks/jupyter/README.md) | bảng 10 notebook + run ID + cách chạy |
 | [`../../docs/References/Papers/_manifest.json`](../References/Papers/_manifest.json) | manifest 9/9 paper (DOI, file, sha256, bytes) |
-| `runs/<run_id>/outputs/comparison.json` | so sánh 2 mô hình × 3 split (notebook 09) |
+| `runs/<run_id>/outputs/comparison.json` | so sánh **5 mô hình** × 3 split (notebook 09, run `20261118_151159_..._1e0f72fa`) |
+| `runs/<run_id>/outputs/paired_stats.json` | 20 cặp kiểm định Wilcoxon + 95% CI + rank-biserial r (notebook 12, run `20261118_151202_..._9b864f59`) |
 | `runs/<run_id>/outputs/reversal_table.csv` | bảng đảo chiều thứ hạng |
 | `docs/Project/Main/report/Big_Data/figures/` | fig1–fig7 (R) · fig8 PRISMA (SVG) · fig9 dashboard (PNG) · fig_interaction (notebook 09) |
 
@@ -196,8 +197,8 @@ Project vẫn dùng MovieLens-25M project protocol, `random80_20`, `temporal_glo
 2. Smoke test Paper 01 chạy hoặc có log blocked.
 3. Paper protocol vs project protocol được lập bảng.
 4. Không trộn output/repository/environment hai track.
-5. Với deadline mode, chạy project matrix nhỏ trước: 3 split × 2 model × 3 seed.
-6. Chỉ mở rộng 10 seed hoặc Paper 01 full model nếu còn thời gian và tài nguyên.
+5. Với deadline mode, chạy project matrix trước: 3 split × 5 model × 1 seed (42) — **đã hoàn thành**; ma trận seed là mở rộng, không phải gate.
+6. Chỉ mở rộng nhiều seed hoặc Paper 01 full model nếu còn thời gian và tài nguyên (hiện **không** nằm trong phạm vi đã đăng kí).
 
 Project result khác dataset/model/protocol Paper 01 phải ghi `method_informed_implementation`, không ghi faithful reproduction.
 
@@ -234,7 +235,7 @@ Các kết quả PoC trước cập nhật này vẫn là kết quả project-co
 | Spark + MapReduce cùng timezone **UTC** | lệch 7,65% số key nếu không |
 | Python ghi `recsys.audit_metrics`, R chỉ đọc | R từng drop/insert phá schema 42 field |
 | Kiểm định dùng **chỉ số per-user** | chỉ số cấp tập không có phương sai |
-| Mẫu ALS = **30.000 user** | `recommendForAllUsers` OOM (162.541 × 59.047) |
+| Mẫu ALS = **FULL 162.541 user** (2026-11-17; subsample 30.000 là lịch sử run 15/11) | `topk_numpy` chunked tránh OOM của `recommendForAllUsers` (162.541 × 59.047) |
 
 ### 11.3 Kết quả kiểm định — đường script, đo 2026-11-04 (rút gọn)
 
@@ -244,13 +245,15 @@ Các kết quả PoC trước cập nhật này vẫn là kết quả project-co
 | `temporal_global` | 1.363 | +0,0929 | < 0,001 | 0,521 | 0,729 |
 | `leave_one_out` | 17.704 | +0,0286 | < 0,001 | 0,169 | 0,537 |
 
-Chi tiết đầy đủ: [`Metrics.md`](Metrics.md) §4.4.
+Chi tiết đầy đủ: [`Metrics.md`](Metrics.md) §4.4 (đường A, lịch sử).
+
+> **Bản chính thức hiện nay là §12.2b + [`Metrics.md`](Metrics.md) §4.10–4.11**: 20 cặp kiểm định trên 5 model, run `20261118_151202_12_paired_stats_9b864f59`. Bảng dưới đây (đường A, 2 model, subsample 30k, `reports/stats_*.json` đã bị gỡ khỏi repo) **không dùng để trích cho slide/đề cương**.
 
 ---
 
 ## 12. Cập nhật 2026-11-15 — luồng notebook-first đã chạy xong
 
-6 notebook mới (`04`–`09`) thay đường quan sát thủ công bằng luồng **cell-by-cell có checkpoint**. Code dùng lại nằm ở `src/audit/*`, notebook chỉ gọi và in bảng.
+9 notebook (`04`–`09`, `10`–`12`) thay đường quan sát thủ công bằng luồng **cell-by-cell có checkpoint**. Code dùng lại nằm ở `src/audit/*`, notebook chỉ gọi và in bảng.
 
 ### 12.1 Gate đã PASS
 
@@ -261,19 +264,56 @@ Chi tiết đầy đủ: [`Metrics.md`](Metrics.md) §4.4.
 | L6a | `06_mostpopular_baseline` | `20261115_192522_06_mostpopular_baseline_c39572de` | MostPopular NDCG 3 split |
 | L6b | `07_ndcg_manual_check` | `20261115_190933_07_ndcg_manual_check_e1cc5714` | 5 fixture NDCG, tolerance `1e-12` |
 | L6c | `08_als_implicit` | `20261115_192654_08_als_implicit_0c1385ff` | ALS implicit 3 split + `seen_exclusion PASS` |
-| L7 | `09_compare_and_reversal` | `20261115_193151_09_compare_and_reversal_66fefc4f` | so sánh + RQ1 |
+| L6c-FULL | `08_als_implicit` | `20261117_185700_08_als_implicit_7be22080` | ALS fit FULL 162.541 user |
+| L10 | `10_random_baseline` | `20261118_144717_10_random_baseline_d8644ac1` | Random sàn 3 split + MRR, bias ≈ 1 |
+| L6a-RERUN | `06_mostpopular_baseline` | `20261118_144642_06_mostpopular_baseline_eaa120f4` | MostPopular chạy lại + MRR, gate reproduction PASS (0,0852/0,0455/0,0183) + **lưu `peruser_ndcg_{split}.npz`** 3 split |
+| L7 | `09_compare_and_reversal` | `20261118_151159_09_compare_and_reversal_1e0f72fa` | so sánh **5 model** + RQ1 (reversals 0 ở cặp vs sàn; **2/3 ở cặp ngôi đầu**) |
+| L11 | `11_itemknn_baseline` | `20261118_150305_11_itemknn_baseline_0b7511ee` | ItemKNN cosine scipy sparse 3 split + MRR, seen PASS, NDCG > Random |
+| L12 | `12_paired_stats` | `20261118_151202_12_paired_stats_9b864f59` | Wilcoxon + 95% CI + rank-biserial r, **20 cặp / 5 model**, all `n>=30`, min 6.214 |
 
-### 12.2 RQ1 — không đảo chiều
+### 12.2 RQ1 — đảo chiều ngôi đầu GIỮA HAI MODEL KINH ĐIỂN
 
-| Split | MostPopular | ALS | Δ | ALS/Pop | n_paired |
-|---|---:|---:|---:|---:|---:|
-| `random80_20` | 0,0852 | **0,2556** | +0,1704 | 3,00× | 29.229 |
-| `temporal_global` | 0,0455 | **0,1311** | +0,0856 | 2,88× | 1.348 |
-| `leave_one_out` | 0,0183 | **0,0467** | +0,0284 | 2,55× | 17.673 |
+| Split | Random (sàn) | MostPopular | ItemKNN | ALS | ALS/sàn | Model đầu |
+|---|---:|---:|---:|---:|---:|---|
+| `random80_20` | 0,0003 | 0,0852 | **0,2679** | 0,2581 | 860,3× | ItemKNN |
+| `temporal_global` | 0,0009 | 0,0455 | **0,1409** | 0,1332 | 148,0× | ItemKNN |
+| `leave_one_out` | 0,0001 | 0,0183 | 0,0461 | **0,0469** | 469,0× | ALS |
 
-Không quan sát đảo chiều trên 3/3 cặp split. Δ co lại **−83,3%** từ `random80_20` → `leave_one_out`, trong khi tỷ lệ ALS/Pop chỉ giảm 3,00× → 2,55×.
+**Hai kết luận khác nhau tuỳ cặp so sánh** (run ghép `20261118_151159_09_compare_and_reversal_1e0f72fa`, `reversals_found = 0`, `best_model_reversals_found = 2`):
 
-> **Giới hạn bắt buộc khai báo:** 1 seed (42); 2 baseline; ALS chỉ fit trên 30.000 user đầu theo `userId` (không phải toàn bộ 162.541); mỗi split có population riêng nên NDCG **không so cặp** giữa split.
+1. Cặp **model vs sàn** (ALS/ItemKNN so MostPopular): ΔNDCG luôn dương ở 3/3 split → **không đảo chiều**.
+2. Cặp **hai model ngang tầm** (ALS vs ItemKNN): ngôi đầu **đổi chỗ ở 2/3 cặp split** → **CÓ đảo chiều thứ hạng**.
+
+Đây là phát hiện phương pháp quan trọng nhất của RQ1: nếu thực nghiệm chỉ so model với đường cơ sở tầm thường thì **kết luận "chia tập không làm đổi thứ hạng" là sai lệch** — độ phân giải của so sánh quyết định phát hiện.
+
+Số FULL run cuối: ALS `20261118_144944_08_als_implicit_aaf45746`, ItemKNN `20261118_150305_11_itemknn_baseline_0b7511ee`, Random `20261118_144717_10_random_baseline_d8644ac1`, MostPopular `20261118_144642_06_mostpopular_baseline_eaa120f4`, SASRec `20261118_144646_13_sasrec_ce_8225755a`.
+
+### 12.2b RQ1 — kiểm định cặp (notebook 12, run cuối `20261118_151202_12_paired_stats_9b864f59`, 20 cặp / 5 model)
+
+Chênh NDCG trung bình chưa đủ bằng chứng. Notebook 12 đọc trực tiếp `peruser_ndcg_*.npz` đã lưu (**không chạy lại pipeline**), khớp user per-user, kiểm định **Wilcoxon signed-rank** + 95% CI của hiệu số + effect size **rank-biserial r** (quy định Bài giảng 04 Phần 4; NDCG per-user lệch phải nặng nên không dùng t-test).
+
+| Cặp (split) | n | mean d | p | 95% CI | r | Mức |
+|---|---:|---:|---:|---|---:|---|
+| `random80_20` ALS vs MostPopular | 158.626 | +0,1729 | <1e-300 | [+0,1718, +0,1740] | 0,696 | trung bình |
+| `random80_20` ALS vs Random | 158.626 | +0,2578 | <1e-300 | [+0,2567, +0,2589] | 0,999 | lớn |
+| `random80_20` ItemKNN vs MostPopular | 158.692 | +0,1827 | <1e-300 | [+0,1816, +0,1838] | 0,736 | lớn |
+| `random80_20` ALS vs ItemKNN | 158.626 | −0,0099 | 2,8e-60 | [−0,0109, −0,0089] | −0,030 | gần không |
+| `temporal_global` ALS vs MostPopular | 6.214 | +0,0878 | 1,1e-297 | [+0,0833, +0,0924] | 0,647 | trung bình |
+| `temporal_global` ALS vs Random | 6.214 | +0,1323 | <1e-300 | [+0,1274, +0,1371] | 0,986 | lớn |
+| `temporal_global` ItemKNN vs MostPopular | 6.219 | +0,0954 | <1e-300 | [+0,0909, +0,0999] | 0,702 | lớn |
+| `temporal_global` ALS vs ItemKNN | 6.214 | −0,0077 | 3,0e-03 | [−0,0118, −0,0036] | −0,016 | gần không |
+| `leave_one_out` ALS vs MostPopular | 95.977 | +0,0286 | <1e-300 | [+0,0276, +0,0297] | 0,531 | trung bình |
+| `leave_one_out` ALS vs Random | 95.977 | +0,0468 | <1e-300 | [+0,0458, +0,0479] | 0,996 | lớn |
+| `leave_one_out` ItemKNN vs MostPopular | 96.003 | +0,0278 | <1e-300 | [+0,0268, +0,0289] | 0,517 | trung bình |
+| `leave_one_out` ALS vs ItemKNN | 95.977 | +0,0008 | 0,153 | [−0,0003, +0,0018] | 0,005 | gần không |
+
+Đọc số: **11/20 cặp** có p < 0,05 và CI **không chứa 0**. Cặp duy nhất không có ý nghĩa: ALS vs ItemKNN ở `leave_one_out` (p = 0,153, CI chứa 0) → ở split sạch nhất, **không đủ bằng chứng** nói hai model khác nhau. Chênh lệch ALS–MostPopular cũng co dần theo độ khó split (0,1729 → 0,0878 → 0,0286): bằng chứng thống kê cho "độ lớn hiệu ứng phụ thuộc chiến lược chia" (RQ1), không chỉ là thứ hạng trung bình.
+
+Điểm phải nói kèm: cặp ALS vs ItemKNN có p nhỏ nhưng **|r| chỉ 0,005–0,030** — khác biệt ~0,008 điểm NDCG, tức **về thực hành hai model ngang nhau**. Đảo chiều THỨ TỰ có thật; đảo chiều ĐỘ LỚN không đáng kể.
+
+Nguồn run per-user cuối: MostPopular `20261118_144642_...eaa120f4`, ALS `20261118_144944_...aaf45746`, Random `20261118_144717_...d8644ac1`, ItemKNN `20261118_150305_...0b7511ee`, SASRec `20261118_144646_...8225755a`. Artifact: `paired_stats.json` (20 cặp).
+
+> **Giới hạn bắt buộc khai báo:** 1 seed (42); cả 5 baseline đăng kí đã chạy (Random, MostPopular, ALS, ItemKNN CPU + SASRec+CE GPU) — EASE không đăng kí nên không chạy. SASRec fit FULL 162.541 user nhưng eval subset (`val_fraction_users=0.1`), pairing dùng giao user, `tuning_budget=0`; **KHÔNG so runtime GPU-vs-CPU**. ALS/ItemKNN fit FULL user; ItemKNN chạy trên driver (scipy sparse) nên chi phí không so được với ALS trong môi trường phân tán thật; mỗi split có population riêng nên NDCG **không so cặp** giữa split; kiểm định cặp chỉ so **trong cùng split**; memory chưa instrument.
 
 ### 12.3 Vị trí artifact
 
@@ -282,8 +322,9 @@ src/utils/spark_utils.py        PATHS, get_spark(), read_ratings(), hằng proto
 src/audit/splits.py             STRATEGIES, build_split, materialize_split, verify_materialized
 src/audit/leakage.py            data_level_audit, eligible_users, relevance_profile
 src/audit/popularity.py         train_popularity, mostpopular_topk, bias_metrics
-src/audit/metrics.py            dcg/idcg/ndcg/hit/precision/recall/gini/coverage + FIXTURES
+src/audit/metrics.py            dcg/idcg/ndcg/hit/precision/recall/mrr/gini/coverage + FIXTURES
 src/audit/als_rec.py            fit_als_implicit, topk_numpy, collect_truth, subsample_users
+src/audit/itemknn.py            fit() + score_users() — ItemKNN cosine bằng scipy sparse (min_co=2)
 src/audit/io.py                 sha256, save_json, readback_ok
 
 runs/<run_id>/manifest.json + checkpoints/<step>.json + outputs/ + figures/

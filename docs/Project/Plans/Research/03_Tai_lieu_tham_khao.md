@@ -141,7 +141,7 @@ Thư mục: `docs/References/Papers/` · manifest: `_manifest.json` (DOI, file, 
       (i) đảo chiều thứ hạng  (ii) mức biến mất của popularity bias
       (iii) chi phí Big Data — trên cùng một pipeline, cùng bộ metric
                     ↓
-      PROPOSED: audit framework 3 split × 2 model × 6+ chỉ số
+      PROPOSED: audit framework 3 split × 4 baseline đã đăng kí (Random, MostPopular, ALS, ItemKNN) × 6+ chỉ số + kiểm định cặp per-user
       trên MovieLens ml-25m (25.000.095 tương tác) + Spark/HDFS/MapReduce + MapReduce Java
 ```
 

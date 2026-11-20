@@ -46,7 +46,11 @@ Mỗi notebook theo nhịp: (1) mục tiêu/điều kiện đầu vào, (2) khá
 
 **Paper 01 processed data:** README trong `dataLeakageRec` dẫn Google Drive `https://drive.google.com/drive/folders/1TyQysstuaUo4IYb3WaVt4dVFOyZu3oN_?usp=sharing`. Đây là artifact tác giả chuẩn bị cho code bài báo, không thay cho raw GroupLens trong thí nghiệm project. Chỉ tải ở phase reproduction; lưu riêng, kiểm tra schema/tên file/hash, không trộn giữa hai protocol.
 
-**Không cần clone repo bài báo ngay.** Đầu tiên học pipeline project bằng Random, MostPopular, ALS và split tự triển khai có kiểm thử. Sau đó mới chọn repo paper để smoke-test/reproduction riêng: Paper 01 `https://github.com/putatu/dataLeakageRec`, Paper 02 `https://github.com/SavvinaDaniil/UnfairnessOfPopularityBias`, Paper 03 `https://github.com/monkey0head/time-to-split`. Pin commit, đọc license/README, ghi environment và sai khác. Tự code theo ý tưởng paper gọi là `method-informed implementation`; không gọi là reproduction. Nếu nghi code paper sai, trước khi sửa phải giữ nguyên bằng chứng, tạo toy counterexample tái hiện lỗi, giải thích expected vs actual, rồi mới ghi patch riêng.
+**Không cần clone repo bài báo ngay.**
+
+> **Cập nhật 2026-11-20:** bảng notebook flow dưới dùng tên kế hoạch cũ cho 10–12. Tên thật đã chạy: `10_random_baseline.ipynb` (sàn Random), `11_itemknn_baseline.ipynb` (ItemKNN), `12_paired_stats.ipynb` (Wilcoxon 20 cặp), `13_sasrec_ce.ipynb` (SASRec+CE GPU). Tất cả đã chạy; rerun 2026-11-20 thêm novelty/diversity. Xem `../../../Main/Metrics.md` §4.12.
+
+Đầu tiên học pipeline project bằng Random, MostPopular, ALS và split tự triển khai có kiểm thử. Sau đó mới chọn repo paper để smoke-test/reproduction riêng: Paper 01 `https://github.com/putatu/dataLeakageRec`, Paper 02 `https://github.com/SavvinaDaniil/UnfairnessOfPopularityBias`, Paper 03 `https://github.com/monkey0head/time-to-split`. Pin commit, đọc license/README, ghi environment và sai khác. Tự code theo ý tưởng paper gọi là `method-informed implementation`; không gọi là reproduction. Nếu nghi code paper sai, trước khi sửa phải giữ nguyên bằng chứng, tạo toy counterexample tái hiện lỗi, giải thích expected vs actual, rồi mới ghi patch riêng.
 
 ## Notebook flow
 
@@ -87,9 +91,10 @@ notebooks/jupyter/
   07_ndcg_manual_check.ipynb
   08_als_implicit.ipynb
   09_compare_and_reversal.ipynb
-  10_statistics_and_uncertainty.ipynb      # chưa tạo
-  11_popularity_bias_audit.ipynb           # chưa tạo
-  12_spark_cost_benchmark.ipynb            # chưa tạo
+  10_random_baseline.ipynb                 # ✅ đã chạy (rerun 20/11: novelty/diversity)
+  11_itemknn_baseline.ipynb                # ✅ đã chạy (rerun 20/11: novelty/diversity)
+  12_paired_stats.ipynb                    # ✅ đã chạy (Wilcoxon 20 cặp; KHÔNG chạy Nemenyi)
+  13_sasrec_ce.ipynb                       # ✅ đã chạy 3 split GPU (rerun 20/11: novelty/diversity)
 src/
   recsys/notebook_logging.py               # NotebookRun: run dir, manifest, checkpoint
   utils/spark_utils.py                     # PATHS, ensure_hadoop_home, get_spark, read_ratings
@@ -97,12 +102,12 @@ src/
     __init__.py
     splits.py                              # STRATEGIES, build_split, materialize_split, load_split
     leakage.py                             # data_level_audit, eligible_users, relevance_profile
-    popularity.py                          # train_popularity, mostpopular_topk, bias_metrics
-    metrics.py                             # dcg/ndcg/hit/recall/gini + FIXTURES
+    popularity.py                          # train_popularity, mostpopular_topk, bias_metrics, genre_map, diversity_metrics
+    metrics.py                             # dcg/ndcg/hit/mrr/recall/gini + novelty/diversity/serendipity + 15 FIXTURES
     als_rec.py                             # fit_als_implicit, topk_numpy, collect_truth, collect_seen
     io.py                                  # sha256_file, sha256_dir, save_json, readback_ok
 scripts/
-  generate_notebook_00.py .. 09.py         # sinh notebook từ code Python
+  generate_notebook_00.py .. 13.py         # sinh notebook từ code Python
   run_notebook.py                          # chạy notebook qua nbclient, lưu .executed.ipynb
   04_audit_spark.py                        # script PoC gốc (nguồn của baseline số)
 configs/experiment_protocol_v1.json

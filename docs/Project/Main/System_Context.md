@@ -2,7 +2,7 @@
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
 **Phục vụ:** IT252BIDA (Xử lý dữ liệu lớn) + IT252STRM (Phương pháp nghiên cứu khoa học)
-**Cập nhật:** 2026-11-15 20:00 GMT+7 (bổ sung luồng notebook-first + môi trường Parquet đã verify)
+**Cập nhật:** 2026-11-20 10:00 GMT+7 (bổ sung Novelty/Diversity/Friedman; rerun 06/08/09/10/11/13 — xem §12.4)
 
 > **Change note:** Từ cập nhật này, tài liệu phân biệt hai track: (A) reproduction Paper 01 và (B) controlled experiment của project. Kết quả hai track không gộp chung.
 >
@@ -56,7 +56,7 @@ S9  Streamlit dashboard đọc MongoDB → screenshot fig9_dashboard.png
 | Đường | Vào | Ra | Trạng thái |
 |---|---|---|---|
 | **Script-driven** (baseline đo 2026-11-04) | `scripts/04_audit_spark.py` → `05_store_mongodb.py` | `D:\recsys_data\poc\poc6_*.json` (CSV `reports/*.csv` đã gỡ khỏi repo) | Giữ để truy vết lịch sử |
-| **Notebook-first** (từ 2026-11-15) | `notebooks/jupyter/04`–`09` → `src/audit/*` | `runs/<run_id>/outputs/*.json` | ✅ đã chạy, 6/6 gate PASS |
+| **Notebook-first** (từ 2026-11-15) | `notebooks/jupyter/04`–`13` → `src/audit/*` | `runs/<run_id>/outputs/*.json` | ✅ đã chạy, gate PASS; rerun 2026-11-20 xem §12.4 |
 
 Notebook 04–09 là đường **quan sát được từng bước**; script vẫn là nguồn số cũ. Hai đường dùng **cùng protocol** (`project_protocol_v1`, seed 42, `rating ≥ 4,0`, K=10) nhưng khác đường chọn tập user đánh giá → chênh lệch nhỏ ở NDCG. Xem `Metrics.md` §4.5.
 
@@ -321,8 +321,8 @@ Nguồn run per-user cuối: MostPopular `20261118_144642_...eaa120f4`, ALS `202
 src/utils/spark_utils.py        PATHS, get_spark(), read_ratings(), hằng protocol
 src/audit/splits.py             STRATEGIES, build_split, materialize_split, verify_materialized
 src/audit/leakage.py            data_level_audit, eligible_users, relevance_profile
-src/audit/popularity.py         train_popularity, mostpopular_topk, bias_metrics
-src/audit/metrics.py            dcg/idcg/ndcg/hit/precision/recall/mrr/gini/coverage + FIXTURES
+src/audit/popularity.py         train_popularity, mostpopular_topk, bias_metrics, genre_map, diversity_metrics
+src/audit/metrics.py            dcg/idcg/ndcg/hit/precision/recall/mrr/gini/coverage + novelty_at_k/intra_list_diversity_at_k/categorical_diversity_at_k/serendipity_at_k + 15 FIXTURES
 src/audit/als_rec.py            fit_als_implicit, topk_numpy, collect_truth, subsample_users
 src/audit/itemknn.py            fit() + score_users() — ItemKNN cosine bằng scipy sparse (min_co=2)
 src/audit/io.py                 sha256, save_json, readback_ok
@@ -345,3 +345,12 @@ python scripts\run_notebook.py notebooks\jupyter\09_compare_and_reversal.ipynb
 ```
 
 `run_notebook.py` tách mỗi notebook thành process riêng — tránh NPE `PartitionKeyedAccumulator.byPartition()` của Spark 4.2.0 khi reuse session (xem `MetErrors/python.md` §3).
+
+### 12.4 Bổ sung Bài 04 (2026-11-20) — Novelty/Diversity/Friedman
+
+Rerun 06/08/10/11/13 để ghi `novelty10`/`diversity10` vào `*_summary.json`; rerun 09 để ghi key `friedman` vào `comparison.json`. Số, công thức, run id: [`Metrics.md`](Metrics.md) §4.12. Ba phát hiện phải nói kèm:
+
+1. Random có Novelty@10 cao nhất (20,2–21,1) nhưng NDCG ≈ 0 — novelty phải đọc cùng NDCG.
+2. ALS có Diversity@10 thấp nhất (0,735–0,747), thấp hơn cả MostPopular (0,765–0,788) ở cả 3 split — cá nhân hoá không tự động tăng đa dạng genre.
+3. Friedman bác bỏ "mọi model ngang nhau" ở 3 split (p ≈ 0) nhưng không chỉ ra cặp nào; Nemenyi KHÔNG chạy. Serendipity KHÔNG đo; memory KHÔNG đo.
+

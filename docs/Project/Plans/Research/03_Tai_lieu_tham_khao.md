@@ -8,6 +8,8 @@
 
 ## 0. Trạng thái file PDF — 14/14 có bản nhà xuất bản
 
+> **Chốt 2026-11-19:** tải về **14** bài, nhưng **danh sách trích dẫn chỉ giữ 10 bài** (xem §0B). Lý do: ưu tiên trục PPNCKH (đo lường – chia tập – thiên lệch), bỏ nhánh "Big Data" vì đề cương PPNCKH chỉ cần ≥ 5 bài; giảng viên yêu cầu "Công trình nền: 3–5 bài báo tiêu biểu" (`raw_01` dòng 1239) và "Ít nhất 5 bài báo" (`raw_01` dòng 1286). Không có giới hạn trên trong bài giảng.
+
 Thư mục: `docs/References/Papers/` · manifest: `_manifest.json` (DOI, file, title, provenance, bytes, sha256).
 
 | #  | File                                                                | Venue (theo Crossref)                      | Nguồn tải                                          |
@@ -36,7 +38,39 @@ Thư mục: `docs/References/Papers/` · manifest: `_manifest.json` (DOI, file, 
 
 ---
 
+## 0B. Danh sách trích dẫn chốt — 10 bài (2026-11-19)
+
+| STT | # gốc | Bài | Venue | CORE | Trục |
+| --- | --- | --- | --- | --- | --- |
+| [1] | 01 | A Critical Study on Data Leakage in RS Offline Evaluation — Ji et al. | TOIS 41(3) | A | Rò rỉ |
+| [2] | 02 | Reproducing Popularity Bias: The Effect of Evaluation Strategies — Daniil et al. | TORS 2(1) | A | Thiên lệch |
+| [3] | 03 | Time to Split — Gusak, … , Frolov | RecSys '25 | A* | Chia tập |
+| [4] | 04 | On the Convergent Validity of Offline Evaluation Designs — Parajuli et al. | RecSys '26 | A* | Chia tập |
+| [5] | 05 | Bias and Debias in RS: A Survey — J. Chen et al. | TOIS 41(3) | A | Thiên lệch |
+| [6] | 06 | A survey on popularity bias in RS — Klimashevskaia et al. | UMAI 34(5) | — (Q1) | Thiên lệch |
+| [7] | 09 | On Inherited Popularity Bias in Cold-Start Item Recommendation — Meehan & Pauwels | RecSys '25 | A* | Thiên lệch |
+| [8] | 10 | Relieving Popularity Bias in Interactive Recommendation — X. Shi et al. | TOIS 42(2) | A | Thiên lệch |
+| [9] | 11 | Quality Metrics in RS: Do We Calculate Metrics Consistently? — Tamm et al. | RecSys '21 | A* | Thước đo |
+| [10] | 12 | Exploring Data Splitting Strategies — Meng et al. | RecSys '20 | A* | Chia tập |
+
+Dataset còn 1 mục riêng, không tính vào 10: Harper & Konstan, *The MovieLens Datasets*, TIST 5(4), 2015, `10.1145/2827872` (bắt buộc theo license GroupLens).
+
+**Đếm lại:** 10 bài → **9 bài CORE A/A\*** ( [1][2][3][4][5][7][8][9][10] ), 1 bài Q1 không xếp CORE ([6]). Khớp với card "9 bài CORE A*/A" trên slide 6.
+
+**Bỏ khỏi danh sách trích dẫn (vẫn giữ PDF trong `Papers/`):**
+
+| # gốc | Bài | Lý do bỏ |
+| --- | --- | --- |
+| 07 | SIGIR '23 — Take a Fresh Look at RS from an Evaluation Standpoint | Position paper; nội dung đã phủ bởi [1] và [3]. |
+| 08 | RecSys '23 — On Challenges of Evaluating RS in an Offline Setting | Tutorial abstract 2 trang, không phải bài nghiên cứu. |
+| 13 | J. Big Data 2019 — E-learning RS on Spark and Hadoop | Nhánh "Big Data" — ngoài trọng tâm PPNCKH. CORE C, và không đo split/bias. |
+| 14 | ESWA 2023 — Evaluation framework for RS in big data | Nhánh "Big Data" — ngoài trọng tâm PPNCKH. CORE B, và PDF chưa tải được. |
+
+---
+
 ## 1. Bài neo — dùng trực tiếp trong phần gap
+
+> ⚠️ Số `[n]` trong §1–§3 giữ **theo thứ tự cũ của 14 bài** để khớp với `Papers/01..14` và `Exploration/`. Danh sách trích dẫn chính thức đã rút gọn là **§0B** (10 bài, đánh số `[1]..[10]`).
 
 ### [1] Bằng chứng rò rỉ dữ liệu do chia tập
 
@@ -89,7 +123,9 @@ Thư mục: `docs/References/Papers/` · manifest: `_manifest.json` (DOI, file, 
 
 ---
 
-## 3. Nhánh "RS trên nền tảng Big Data" (bổ sung 07/11 — trước đây trống)
+## 3. Nhánh "RS trên nền tảng Big Data" — **KHÔNG còn dùng làm trích dẫn** (chốt 2026-11-19)
+
+Hai bài dưới đây vẫn nằm trong `Papers/` làm tư liệu nền cho môn Big Data, nhưng **không** đưa vào danh sách trích dẫn của đề cương PPNCKH. Nếu hội đồng hỏi về nền tảng, trả lời bằng chương trình thực nghiệm (Spark/MapReduce) chứ không cần viện dẫn.
 
 | #    | Tiêu đề                                                                              | Venue                                                           | DOI                            | Vai trò                                                                                                                                                                                                                                                             |
 | ---- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -128,14 +164,14 @@ Thư mục: `docs/References/Papers/` · manifest: `_manifest.json` (DOI, file, 
 ```
 [1] TOIS 2023 (3569930) ──┐
 [2] TORS 2024 (3637066) ──┼─→ Known: split ảnh hưởng kết quả; bias bị giấu dưới split ngẫu nhiên
-[12] RecSys'20 (…3418479) ┤
+[10] RecSys'20 (…3418479) ┤
 [3] RecSys'25 (…3748164) ─┘
 [4] RecSys'26 (…3831818) ───→ Thiếu convergent validity
-[11] RecSys'21 (…3478848) ──→ Metric không tính nhất quán giữa các codebase
-[5] TOIS 2023 survey ───────→ Bias = vấn đề đạo đức đã biết (860 cites)
+[9] RecSys'21 (…3478848) ──→ Metric không tính nhất quán giữa các codebase
+[5] TOIS 2023 survey ───────→ Bias = vấn đề đạo đức đã biết
 [6] UMAI 2024 survey ───────→ Định nghĩa chuẩn chỉ số coverage/Gini/exposure
-[13] J.BigData 2019 ────────→ Có pipeline Spark/Hadoop nhưng KHÔNG đo bias/split
-[14] ESWA 2023 ─────────────→ Có framework đánh giá big data nhưng KHÔNG đo split sensitivity
+[7] RecSys'25 cold-start ───→ Bias kế thừa ở item mới (unseen_item)
+[8] TOIS 2024 debias ───────→ Hướng giảm thiên lệch
                     ↓
       CRITICAL GAP: chưa nghiên cứu nào đo ĐỒNG THỜI
       (i) đảo chiều thứ hạng  (ii) mức biến mất của popularity bias
@@ -153,13 +189,13 @@ Script: `scripts/13_prisma_flow.py` → `figures/fig8_prisma_flow.svg`.
 
 | Tiêu chí           | Nội dung                                                                                                                                                                     | Áp dụng            |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| Khoảng thời gian   | 2019–2026                                                                                                                                                                    | cả 14 tài liệu    |
-| Chủ đề            | offline evaluation / data leakage / popularity bias / splitting strategy / Big Data RS                                                                                        | cả 14               |
-| **Loại bài** | **chỉ bài đã publish bởi ACM / IEEE / Springer / Elsevier** (tạp chí hoặc proceedings có DOI). **Loại toàn bộ preprint arXiv chưa qua bình duyệt** | 14/14 đạt          |
+| Khoảng thời gian   | 2019–2026                                                                                                                                                                    | cả 10 tài liệu    |
+| Chủ đề            | offline evaluation / data leakage / popularity bias / splitting strategy                                                                                                     | cả 10               |
+| **Loại bài** | **chỉ bài đã publish bởi ACM / IEEE / Springer / Elsevier** (tạp chí hoặc proceedings có DOI). **Loại toàn bộ preprint arXiv chưa qua bình duyệt** | 10/10 đạt          |
 | Ngôn ngữ           | tiếng Anh                                                                                                                                                                    | ✅                   |
-| Truy cập            | open access hoặc qua thư viện                                                                                                                                              | [14] cần thư viện |
+| Truy cập            | open access hoặc qua thư viện                                                                                                                                              | ✅ 10/10 có PDF |
 
-**Số liệu phải điền khi nộp:** identification (Crossref + OpenAlex + Scopus) → screening → eligibility → included. Bản crypto: 2 nguồn API, 14 bài giữ lại sau khi loại preprint.
+**Số liệu phải điền khi nộp:** identification (Crossref + OpenAlex + Scopus) → screening → eligibility → included. Bản crypto: 2 nguồn API, **14 bài tải về → 10 bài đưa vào danh sách trích dẫn** (loại 07, 08, 13, 14 — xem §0B).
 
 ---
 

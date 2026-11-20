@@ -54,6 +54,7 @@ Tải code không đồng nghĩa với reproduction thành công. Mỗi reposito
 
 > [!NOTE]
 > Cập nhật 2026-11-19: pipeline đã chạy xong notebook 12/13; 5 model × 3 split, 20 cặp kiểm định, slide + plan đã regenerate. Hướng dẫn chạy/đối chiếu: `06_Huong_Dan_Chay_SASRec_va_MRR.md`.
+> Cập nhật 2026-11-20: bổ sung độ đo Bài 04 — `novelty10`/`diversity10` trên 5 baseline (06/08/10/11/13), Friedman trong 09 (4 model/split; SASRec bị loại do eval subset khác). Serendipity KHÔNG đo, Nemenyi KHÔNG chạy. Chi tiết: `../../../Main/Metrics.md` §4.12.
 
 - PDF và text 14 bài đã có ở `docs/References/Papers/`.
 - `Exploration/` trước đây trống; bộ hồ sơ cạnh đây là tài liệu đọc đầu tiên.

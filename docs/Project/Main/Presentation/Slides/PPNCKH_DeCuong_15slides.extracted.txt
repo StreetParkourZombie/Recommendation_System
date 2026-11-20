@@ -6,21 +6,48 @@ SLIDES: 15
 HỌC PHẦN: PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC TRONG CNTT
 Rò rỉ và thiên lệch trong hệ thống gợi ý:
 kiểm tra cách chia dữ liệu bằng Spark
+Cách chia dữ liệu
+Thước đo rò rỉ
+Spark · MovieLens 25M
 Giảng viên: TS. Trần Minh Thái · Khoa CNTT · HUFLIT
 Cách chia dữ liệu → thước đo rò rỉ → thiên lệch phổ biến → hệ thống gợi ý trên Spark, MovieLens 25M
 Sinh viên: Trần Khôi Nguyên (MIT26004) · HUFLIT · 11/2026
+Trọng tâm: quy trình nghiên cứu, không phải demo hạ tầng.
 --- NOTES ---
 Chào hội đồng. Em trình bày đề cương: Rò rỉ và thiên lệch trong hệ thống gợi ý: kiểm tra cách chia dữ liệu bằng Spark. Tiêu đề gồm phương pháp + mục tiêu + phạm vi. Đề tài phục vụ môn Phương pháp nghiên cứu khoa học.
 
 ===== SLIDE 2 =====
 Bố cục trình bày
 2 / 15
-Phần | Nội dung | Tỷ trọng
-CHƯƠNG 1 — Cơ sở | Từ dữ liệu đến quyết định: DIKW + cách tư duy | 20%
-CHƯƠNG 2 — Bài toán & tài liệu | W5H2 · kiểm tra 14 bài · bảng tổng hợp + khoảng trống | 30%
-CHƯƠNG 3 — Đề cương | Mục tiêu · câu hỏi · khả thi · quy trình · chỉ số · kết quả sơ bộ · kế hoạch | 45%
-KẾT LUẬN | Tự đánh giá và giới hạn | 5%
+20%
+CHƯƠNG 1
+CHƯƠNG 1
+Cơ sở
+Hiểu dữ liệu
+3 cách tư duy
+→
+30%
+CHƯƠNG 2
+CHƯƠNG 2
+Bài toán & tài liệu
+6 câu hỏi
+14 bài + bảng tổng hợp
+→
+45%
+CHƯƠNG 3
+CHƯƠNG 3
+Đề cương
+Mục tiêu, chỉ số
+Kết quả, kế hoạch
+→
+5%
+KẾT LUẬN
+KẾT LUẬN
+Tự đánh giá
+Giới hạn
+Hướng thêm
 Thời lượng: khoảng 12 phút trình bày + 5–8 phút hỏi đáp.
+Chương 3 nhận nhiều thời gian nhất.
 --- NOTES ---
 Bố cục bám tỷ trọng hướng dẫn: C1 20%, C2 30%, C3 45%, kết luận 5%. Phần nặng nhất là Chương 3.
 
@@ -28,11 +55,29 @@ Bố cục bám tỷ trọng hướng dẫn: C1 20%, C2 30%, C3 45%, kết luậ
 Từ dữ liệu đến quyết định
 Chương 1 — có gì → thấy gì → hiểu gì → làm gì
 3 / 15
-Bước | Áp dụng vào đề tài
-Dữ liệu | 25.000.095 lượt chấm phim của 162.541 người (MovieLens ml-25m, 1995–2019). Mỗi dòng: ai chấm, phim nào, mấy sao, lúc nào.
-Thông tin | Đếm thật: 0 dòng trùng · 1.799.454 nhóm chấm cùng giây · 8,76% phim ở tập kiểm tra là phim người đó chưa từng chấm.
-Hiểu ra | Cùng ALS, cùng dữ liệu, chỉ đổi cách chia: NDCG@10 từ 0,2581 xuống 0,0469 (thấp hơn 5,5 lần). Số đo phụ thuộc cách chia.
-Quyết định | Đóng gói thành thước đo rò rỉ SLI + kiểm tra 3 bước: coi SLI trước, đọc chỉ số sau; lệch quá 1,2 lần thì dừng so sánh.
+Có gì
+Dữ liệu
+25 triệu lượt chấm; 162.541 người.
+MovieLens 25M (1995–2019).
+Mỗi dòng: ai, phim nào, mấy sao, lúc nào.
+→
+Thấy gì
+Thông tin
+0 dòng trùng.
+1.799.454 nhóm chấm cùng giây.
+8,76% phim kiểm tra là phim người đó chưa chấm.
+→
+Hiểu gì
+Hiểu ra
+Cùng ALS, chỉ đổi cách chia:
+NDCG@10 0,2581 → 0,0469.
+Thấp hơn 5,5 lần.
+→
+Làm gì
+Quyết định
+Đo rò rỉ trước (SLI), đọc chỉ số sau.
+Lệch quá 1,2 lần thì dừng so sánh.
+Ghi rõ điều kiện chia khi báo cáo.
 Đây là ví dụ có số thật của đề tài, không phải ví dụ giả định trong bài giảng.
 --- NOTES ---
 Bốn bước: dữ liệu 25 triệu lượt; thông tin đếm được; hiểu ra số đo đổi 5,5 lần; quyết định dùng SLI và kiểm tra 3 bước.
@@ -76,39 +121,64 @@ Có quy luật sẵn → diễn dịch · Có nhiều quan sát → quy nạp ·
 Ba phương pháp tư duy theo báo cáo và bài giảng: diễn dịch, quy nạp, suy đoán. Chủ đạo là quy nạp vì kết luận chính rút từ nhiều quan sát trên dữ liệu thật. Diễn dịch: lý thuyết TOIS 2022 nói đánh giá offline cần mốc thời gian chung; đem kiểm định trên 3 split thì random 80/20 có SLI tương đối 98,91%, leave-one-out (LOO) là 0%. Một phản ví dụ LOO đủ bác định nghĩa rò rỉ toàn cục. Phản chứng ở đây là bước kiểm chứng thêm, không phải phương pháp thứ 4. Quy nạp: 3 split × 2 mô hình × 6 chỉ số trên 25.000.095 lượt chấm; giới hạn là mới 1 seed; ALS đã chạy đủ 162.541 người. Suy đoán: cùng ALS, NDCG@10 rơi 0,2584 → 0,0474 (đường chạy script 2026-11-04 / Metrics.md mục 4); đoán rò rỉ ở split random; đếm thì 98,91% mẫu test cũ hơn lượt mới nhất của chính người đó, giả thuyết thành bằng chứng. Không trộn số 0,2581 → 0,0469 của đường notebook/FULL vào slide này.
 
 ===== SLIDE 5 =====
-Phân tích bài toán theo W5H2
-Chương 2
+6 câu hỏi của bài toán
+Chương 2 — hỏi đúng thì làm đúng
 5 / 15
-Câu hỏi | Nội dung
-WHAT — cái gì | Cách chia dữ liệu (random 80/20 · theo thời gian · leave-one-out) đổi thước đo và thiên lệch thế nào
-WHO — ai | Người làm gợi ý dùng đánh giá offline; người dùng ít phim bị che khuất
-WHERE / WHEN | Spark trên máy cá nhân; phim 1995–2019; nghiên cứu 11/2026–06/2027
-WHY — vì sao | Chia sai → rò rỉ → kết luận sai → chọn sai mô hình
-HOW MUCH — bao nhiêu | ALS NDCG 0,2581 (random) → 0,0469 (leave-one-out): chênh 5,5 lần
-HOW — làm sao | Kiểm tra 3 cách chia × 5 mô hình × 6 chỉ số trên 25 triệu tương tác
+Chia dữ liệu
+Cái gì?
+Trộn ngẫu nhiên, theo thời gian,
+giữ lượt cuối của mỗi người.
+Cách chia đổi thước đo và thiên lệch.
+Ai bị ảnh hưởng
+Ai?
+Người làm gợi ý đọc kết quả.
+Người dùng ít phim dễ bị che khuất.
+Phạm vi
+Ở đâu / khi nào?
+Spark trên máy cá nhân.
+Phim 1995–2019; nghiên cứu 11/2026–06/2027.
+Lý do
+Vì sao?
+Chia sai → rò rỉ → kết luận sai
+→ chọn sai mô hình.
+Mức chênh
+Bao nhiêu?
+ALS NDCG 0,2581 (trộn) → 0,0469
+(giữ lượt cuối): chênh 5,5 lần.
+Cách kiểm tra
+Làm sao?
+3 cách chia × 5 mô hình × 6 chỉ số
+trên 25 triệu tương tác.
 Chuỗi phát biểu vấn đề: thực trạng → hậu quả → hạn chế của tài liệu → giải pháp (SLI + kiểm tra 3 bước).
 --- NOTES ---
-Thực trạng: đa số dùng random 80/20. Hậu quả: chỉ số phóng đại, thứ hạng có thể đảo. Hạn chế: bài trước đo riêng từng mặt. Giải pháp: SLI + kiểm tra 3 bước.
+W5H2: What, Who, Where/When, Why, How much, How. Thực trạng: đa số dùng random 80/20. Hậu quả: chỉ số phóng đại, thứ hạng có thể đảo. Hạn chế: bài trước đo riêng từng mặt. Giải pháp: SLI + kiểm tra 3 bước.
 
 ===== SLIDE 6 =====
 Kiểm tra tài liệu
 Chương 2 — 14 bài bản nhà xuất bản, không dùng arXiv
 6 / 15
+14
+bài được giữ lại
+9
+bài CORE A*/A
+0
+bài chỉ có arXiv
 Nguồn | Xếp hạng | Số bài
 ACM TOIS / TORS | Q1 · CORE A | 4
 ACM RecSys ('25, '26, '23, '21, '20) | Q1 · CORE A* | 5
 ACM SIGIR '23 | Q1 · CORE A* | 1
 Springer UMAI 2024 / J. Big Data 2019 | Q1 · CORE —/C | 2
 Elsevier ESWA 2023 | Q1 · CORE B | 1
-Cách kiểm tra
-• 14/14 là bản nhà xuất bản; đã kiểm tra thông tin PDF
-• 10/14 có DOI ACM; 9 bài CORE A*/A
-• Loại bài chỉ có arXiv: 10.48550/arxiv.2011.07931
-• Kiểm tra: DOI mở được, có bản quyền ACM/Springer/Elsevier
-• Ghi rõ nguồn: _manifest.json có sha256 từng file
-• Zotero: nhóm thẻ rò rỉ (5), thiên lệch (6), chia tập (2), Big Data (2)
-• Mã nguồn bài đối chuẩn: github.com/putatu/dataLeakageRec
-Chụp trang đầu từng PDF có trong phụ lục. Tìm kiếm theo 3 trục: bài toán – cách làm – phạm vi.
+Cách làm
+Kiểm tra từng bài
+14/14 là bản nhà xuất bản.
+10/14 có DOI ACM.
+Loại bản chỉ có arXiv: 10.48550/arxiv.2011.07931
+DOI mở được, có bản quyền rõ.
+Ghi sha256 trong _manifest.json.
+Zotero: rò rỉ 5 · thiên lệch 6 · chia tập 2 · Big Data 2
+Mã đối chuẩn: github.com/putatu/dataLeakageRec
+Chụp trang đầu từng PDF có trong phụ lục. Tìm theo 3 trục: bài toán – cách làm – phạm vi.
 --- NOTES ---
 Quy trình tìm: DOI từ OpenAlex/Unpaywall → chỉ lấy bản nhà xuất bản → kiểm tra /Creator → tra SCImago/CORE → ghi manifest sha256. 14 bài, 9 bài CORE A*/A. Mã nguồn bài đối chuẩn: github.com/putatu/dataLeakageRec.
 
@@ -116,6 +186,7 @@ Quy trình tìm: DOI từ OpenAlex/Unpaywall → chỉ lấy bản nhà xuất b
 Bảng tổng hợp và khoảng trống
 Chương 2 — hạn chế trong bảng dẫn tới câu hỏi
 7 / 15
+5 bài · 4 nhận xét
 Bài | Cách làm | Kết quả | Hạn chế → chỗ đề tài vào
 Wang, TOIS 2022 | So sánh có/không dùng mốc thời gian chung | Rò rỉ đổi độ đúng và thứ hạng | Chưa có thước đo rò rỉ
 Abdollahpouri, TOIS 2023 | Tách dữ liệu / thuật toán / nhóm người / cách đánh giá | Cách đánh giá giải thích mâu thuẫn | Chưa gắn quy mô lớn
@@ -132,30 +203,56 @@ Bảng 5 bài. 4 ảnh là câu hạn chế cắt từ bản nhà xuất bản, 
 
 ===== SLIDE 8 =====
 Mục tiêu và câu hỏi
-Chương 3
+Chương 3 — việc cần làm gắn với câu hỏi
 8 / 15
-Công thức tiêu đề: [cách làm] + [mục tiêu] + [phạm vi] — kiểm tra cách chia tập → đo rò rỉ và thiên lệch → gợi ý trên Spark, MovieLens 25M
-Việc cần làm | Nội dung | Tỷ trọng | Câu hỏi
-SO1 Dữ liệu | Chuẩn hóa MovieLens 25M; tạo 3 cách chia; đếm phổ biến bằng MapReduce | 20% | —
-SO2 Thước đo | Đề xuất SLI theo từng người, 3 mức + kiểm tra 3 bước | 40% | RQ1, RQ2
-SO3 Đối chuẩn | Chạy 5 mô hình trên 3 cách chia, 1 seed (đã khai báo giới hạn) | 20% | RQ1
-SO4 Thử nghiệm thêm | Đổi ngưỡng liên quan, lấy mẫu nhỏ, thử 2 định nghĩa SLI | 20% | RQ2, RQ4
-RQ1: cách chia có làm đảo thứ hạng? · RQ2: thiên lệch đổi bao nhiêu? · RQ3: chi phí chạy? · RQ4: kiểm tra 3 bước có dùng được? · RQ5 (mở rộng): sang tập dữ liệu khác.
-Biến: độc lập = cách chia; phụ thuộc = NDCG/MRR/SLI; kiểm soát = dữ liệu, seed, ngân sách chỉnh. H0: không khác biệt giữa các cách chia; H1: có khác biệt; bác H0 khi p < 0,05.
+Công thức tiêu đề: [cách làm] + [mục tiêu] + [phạm vi] — kiểm tra cách chia → đo rò rỉ và thiên lệch → Spark, MovieLens 25M
+Tỷ trọng 20%
+Việc 1 · Dữ liệu
+Chuẩn hóa MovieLens 25M.
+Tạo 3 cách chia; đếm phổ biến.
+Chưa gắn câu hỏi riêng.
+Tỷ trọng 40%
+Việc 2 · Thước đo
+SLI theo từng người, 3 mức.
+Kiểm tra 3 bước.
+Trả lời câu hỏi 1, 2.
+Tỷ trọng 20%
+Việc 3 · Đối chuẩn
+5 mô hình × 3 cách chia.
+1 seed (đã khai báo giới hạn).
+Trả lời câu hỏi 1.
+Tỷ trọng 20%
+Việc 4 · Thử thêm
+Đổi ngưỡng; lấy mẫu nhỏ.
+Thử 2 cách tính SLI.
+Trả lời câu hỏi 2, 4.
+Câu hỏi 1: chia tập có đảo thứ hạng? · 2: thiên lệch đổi bao nhiêu? · 3: chi phí chạy?
+Câu hỏi 4: kiểm tra 3 bước dùng được không? · 5 (mở rộng): sang tập dữ liệu khác.
+Biến: độc lập = cách chia; phụ thuộc = NDCG/MRR/SLI; kiểm soát = dữ liệu, seed, ngân sách chỉnh.
+H0: không khác biệt giữa các cách chia; H1: có khác biệt; bác H0 khi p < 0,05.
 --- NOTES ---
-SO2 nặng nhất. S8 dùng 1 seed thay vì 3+ seed như bản cũ. Thêm bảng biến và H0/H1 theo bài giảng 03.
+SO2 nặng nhất. RQ1–RQ5 như slide. S8 dùng 1 seed thay vì 3+ seed như bản cũ. Bảng biến và H0/H1 theo bài giảng 03.
 
 ===== SLIDE 9 =====
 Kiểm tra tính khả thi
-Chương 3 — mỗi ô có một bằng chứng thật
+Chương 3 — mỗi ý có một bằng chứng thật
 9 / 15
-Tiêu chí | Bằng chứng
-F — làm được | Dữ liệu đã tải và đo; thử nghiệm chạy xong trước hạn
-I — đáng quan tâm | Trả lời 'cách đo đúng chưa' quan trọng hơn 'mô hình nào cao hơn'
-N — mới | SLI: leave-one-out tính toàn cục 99,9988% nhưng theo từng người là 0%
-E — đạo đức | Dữ liệu ẩn danh, dùng cho nghiên cứu, có trích nguồn Harper & Konstan
-R — dùng được | Đóng góp là cách kiểm tra, không phải mô hình mới; dùng cho tập có mốc thời gian
-Chữ trong slide dùng cách nói dễ hiểu; tên đầy đủ FINER nằm trong notes để hội đồng đối chiếu.
+Tiêu chí 1
+Làm được
+Dữ liệu đã tải và đo; thử nghiệm chạy xong trước hạn.
+Tiêu chí 2
+Đáng quan tâm
+Trả lời 'cách đo đúng chưa' quan trọng hơn 'mô hình nào cao hơn'.
+Tiêu chí 3
+Mới
+SLI: giữ lượt cuối tính toàn cục 99,9988% nhưng theo từng người là 0%.
+Tiêu chí 4
+Đạo đức
+Dữ liệu ẩn danh, dùng cho nghiên cứu, có trích nguồn Harper & Konstan.
+Tiêu chí 5
+Dùng được
+Đóng góp là cách kiểm tra, không phải mô hình mới; dùng cho tập có mốc thời gian.
+Tên đầy đủ 5 tiêu chí nằm trong speaker notes để hội đồng đối chiếu.
 --- NOTES ---
 FINER = Feasible, Interesting, Novel, Ethical, Relevant. Mỗi ô gắn một bằng chứng có số hoặc có nguồn.
 
@@ -163,26 +260,46 @@ FINER = Feasible, Interesting, Novel, Ethical, Relevant. Mỗi ô gắn một b�
 Quy trình thực hiện
 Chương 3 — bốn tầng, đã chạy thật
 10 / 15
+Tầng 1 · Chứa dữ liệu
+CSV 25M → Parquet
+Spark đọc trực tiếp
+Tầng 2 · Xử lý lớn
+MapReduce + Spark
+323.737 khóa phổ biến
+Tầng 3 · Lưu kết quả
+MongoDB
+42 trường audit
+Tầng 4 · Xem & kiểm định
+R + Streamlit
+Wilcoxon theo từng người
 MapReduce chạy xong 2026-11-04 (container đã gỡ, dựng lại được) · đối chiếu G3 đúng 100% · 10/10 notebook đạt · 4 mô hình CPU, SASRec GPU local.
 --- NOTES ---
 Bốn tầng: lưu trữ Parquet + Spark; xử lý lớn MapReduce Java + PySpark local[4]; lưu chỉ số MongoDB; trình bày R + Streamlit. SASRec chạy GPU RTX 4050 6 GB.
 
 ===== SLIDE 11 =====
 Chỉ số và mô hình đối chuẩn
-Chương 3
+Chương 3 — đo gì, so với ai
 11 / 15
-Chỉ số của đề tài
-SLI = trung bình tỷ lệ rò rỉ theo từng người; không dùng tỷ lệ gộp cả tập
-3 mức: an toàn < 0,05 · nhẹ 0,05–0,30 · nặng ≥ 0,30
+Chỉ số rò rỉ
+SLI
+Trung bình tỷ lệ rò rỉ theo từng người.
+Không dùng tỷ lệ gộp cả tập.
+An toàn < 0,05 · nhẹ 0,05–0,30 · nặng ≥ 0,30
 Chỉ số xếp hạng
-NDCG@10 = DCG/IDCG (5 ca tính tay, sai số 1e-12) · Hit@10 · Recall@10 · MRR@10
+NDCG / MRR
+NDCG@10 = DCG/IDCG (5 ca tính tay).
+Hit@10 · Recall@10 · MRR@10.
 Chỉ số thiên lệch
-độ phủ danh mục · Gini mức hiển thị · tỷ lệ phim phổ biến · độ phủ phim ít người xem
-5/5 mô hình đã chạy: sàn (MostPopular, Random) · kinh điển (ALS, ItemKNN) · đối chuẩn mới (SASRec + CE)
-SASRec + CE là mô hình đối chuẩn, KHÔNG phải mô hình thắng; GPU RTX 4050 6 GB, seed 42, không chỉnh thêm
-4 mô hình chạy CPU, SASRec chạy GPU; KHÔNG so thời gian CPU với GPU
-Kiểm định: Wilcoxon theo từng người + khoảng tin cậy 95% + độ lớn hiệu ứng
-20/20 cặp có ít nhất 30 người; ít nhất 6.214 người
+Độ phủ
+Độ phủ danh mục · Gini mức hiển thị.
+Tỷ lệ phim phổ biến · độ phủ phim ít xem.
+5/5 mô hình đã chạy
+Ba nhóm đối chuẩn
+Sàn: MostPopular, Random · Kinh điển: ALS, ItemKNN · Đối chuẩn mới: SASRec + CE.
+SASRec + CE là mô hình đối chuẩn, KHÔNG phải mô hình thắng; GPU RTX 4050 6 GB, seed 42, không chỉnh thêm.
+4 mô hình chạy CPU, SASRec chạy GPU; KHÔNG so thời gian CPU với GPU.
+Kiểm định: Wilcoxon theo từng người + khoảng tin cậy 95% + độ lớn hiệu ứng.
+20/20 cặp có ít nhất 30 người; ít nhất 6.214 người. Dùng Wilcoxon vì điểm theo từng người lệch phải.
 --- NOTES ---
 Wilcoxon dùng vì NDCG theo từng người lệch phải. 20 cặp gồm 12 cặp baseline + 8 cặp SASRec. SASRec là SOTA reference/local reproduction, tuning_budget=0, không phải model thắng.
 
@@ -190,6 +307,8 @@ Wilcoxon dùng vì NDCG theo từng người lệch phải. 20 cặp gồm 12 c�
 Kết quả sơ bộ
 Chương 3 — số thật, chưa phải kết luận cuối
 12 / 15
+Rò rỉ theo từng người
+Thứ hạng đổi thế nào
 Mô hình | NDCG r80 | NDCG thời gian | NDCG LOO | MRR r80 | MRR thời gian | MRR LOO
 ItemKNN | 0,2679 | 0,1409 | 0,0461 | 0,4604 | 0,2644 | 0,0330
 ALS | 0,2581 | 0,1332 | 0,0469 | 0,4342 | 0,2491 | 0,0328
@@ -204,38 +323,54 @@ ItemKNN dẫn ở random và temporal; ALS dẫn ở LOO nhưng p=0,153, CI ch�
 
 ===== SLIDE 13 =====
 Hiệu quả, chi phí và kế hoạch
-Chương 3
+Chương 3 — chặn sớm, làm tiếp theo lộ trình
 13 / 15
-Hiệu quả và chi phí
-• Kiểm tra tự chặn 3/3 cặp so không hợp lệ (lệch 25,5× / 1,65× / 15,4× > 1,2)
-• Tính SLI khoảng 2 phút cho mỗi cách chia mới
-• 3 kết quả: thước đo SLI · cách kiểm tra 3 bước · pipeline chạy lại được
-• 1 laptop i7-13620H, 32 GB, RTX 4050 6 GB; không dùng cloud
-Rủi ro và cách xử lý
-• SASRec chạy được trên GPU 6 GB; chưa chỉnh thêm, chưa hết bộ nhớ
-• Hạ tầng lỗi → giữ Spark trên máy, vẫn đọc được Parquet
-• Thiếu thời gian → bỏ RQ5 (sang tập khác)
-• Mới 1 seed → nói rõ giới hạn
+Hiệu quả
+Chạy nhanh, chặn sớm
+Kiểm tra tự chặn 3/3 cặp so không hợp lệ.
+Lệch 25,5× / 1,65× / 15,4× > ngưỡng 1,2.
+Tính SLI khoảng 2 phút cho mỗi cách chia mới.
+3 kết quả: thước đo SLI · kiểm tra 3 bước · pipeline chạy lại được.
+Rủi ro
+Có phương án dự phòng
+SASRec chạy được trên GPU 6 GB; chưa chỉnh thêm.
+Hạ tầng lỗi → giữ Spark trên máy, vẫn đọc Parquet.
+Thiếu thời gian → bỏ câu hỏi 5 (sang tập khác).
+Mới 1 seed → nói rõ giới hạn.
 Giai đoạn | Nội dung | Kết quả | Mốc
 G1 | Xong SASRec trên GPU; EASE không đăng ký nên không chạy | Bảng 3 cách chia × 5 mô hình | 11/2026
 G2 | Xong Wilcoxon + CI + độ lớn; 20/20 cặp | Thêm biểu đồ nếu có thời gian | 01/2027
 G3 | Viết báo cáo + thử giao diện | Báo cáo nháp | 02/2027
 G4 | Phản biện nội bộ + sửa | Bản cuối | 03/2027
 G5 | Bảo vệ | Slide + demo | 06/2027
+Chi phí: 1 laptop i7-13620H, 32 GB, RTX 4050 6 GB; không dùng cloud.
 Mã nguồn và tham số: https://github.com/StreetParkourZombie/Recommendation_System
 --- NOTES ---
 Giao thức chặn 3/3 cặp so sai. ROI: 1 laptop, 3 kết quả. Kế hoạch 5 giai đoạn đến 06/2027. Repo công khai: https://github.com/StreetParkourZombie/Recommendation_System
 
 ===== SLIDE 14 =====
 Tự đánh giá và giới hạn
-Kết luận
+Kết luận — nói thẳng điều đã làm và chưa làm
 14 / 15
-Mặt | Trạng thái
-Dữ liệu | Hợp pháp, ẩn danh, đã kiểm tra sha256, dùng cho nghiên cứu
-Kỹ thuật | PySpark + MapReduce Java + MongoDB + R + Streamlit; MapReduce chạy thật 2026-11-04
-Thời gian & máy | Laptop RTX 4050 6 GB; các bước G1–G5 đến 06/2027
-Giới hạn nói thẳng | local[4] không phải cụm; container đã gỡ; 5/5 mô hình chạy (SASRec GPU, tập người con); không so CPU/GPU; 1 seed; không Mean±Std; không đo bộ nhớ; không so NDCG giữa các split
-Hướng thêm | Sang tập khác (Amazon/Steam); thêm seed; chỉnh SASRec; đo bộ nhớ; nếu có thời gian thêm Friedman/Nemenyi
+Hợp lệ
+Dữ liệu
+Ẩn danh, dùng cho nghiên cứu.
+Đã kiểm tra sha256, trích nguồn.
+Chạy thật
+Kỹ thuật
+PySpark + MapReduce + MongoDB.
+R + Streamlit; MapReduce xong 2026-11-04.
+Rõ ràng
+Thời gian & máy
+Laptop RTX 4050 6 GB.
+G1–G5 đến 06/2027.
+Còn việc
+Hướng thêm
+Sang tập khác; thêm seed.
+Chỉnh SASRec; đo bộ nhớ.
+Giới hạn nói thẳng: local[4] không phải cụm; container đã gỡ; 5/5 mô hình chạy (SASRec GPU, tập người con);
+không so CPU/GPU; 1 seed; không Mean±Std; không đo bộ nhớ; không so NDCG giữa các split.
+Chưa nhận bản sao SOTA đầy đủ; muốn chắc hơn thì thêm seed, thêm tập dữ liệu, đo thêm bộ nhớ.
 Bốn nhóm an toàn của nghiên cứu: dữ liệu/thiết kế/đo lường/thống kê — mới đáp ứng một phần; cách giảm rủi ro được ghi ở dòng giới hạn.
 --- NOTES ---
 Nói thẳng giới hạn trước khi hội đồng hỏi. Chưa chứng minh ổn định qua seed, chưa đo memory, chưa so runtime CPU/GPU. Không nhận SOTA replication đầy đủ.
@@ -250,7 +385,13 @@ Cảm ơn hội đồng
 [3] | Y. Chen et al., “Time to Split,” Proc. RecSys '25, 2025, pp. 874–883. DOI: 10.1145/3705328.3748164
 [4] | “On the Convergent Validity of Offline Evaluation Designs,” Proc. RecSys '26, 2026. DOI: 10.1145/3773078.3831818
 [5] | F. M. Harper and J. A. Konstan, “The MovieLens Datasets,” ACM TIST, 5(4), 2015. DOI: 10.1145/2827872
+Chuẩn bị
+Câu hỏi dự phòng
+Vì sao giữ lượt cuối lại không rò rỉ?
+ALS có chạy đủ 162.541 người không?
+Mới 1 seed thì có đủ chưa?
+SASRec có phải mô hình thắng không?
 Mã nguồn và tham số: https://github.com/StreetParkourZombie/Recommendation_System
-Câu hỏi dự phòng: vì sao LOO không rò rỉ? · ALS có chạy đủ 162.541 người không? · 1 seed có đủ chưa?
+Giải thích ngắn nằm trong speaker notes của từng slide.
 --- NOTES ---
 Giải thích ngắn: LOO lấy mốc là lượt muộn nhất của chính người đó; ALS chạy đủ 162.541 người; mới 1 seed nên chưa nói độ ổn định. SASRec là đối chuẩn, không phải mô hình thắng.

@@ -1,12 +1,12 @@
 # Kế hoạch tạo slide thuyết trình PPNCKH — bảo vệ đề cương
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-18
+**Cập nhật:** 2026-11-19
 **Mục đích:** Bảo vệ đề cương PPNCKH. Slide khớp artifact cuối: 5 model, 20 cặp kiểm định, SASRec+CE GPU local, 1 seed, 3 split. 
 
 **Căn cứ:**
 - [HD Chuan bi thuyet trinh.pdf](file:///d:/Master%20Exers/Big%20Data/Recomendation_System/docs/References/HUFLIT/Research_Methods/HD%20Chuan%20bi%20thuyet%20trinh.pdf) (TS. Trần Minh Thái — 12 slide mẫu, tỷ trọng C1 20% / C2 30% / C3 45% / KL 5% + Q&A)
-- 14 paper Q1/CORE A*/A (docs/References/Papers/ + `_manifest.json`)
+- 10 paper Q1/CORE A*/A dung trong de cuong (14 PDF trong docs/References/Papers/, 4 bai archived)
 - Đề tài, W5H2, FINER, gap 3 phần, SLI — `docs/Project/Plans/Research/`
 - Kết quả đo thật (PoC 2026-11-04 + notebook 04–09 2026-11-15) — dùng làm **kết quả sơ bộ chứng minh khả thi**, không phải deliverable chính
 
@@ -18,7 +18,7 @@
 |---|---|
 | Số slide | **15** (trong khoảng 10–20 cho phép) |
 | Công cụ | `python-pptx` — script sinh slide (`scripts/generate_slides.py`) + dùng 1 slide mẫu của file HD làm reference layout (Title and Content / Two Content, footer `x / 15`) |
-| Cỡ chữ | Title 30pt; thân slide 11–17pt; bảng dày 9–13pt. Chưa đạt mức ≥24pt của hướng dẫn. Muốn đạt: đẩy bảng dày sang phụ lục, thân slide chỉ giữ 3 số chính. |
+| Cỡ chữ | Title 30pt. Thân/thẻ/bảng dày 9–15pt (phần lớn 9–11pt), nhãn 8.5–11.5pt, số lớn 20pt. Chưa đạt mức ≥24pt của hướng dẫn; giữ nhỏ để tránh tràn. Muốn đạt: đẩy bảng dày sang phụ lục, thân slide chỉ giữ 3 số chính. |
 | Nền | Sáng (trắng / trắng ngà), một accent màu; không animation |
 | Ngôn ngữ | Tiếng Việt, cách nói dễ hiểu. Tên chỉ số/mô hình giữ nguyên khi cần tra cứu (SLI, NDCG@10, MRR@10, SASRec); giải thích bằng tiếng Việt ngay bên cạnh. |
 | Trực quan | Sơ đồ + bảng thay đoạn văn; mỗi slide ≤ 2 khối thông tin |
@@ -35,7 +35,7 @@
 | 3 | **DIKW áp dụng vào đề tài** | C1 20% | mục §4 dưới đây |
 | 4 | **Phương pháp tư duy** (3 cách: diễn dịch – quy nạp – suy đoán; phản chứng là bước kiểm chứng thêm) | C1 20% | mục §5 |
 | 5 | **W5H2** — bài toán thực tiễn | C2 30% | `01_De_tai…` §4 |
-| 6 | **Quản lý tài liệu — 14 bài đã thu thập + kiểm tra độ uy tín** (chụp trang PDF + SCImago/CORE) | C2 30% | `docs/References/Papers/_manifest.json` |
+| 6 | **Quản lý tài liệu — 10 bài trích dẫn + kiểm tra độ uy tín** (chụp trang PDF + SCImago/CORE) | C2 30% | `docs/References/Papers/_manifest.json` |
 | 7 | **Ma trận tổng hợp tài liệu** (5 bài Q1/CORE A*) + khoảng trống | C2 30% | `04_Ma_tran_tong_quan_5_cot.md`, `07_Gap_3_phan…` |
 | 8 | **Tiêu đề + GO/SO + RQ** (gắn kết) | C3 45% | `01` §1, §3; `08` §6 |
 | 9 | **FINER** (5 ô, mỗi ô 1 bằng chứng thật) | C3 45% | `01` §5 |
@@ -73,14 +73,14 @@
 | **Who** | Nhà nghiên cứu RS dùng kết quả đánh giá offline; user long-tail bị che khuất |
 | **Where/When** | Pipeline Spark/HDFS/MapReduce cục bộ; dữ liệu phim 1995–2019; nghiên cứu 11/2026–06/2027 |
 | **Why** | Split sai → rò rỉ → kết luận sai → quyết định triển khai sai |
-| **How much** | Chứng minh định lượng: ALS NDCG 0,2584 (random) → 0,0467 (LOO) = chênh **5,5×** trên cùng mô hình, cùng dữ liệu |
+| **How much** | Chứng minh định lượng: ALS NDCG 0,2581 (random) → 0,0469 (LOO, notebook FULL 2026-11-17) = chênh **5,5×** trên cùng mô hình, cùng dữ liệu |
 | **How** | Audit framework 3 split × 2+ model × 6 metric trên 25M tương tác |
 
 > Phát biểu vấn đề 4 bước (dùng notes): Thực trạng (đa số đánh giá trên random 80/20) → Hậu quả (NDCG phóng đại ảo, thứ hạng có thể đảo) → Hạn chế của tài liệu (đo từng khía cạnh riêng lẻ) → Giải pháp (SLI + giao thức audit).
 
-### Slide 6 — Quản lý tài liệu: 14 bài đã thu thập + kiểm tra độ uy tín
+### Slide 6 — Quản lý tài liệu: 10 bài trích dẫn + kiểm tra độ uy tín
 
-**Layout Two Content.** Trái: ảnh chụp (screenshot) trang PDF của từng bài từ trang nhà xuất bản — nhóm 5 bài chính + thumbnail 9 bài còn lại nhỏ hơn. Phải: bảng uy tín.
+**Layout Two Content.** Trái: ảnh chụp (screenshot) trang PDF của từng bài từ trang nhà xuất bản — nhóm 5 bài chính + thumbnail 5 bài còn lại nhỏ hơn. Phải: bảng uy tín.
 
 **Ảnh chụp bắt buộc** (lấy từ chính file PDF có trong `docs/References/Papers/` — các bản **published version**, đã verify `/Creator` là `acmart`/`Springer`/`Elsevier`, không phải arXiv):
 
@@ -91,7 +91,7 @@
 | 3 | RecSys '25 Time to Split | trang đầu | `acmart` |
 | 4 | RecSys '26 Convergent Validity | trang đầu | `acmart` |
 | 5 | TOIS 2022 Bias/Debias Survey | trang đầu | `acmart` |
-| 6–14 | 9 bài còn lại | thumbnail hàng đầu + logo journal | `_manifest.json` |
+| 06–10 | 5 bài còn lại | thumbnail hàng đầu + logo journal | `_manifest.json` |
 
 **Bảng độ uy tín (cột phải):**
 
@@ -105,7 +105,7 @@
 | J. Big Data 2019 | SpringerOpen | Q1 | C |
 | ESWA 2023 | Elsevier Expert Systems with Applications | **Q1** | B |
 
-> **Yêu cầu Think–Check–Submit** (ghi dưới bảng): mọi bài đều là **bản nhà xuất bản** (không arXiv — đã loại `10.48550/arxiv.2011.07931`), DOI resolve được, có footer bản quyền ACM/Springer/Elsevier trên PDF. Đóng góp: 14/14 bài ≥ Q1 hoặc CORE B, trong đó **9 bài CORE A*/A**.
+> **Yêu cầu Think–Check–Submit** (ghi dưới bảng): mọi bài đều là **bản nhà xuất bản** (không arXiv — đã loại `10.48550/arxiv.2011.07931`), DOI resolve được, có footer bản quyền ACM/Springer trên PDF. Đóng góp: **10/10 bài ≥ Q1**, trong đó **9 bài CORE A*/A**, 1 bài Q1 chưa xếp CORE (UMAI 2024).
 >
 > **Nguồn số liệu SCImago/CORE:** tra web tại `scimagojr.com` + `coreportal.org` trước khi dựng slide; chụp màn hình kết quả tra, dán vào speaker notes làm bằng chứng.
 
@@ -115,9 +115,9 @@
 |---|---|---|---|
 | Wang et al. — **TOIS 2022 (Q1)** `10.1145/3569930` | So sánh protocol có/không global timeline; BPR, NeuMF, SASRec, LightGCN | Leakage thay đổi accuracy và thứ hạng | Chưa định nghĩa **chỉ số** đo rò rỉ |
 | Abdollahpouri et al. — **TOIS 2023 (Q1)** `10.1145/3637066` | Tách 4 yếu tố: data/algorithm/user-group/eval-strategy | Eval strategy giải thích phần lớn mâu thuẫn bias | Chưa gắn với quy mô Big Data |
-| Chen et al. — **RecSys '25 (CORE A*)** `10.1145/3705328.3748164` | SASRec+/BERT4Rec/GRU4Rec × 8 dataset, RePlay | Split strategy thay đổi thứ hạng sequential | Chỉ sequential RS; H100 GPU |
-| RecSys '26 (CORE A*) `10.1145/3773078.3831818` | Convergent validity của các thiết kế offline | Sparse ranking ≠ dense judgment | Chưa đo coverage/bias kèm rank |
-| RecSys '20 (CORE A*) `10.1145/3383313.3418479` | So sánh split strategies | Split là lựa chọn thiết kế | Tiền thân, quy mô vừa |
+| Gusak, …, Frolov — **RecSys '25 (CORE A*)** `10.1145/3705328.3748164` | SASRec+/BERT4Rec/GRU4Rec × 8 dataset, RePlay | Split strategy thay đổi thứ hạng sequential | Chỉ sequential RS; H100 GPU |
+| Parajuli et al. — RecSys '26 (CORE A*) `10.1145/3773078.3831818` | Convergent validity của các thiết kế offline | Sparse ranking ≠ dense judgment | Chưa đo coverage/bias kèm rank |
+| Meng et al. — RecSys '20 (CORE A*) `10.1145/3383313.3418479` | So sánh split strategies | Split là lựa chọn thiết kế | Tiền thân, quy mô vừa |
 
 > **Khoảng trống (đọc nguyên văn gap 3 phần — 237 từ, rút gọn còn ~80 từ cho slide):** Chưa có nghiên cứu nào đo **đồng thời** (i) đảo chiều thứ hạng, (ii) mức biến mất của thiên lệch phổ biến, (iii) chi phí Big Data — trên **cùng một pipeline**. Đo riêng lẻ thì không biết các hiệu ứng **cộng hưởng hay triệt tiêu nhau**.
 
@@ -200,7 +200,7 @@ Bảng 5 model × 3 cách chia (từ artifact cuối):
 | 2 | Nhồi nội dung theo §3; mỗi slide ≤ 6 dòng bullet + 1 bảng/sơ đồ | slide hoàn chỉnh nội dung | 1 phiên |
 | 3 | Vẽ 2 hình riêng bằng matplotlib cho slide 10 (kiến trúc) và slide 12 (SLI 3 cột: toàn cục vs tương đối — chính là hình số 1 luận văn theo `08` §7.2) | 2 PNG | 1 phiên |
 | 4 | Speaker notes cho từng slide: script nói + 3 câu hỏi dự phòng mỗi slide | notes | 1 phiên |
-| 5 | Rà soát checklist §5; sửa cỡ chữ ≥ 24pt (bảng 20pt) | bản nộp | nửa phiên |
+| 5 | Rà soát checklist §5; kiểm tra cỡ chữ 9–30pt, fit text | bản nộp | nửa phiên |
 | 6 | (Tùy chọn) Export PDF dự phòng | `.pdf` | 5 phút |
 
 > **Nguyên tắc an toàn:** nội dung slide **không phụ thuộc** kết quả chạy tiếp theo. Slide 12 dùng số đã đo + disclaimer. Nếu thực nghiệm có thêm số mới (3 seed, EASE) thì chỉ cần cập nhật bảng slide 12 — không phải dựng lại.
@@ -224,7 +224,7 @@ Bảng 5 model × 3 cách chia (từ artifact cuối):
 | Tự đánh giá: dữ liệu/năng lực/nguồn lực/giới hạn | 14 | ✅ |
 | Q&A slide cuối + repo URL | 15 | ✅ |
 | Nền sáng, sơ đồ/bảng thay văn dài, không tràn/overlap | toàn bộ | ✅ |
-| Cỡ chữ ≥ 24pt | toàn bộ | ⚠️ Chưa; bảng 9–13pt để tránh tràn |
+| Cỡ chữ ≥ 24pt | toàn bộ | ⚠️ Chưa; thân/bảng 9–15pt, title 30pt. Giữ nhỏ để hết tràn; nếu bắt buộc ≥24pt, chuyển bảng sang phụ lục |
 | Footer `x / 15` (đánh số mọi slide) | toàn bộ | ✅ |
 
 ## 6. Rủi ro khi dựng slide + ứng phó
@@ -249,7 +249,7 @@ Bảng 5 model × 3 cách chia (từ artifact cuối):
 - S13/S15: thêm repo `https://github.com/StreetParkourZombie/Recommendation_System`.
 - S14: thêm bốn nhóm an toàn dữ liệu/thiết kế/đo lường/thống kê ở mức tóm tắt.
 - Deck `PPNCKH_DeCuong_15slides_Self-Adjustion.pptx` cũ, lỗi thời; không dùng làm bằng chứng.
-- Hạn chế còn lại: cỡ chữ bảng dày 9–13pt, chưa đạt ≥24pt. Giữ để tránh tràn/overlap; nếu hội đồng bắt buộc ≥24pt, chuyển bảng sang phụ lục.
+- Hạn chế còn lại: cỡ chữ thân/bảng 9–15pt (title 30pt), chưa đạt ≥24pt. `check_text_fit.py` cho `TOTAL_FLAGS 0`. Nếu hội đồng bắt buộc ≥24pt, chuyển bảng sang phụ lục.
 
 ## Chốt slide 4 — bản thân thiện người xem (2026-11-19)
 
@@ -263,3 +263,13 @@ Slide 4 đã đổi từ dạng bullets sang **3 thẻ màu ngang hàng**, mỗi
 - Số liệu giữ nguyên nguồn: `98,91%`, `0%`, `0,2584 → 0,0474` (đường script 2026-11-04 / `Metrics.md` mục 4), `25 triệu lượt chấm`. Không trộn `0,2581 → 0,0469` của đường notebook/FULL.
 - Generator: helper `add_thinking_card`, modifier excluded `decor_*` khỏi kiểm tra chồng chéo; chạy `scripts/generate_slides.py` cho kết quả `15 slides, layout checked`.
 - Không sửa `.tex`, không chạy lại notebook.
+
+
+## Chốt bản trang trí toàn deck (2026-11-19)
+
+- Áp dụng component PowerPoint gốc (thẻ bo góc, badge, stat card, banner, mũi tên, thanh chú thích) cho mọi slide 1–15. Cách nói đời thường; tên kỹ thuật đầy đủ giữ trong speaker notes.
+- Slide 4 giữ nguyên đúng 3 cách: `Diễn dịch`, `Quy nạp` (**CHỦ ĐẠO**), `Suy đoán`. `Phản chứng` là bước kiểm chứng thêm, không phải phương pháp thứ 4.
+- Slide 10: 4 ô tầng đổi sang helper `add_compact_card` (mỗi ô một khung chữ + thanh màu) để hết tràn. Slide 11: thu nhỏ đầu thẻ đối chuẩn. Slide 13: tăng chiều cao thẻ rủi ro.
+- Kiểm tra: `py_compile` OK; generator in `15 slides, layout checked`; `verify_final_slides.py` giữ nguyên các check đúng/sai; `check_text_fit.py` cho `TOTAL_FLAGS 0`.
+- Extracted text làm mới: `docs/Project/Main/Presentation/Slides/PPNCKH_DeCuong_15slides.extracted.txt`.
+- Không sửa `.tex`, không chạy lại notebook, không commit/push.

@@ -42,6 +42,13 @@ Chạy cho **3 chiến lược split**, mỗi chiến lược trả về:
 | `longtail_coverage` | số item long-tail (pop ≤ P20) được đề xuất / tổng số item long-tail |
 | `avg_pop_rec` / `avg_pop_all` | popularity trung bình của item được đề xuất / của toàn catalog |
 | `popularity_bias_ratio` | `avg_pop_rec / avg_pop_all` — **> 1 nghĩa là thiên lệch về phim phổ biến** |
+| `hit_rate10` | tỷ lệ user có ít nhất 1 item relevant trong top-10 |
+| `recall10` | số item relevant trong top-10 / tổng số item relevant của user |
+| `mrr10` | nghịch đảo hạng của item relevant đầu tiên (0 nếu không có) |
+| `novelty10` | trung bình `-log2(pop_train(item)/P_train)` trên top-10 — cao hơn = ít phổ biến hơn (**bổ sung 2026-11-20, Bài 04 Phần 3**) |
+| `diversity10` | trung bình `1 − Jaccard(genre_i, genre_j)` trên mọi cặp trong top-10 — cao hơn = đa dạng thể loại hơn (**bổ sung 2026-11-20**) |
+| `serendipity` | **KHÔNG đo** — cần model "nguyên thuỷ" làm mốc, đề tài không có |
+| `fit_seconds` / `total_seconds` | chi phí vận hành (RQ3); bộ nhớ (RSS/VRAM) **KHÔNG đo** |
 
 ### 1.4 Tầng 3 — ALS (Implicit + Explicit)
 
@@ -135,6 +142,7 @@ Adam lr 1e-3 · max 300 epoch · early stop patience 10 (BERT4Rec 20).
 3. **Checksum dataset** lưu trong `data/raw/CHECKSUMS.sha256` (chỉ hash, không commit dữ liệu).
 4. Không dùng `F.rand` không seed; không dùng `current_date` trong logic.
 5. **Seed: 42 cho mọi mô hình** (1 seed — giới hạn đã khai báo, không phải 10 seed). Vì không có Mean ± Std, mọi kết luận chênh lệch phải kèm **kiểm định cặp per-user** (Wilcoxon + 95% CI + effect size r) — notebook 12, 20 cặp.
+6. **So ≥3 mô hình cùng lúc thì dùng Friedman** (giả thuyết không: mọi mô hình ngang nhau), rồi Nemenyi post-hoc để biết cặp nào khác — Demšar, JMLR 2006. Đã cài trong notebook 09 (**bổ sung 2026-11-20**): 4 mô hình dùng chung tập user (bỏ SASRec vì tập eval khác), 5.000 user/split. Kết quả: χ² = 7.017,3 / 4.206,0 / 773,1, p ≈ 0 ở cả 3 split → bác bỏ "ngang nhau". **Nemenyi chưa chạy** — chỉ ra cặp cụ thể hiện dùng Wilcoxon notebook 12.
 6. **Khai báo phần cứng** mỗi lần chạy: `scripts/18_hardware_log.py` → `logs/hardware.txt` (tiêu chí 6 của Bài 03).
 7. **Ngân sách tinh chỉnh bằng nhau** giữa mô hình đề xuất và baseline — ghi rõ số cấu hình thử.
 8. **Ba tầng baseline** (sàn / kinh điển / SOTA) — xem §1.5 và `05C_Baseline_3_tang_DSRM.md`.

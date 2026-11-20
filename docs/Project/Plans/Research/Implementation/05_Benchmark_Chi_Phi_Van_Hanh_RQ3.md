@@ -108,3 +108,37 @@ Cách đo rẻ, đề xuất (**chưa triển khai** — cần duyệt trước 
 - [x] `mrr_at_k` đã có trong `src/audit/metrics.py` và đã đo ở cả 5 model (xem `Metrics.md` §4.10).
 - [ ] Bảng slide 12: bold tốt nhất, underline nhì, `(*)` p<0,05 — lấy nguồn dấu sao từ `paired_stats.json` (run `20261118_151202_..._9b864f59`).
 - [x] Cột `fit_seconds`/`total_seconds` cho 5 model trên slide 12 (footer chi phí RQ3: ALS 286,7 s, ItemKNN 499,7 s, Random 111,1 s, MostPopular 15,3 s).
+
+---
+
+## 7. Cập nhật 2026-11-20 — re-run 5 notebook để lấy Novelty/Diversity (Bài 04 Phần 3)
+
+Re-run cả 5 notebook baseline để thêm `novelty10` / `diversity10` vào từng `*_summary.json` nên runtime đo lại toàn bộ. Cùng máy, cùng `local[4]`, cùng seed 42, cùng protocol. Chênh lệch so với bảng §2 là **dao động I/O + tải máy**, không phải thay đổi thuật toán.
+
+| Split | Model | fit (giây) | total (giây) |
+|---|---|---:|---:|
+| `random80_20` | MostPopular | — | 10,5 * |
+| `random80_20` | Random | 0,0 | 48,1 |
+| `random80_20` | ALS | 38,7 | 103,7 |
+| `random80_20` | ItemKNN | 61,5 | 203,1 |
+| `random80_20` | SASRec+CE | 491,9 | 558,2 |
+| `temporal_global` | MostPopular | — | 2,5 * |
+| `temporal_global` | Random | 0,0 | 17,1 |
+| `temporal_global` | ALS | 36,2 | 65,9 |
+| `temporal_global` | ItemKNN | 55,0 | 88,0 |
+| `temporal_global` | SASRec+CE | 304,6 | 332,1 |
+| `leave_one_out` | MostPopular | — | 3,8 * |
+| `leave_one_out` | Random | 0,0 | 34,2 |
+| `leave_one_out` | ALS | 35,2 | 91,6 |
+| `leave_one_out` | ItemKNN | 77,4 | 172,3 |
+| `leave_one_out` | SASRec+CE | 524,4 | 564,1 |
+
+\* MostPopular chỉ ghi `elapsed_seconds`.
+
+Tổng 3 split theo đợt run này: ALS **261,2 s**, ItemKNN **463,4 s**, Random **99,4 s**, MostPopular **16,8 s**, SASRec+CE **1.454,4 s** (GPU, không so trực tiếp với 4 baseline CPU).
+
+**Chi phí đo thêm của novelty/diversity: gần 0.** Chỉ cộng thêm `diversity_metrics` một lần mỗi split: đọc `movies.csv` (62.423 phim, cache module-level 0,23 s lần đầu) + 5.000 user × 45 cặp Jaccard. Không đáng kể so với 91,6–564,1 s của một split. `total_seconds` không tăng vì đã nằm trong cùng cell đánh giá.
+
+**Cảnh báo đọc cột total:** SASRec+CE chạy **GPU RTX 4050 6 GB**, 4 baseline còn lại chạy **CPU** Spark `local[4]`. Không được kết luận "SASRec đắt hơn 5×" — khác phần cứng.
+
+Run id đợt này: `20261120_004801_06_..._cde8a34b` (MostPopular), `20261120_012429_08_..._73a9947b` (ALS), `20261120_004945_10_..._dc453187` (Random), `20261120_005139_11_..._979f28e2` (ItemKNN), `20261120_005943_13_..._f31d7945` (SASRec), ghép đối chiếu `20261120_012944_09_..._21d0811a`. Chi tiết chỉ số: `Metrics.md` §4.12.

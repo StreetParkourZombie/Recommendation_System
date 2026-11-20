@@ -2,6 +2,7 @@
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
 **Verify:** 2026-11-04 00:20 GMT+7
+**Cập nhật:** 2026-11-20 — xác nhận lại môi trường khi rerun 5 notebook: scipy 1.18.0, pandas 3.0.3, pyarrow 26.0.0, PyTorch 2.14.1+cu126. Novelty/Diversity chỉ dùng thêm `movies.csv` (62.423 dòng) — không thêm dependency. Cảnh báo `Missing Python executable ... .venv\Scripts\python.exe`, `netlib-blas: dlopen(libopenblas.dll) failed`, `The process "..." not found.` lành tính, run vẫn `COMPLETED`.
 
 ---
 

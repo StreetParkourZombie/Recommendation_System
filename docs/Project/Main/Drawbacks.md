@@ -1,7 +1,7 @@
 # Hạn Chế & Thách Thức Dự Án (Project Drawbacks & Limitations)
 
 **Dự án:** Phân tích rò rỉ, thiên lệch phổ biến trong hệ thống gợi ý bằng kiểm toán chiến lược chia tập trên Spark.
-**Cập nhật:** 2026-11-15 (bổ sung hạn chế đo được từ run `04`–`09`)
+**Cập nhật:** 2026-11-20 (bổ sung giới hạn Novelty/Diversity/Friedman từ Bài 04)
 
 ---
 
@@ -136,3 +136,8 @@
 | "Đã chạy ma trận seed" hoặc "kết quả là Mean ± Std" | chỉ 1 seed 42; bảng báo per-split + kiểm định cặp per-user |
 | "Chi phí ItemKNN so sánh được với ALS trên cụm" | ItemKNN chạy scipy sparse trên driver (`toPandas` ~20M cặp) — driver-bound, không phân tán |
 | "Đã tái lập Paper 01" | đây là `method_informed_implementation` |
+| "Serendipity đã đo" | Bài 04 định nghĩa serendipity cần một model "nguyên thuỷ" làm mốc; đề tài không có. Hàm `serendipity_at_k` chỉ cài **định nghĩa hẹp** (novelty của item vừa top-K vừa relevant), KHÔNG phải serendipity đầy đủ — xem `Metrics.md` §2.5 |
+| "Mô hình cá nhân hoá thì đa dạng hơn" | Số đo ngược lại: Diversity@10 của ALS (0,735–0,747) **thấp hơn** MostPopular (0,765–0,788) ở cả 3 split. Cá nhân hoá không tự động kéo theo đa dạng genre — xem `Metrics.md` §4.12.3 |
+| "Mô hình mới lạ hơn là tốt hơn" | Random có Novelty@10 cao nhất (20,2–21,1) nhưng NDCG ≈ 0. Novelty phải đọc kèm NDCG — xem `Metrics.md` §4.12.2 |
+| "Friedman chỉ ra cặp nào khác nhau" | Friedman (Demšar, JMLR 2006) chỉ bác bỏ "mọi model ngang nhau"; chỉ ra cặp cụ thể là việc của Wilcoxon (notebook 12) hoặc Nemenyi post-hoc — chưa chạy Nemenyi |
+| "SASRec đắt hơn baseline 5×" | SASRec chạy GPU RTX 4050, 4 baseline chạy CPU. Khác phần cứng, không so runtime — xem `Metrics.md` §4.12.4 |

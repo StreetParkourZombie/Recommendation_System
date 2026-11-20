@@ -1,6 +1,7 @@
 # TEMP — Plan hoàn thiện slide PPNCKH (2026-11-18)
 
 > File tạm, được phép overwrite. Nguồn: `docs/Project/Main/Notes/04.md` (chuỗi Q_1–Q_5) + audit RQ + audit baseline.
+> **Đóng 2026-11-20:** plan trong file này đã xong. Bổ sung cuối: rerun 06/08/10/11/13 lấy Novelty/Diversity, 09 lấy Friedman (Nemenyi KHÔNG chạy), 15/15 fixture PASS. Không còn hành động nào từ TEMP; số cuối ở `../../../Main/Metrics.md` §4.12.
 
 ---
 

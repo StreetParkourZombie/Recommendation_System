@@ -4,6 +4,8 @@
 **Mục đích:** cột 5 = **hạn chế cốt lõi** → trực tiếp sinh ra phần **Critical Gap** (theo `02_Tong Quan Tai Lieu.pdf`).
 **Cập nhật 2026-11-07:** toàn bộ tài liệu là **bản nhà xuất bản** (ACM / Springer / Elsevier). Đã loại tài liệu arXiv-only. Thêm nhánh "Big Data platform" (S13, S14) để bảng đối chiếu công bằng.
 
+**Cập nhật 2026-11-19 — chốt danh sách trích dẫn:** chỉ giữ **10 bài** (S1, S2, S3, S4, S5, S6, S9, S10, S11, S12) — tức bỏ khỏi danh sách trích dẫn **S7, S8, S13, S14**. Lý do: trọng tâm đề cương PPNCKH là đo lường/chia tập/thiên lệch; S7 là tutorial 2 trang, S8 là position paper, S13–S14 thuộc nhánh Big Data (ngoài trọng tâm, và S14 chưa có PDF). Bảng dưới **vẫn giữ đủ 14 dòng** để làm tư liệu đối chiếu khi bảo vệ — các dòng S7, S8, S13, S14 được đánh dấu `(ngoài danh sách trích dẫn)`. Chi tiết: `03_Tai_lieu_tham_khao.md` §0B.
+
 ---
 
 ## Bảng chính
@@ -55,7 +57,7 @@
 
 1. **Known:** S1 + S2 (bias đã biết, có metric chuẩn) + S3 + S4 + S12 + S5 (split ảnh hưởng kết quả, thứ hạng đảo chiều) + S11 (metric không nhất quán) + S6 (thiếu convergent validity).
 2. **Critical Gap:** chỉ vào bảng 6 cột — "chưa nghiên cứu nào đo **đồng thời** (i) đảo chiều thứ hạng, (ii) mức biến mất của popularity bias, (iii) chi phí vận hành, trên **một** pipeline Big Data cố định với **một** dataset ở quy mô ≥ 10M tương tác". Kèm bằng chứng PoC (mục 7.3 file `01`). Nêu rõ S13/S14 làm được lớp kiến trúc nhưng **không** làm lớp đo lường.
-3. **Proposed:** audit framework 3 split × 4 baseline đã đăng kí (Random, MostPopular, ALS, ItemKNN) × 6+ chỉ số, MovieLens ml-25m, Spark/HDFS/MapReduce Java, MongoDB, R, Streamlit + tầng kiểm định thống kê (bootstrap, Wilcoxon, Cohen's dz).
+3. **Proposed:** audit framework 3 split × 4 baseline đã đăng kí (Random, MostPopular, ALS, ItemKNN) × 6+ chỉ số (từ 2026-11-20 thêm Novelty@10/Diversity@10 + Friedman; Serendipity KHÔNG đo), MovieLens ml-25m, Spark/HDFS/MapReduce Java, MongoDB, R, Streamlit + tầng kiểm định thống kê (bootstrap, Wilcoxon, Cohen's dz).
 
 ---
 

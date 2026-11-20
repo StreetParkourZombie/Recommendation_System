@@ -174,6 +174,12 @@ for strategy in SPLITS_TO_RUN:
     flat_recs = [int(i) for items in recommendations.values() for i in items]
     bias = pop_lib.bias_metrics(flat_recs, catalog)
 
+    # Độ đo bổ sung theo Bài 04 (Phần 3): Novelty + Diversity trên cùng tập user.
+    # popularity tham chiếu = train của chính split, không đụng test.
+    diversity = pop_lib.diversity_metrics(
+        recommendations, catalog, pop_lib.genre_map(), k=spark_utils.TOP_K
+    )
+
     total_seconds = time.perf_counter() - started
     als_by_split[strategy] = {
         'model': 'ALS_implicit',
@@ -182,6 +188,9 @@ for strategy in SPLITS_TO_RUN:
         'hit_rate10': round(hit_mean, 4),
         'recall10': round(recall_mean, 4),
         'mrr10': round(mrr_mean, 4),
+        'novelty10': diversity['novelty_at_k'],
+        'diversity10': diversity['diversity_at_k'],
+        'diversity_users_measured': diversity['users_measured'],
         'eval_users': len(ndcg_per_user),
         'train_rows': n_train,
         'test_rows': n_test,
@@ -197,6 +206,7 @@ for strategy in SPLITS_TO_RUN:
     peruser_by_split[strategy] = ndcg_per_user
 
     print(f"  ndcg@10={ndcg_mean:.4f}  hit@10={hit_mean:.4f}  recall@10={recall_mean:.4f}  mrr@10={mrr_mean:.4f}")
+    print(f"  novelty@10={diversity['novelty_at_k']:.4f}  diversity@10={diversity['diversity_at_k']:.4f} (genre Jaccard, {diversity['users_measured']:,} user)")
     print(f'  total {total_seconds:.1f}s')
     run.log('ALS_RESULT', strategy=strategy, result=als_by_split[strategy])
 

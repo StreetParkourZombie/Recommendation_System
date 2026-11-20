@@ -1,7 +1,7 @@
 # Lựa Chọn & Đặc Tả Dữ Liệu — MovieLens-25M
 
 **Dự án:** Phân tích rò rỉ, thiên lệch phổ biến trong hệ thống gợi ý bằng kiểm toán chiến lược chia tập trên Spark.  
-**Cập nhật:** 2026-11-15  
+**Cập nhật:** 2026-11-20  
 **Trạng thái kiểm chứng:** Đã kiểm toán L1/L2/L3 từ GroupLens gốc (không tải lại, không phân phối lại).
 
 ---
@@ -24,7 +24,7 @@ Kết quả kiểm toán SHA-256 và kích thước từ Notebook 01 (`runs/2026
 | File | Kích thước (bytes) | Ghi chú & Hash |
 |---|---:|---|
 | `ratings.csv` | 678,260,987 | SHA-256: `9c85525758597dca76e8d98cebb9c13e018c2317b09a0878b6d383179526e385` |
-| `movies.csv` | 3,038,099 | Danh mục phim danh nghĩa (62,423 phim) |
+| `movies.csv` | 3,038,099 | Danh mục phim danh nghĩa (62,423 phim); từ 2026-11-20 dùng cột `genres` cho `diversity10` (Jaccard giữa phim trong top-K) — không tải thêm dữ liệu; vector ẩn ALS/SASRec không được lưu |
 | `genome-scores.csv` | 435,164,157 | Điểm tương đồng tag genome |
 | `genome-tags.csv` | 18,103 | Tag IDs |
 | `links.csv` | 1,368,578 | Ánh xạ sang IMDb, TMDb |

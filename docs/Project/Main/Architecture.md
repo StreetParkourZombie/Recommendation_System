@@ -1,17 +1,17 @@
 # Architecture — Kiến trúc pipeline đánh giá hệ thống gợi ý
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-15 (bổ sung §0 notebook-first, `src/audit/*`; §2 Parquet write đã giải quyết)
+**Cập nhật:** 2026-11-20 (bổ sung §0 Novelty/Diversity/Friedman; rerun 06/08/10/11/13)
 
 > Architecture contains two isolated tracks: Paper 01 reproduction and project controlled experiment.
 >
-> **Từ 2026-11-15:** pipeline project có **hai đường thực thi** — notebook-first (`notebooks/jupyter/04`–`09` + `src/audit/*`, đã PASS 6/6 gate) và script-driven (`scripts/04_audit_spark.py`, giữ làm tham chiếu và nguồn số 2026-11-04). Cùng protocol, khác đường chọn tập user đánh giá → chênh NDCG ≤ 0,0053. Xem `Metrics.md` §4.5.
+> **Từ 2026-11-15:** pipeline project có **hai đường thực thi** — notebook-first (`notebooks/jupyter/04`–`13` + `src/audit/*`, đã PASS gate; rerun 2026-11-20 thêm Novelty/Diversity + Friedman) và script-driven (`scripts/04_audit_spark.py`, giữ làm tham chiếu và nguồn số 2026-11-04). Cùng protocol, khác đường chọn tập user đánh giá → chênh NDCG ≤ 0,0053. Xem `Metrics.md` §4.5. Rerun 2026-11-20: 06/08/10/11/13 ghi `novelty10`/`diversity10`; 09 ghi `friedman`. Xem §4.12.
 
 ---
 
-## 0. Đường thực thi notebook-first (bổ sung 2026-11-15)
+## 0. Đường thực thi notebook-first (bổ sung 2026-11-15; cập nhật 2026-11-20)
 
-Script đơn khối `04_audit_spark.py` chạy 40–60 phút và chỉ in kết quả cuối — không quan sát được bước nào hỏng. Notebook 04–09 chia nhỏ theo gate, mỗi bước ghi checkpoint.
+Script đơn khối `04_audit_spark.py` chạy 40–60 phút và chỉ in kết quả cuối — không quan sát được bước nào hỏng. Notebook 04–13 chia nhỏ theo gate, mỗi bước ghi checkpoint.
 
 ```
 04_build_splits          3 split → D:\recsys_data\splits\<strategy>\{train,test}\*.parquet
@@ -19,14 +19,22 @@ Script đơn khối `04_audit_spark.py` chạy 40–60 phút và chỉ in kết 
 05_audit_split_leakage   temporal_violation (toàn cục + user), unseen_item, cold_start → L5 PASS
    │
    ├── 06_mostpopular_baseline   Popularity top-K, NDCG/Hit/coverage/Gini/bias → L6a PASS
-   │                             (rerun 2026-11-18: lưu thêm peruser_ndcg_{split}.npz → nguyên liệu L12)
+   │                             (rerun 2026-11-18: peruser_ndcg_{split}.npz → nguyên liệu L12;
+   │                              rerun 2026-11-20: novelty10/diversity10)
    ├── 07_ndcg_manual_check      5 fixture NDCG tính tay, tol 1e-12          → L6b PASS
+   │                             (từ 2026-11-20: 15 fixture, thêm novelty/diversity/serendipity)
    ├── 08_als_implicit           ALS implicit + numpy top-K + seen_exclusion  → L6c PASS
+   │                             (rerun 2026-11-20: novelty10/diversity10)
    ├── 10_random_baseline        Random sàn (catalog uniform, seen excluded) → L10 PASS
-   └── 11_itemknn_baseline       ItemKNN cosine k=100, scipy sparse (min_co=2) → L11 PASS
+   │                             (rerun 2026-11-20: novelty10/diversity10)
+   ├── 11_itemknn_baseline       ItemKNN cosine k=100, scipy sparse (min_co=2) → L11 PASS
+   │                             (rerun 2026-11-20: novelty10/diversity10)
+   └── 13_sasrec_ce              SASRec+CE, GPU local, eval subset user      → đã chạy 3 split
+                                  (rerun 2026-11-20: novelty10/diversity10)
                 │
                 ▼
 09_compare_and_reversal   comparison.json (5 model), reversal_table.csv, rq1_answer.md → L7 PASS
+                          (rerun 2026-11-20: thêm key `friedman`; Nemenyi KHÔNG chạy)
 12_paired_stats           đọc peruser_ndcg_*.npz, không chạy lại pipeline → Wilcoxon + 95% CI
                           + rank-biserial r, 20 cặp (5 model) → L12 PASS
 ```
@@ -56,7 +64,7 @@ official repository + paper protocol
 TRACK B — PROJECT CONTROLLED EXPERIMENT
 MovieLens-25M project preprocessing
   -> 3 project splits
-  -> Random, MostPopular, ALS, ItemKNN (4 baseline đã đăng kí)
+  -> Random, MostPopular, ALS, ItemKNN + SASRec+CE (5 baseline đã đăng kí)
   -> leakage + popularity bias + runtime
   -> Spark/HDFS/MongoDB/R/Streamlit
 
@@ -108,9 +116,11 @@ Paper 01 dùng MovieLens subset theo paper; project dùng full MovieLens-25M. Ha
 │      → userFactors/itemFactors              (notebook 08)           │
 │  S7  top-K bằng numpy: U[s:e] @ V.T → argpartition (chunk 2000)   │
 │  S8  bias metrics: coverage, long-tail, Gini, popularity_bias_ratio│
-│  S8c Random baseline: uniform từ catalog train, seen excluded      │
+│  S8a Random baseline: uniform từ catalog train, seen excluded       │
 │      (notebook 10)                                                  │
-│  S8b so sánh 3 mô hình × 3 split, kiểm tra đảo chiều (notebook 09) │
+│  S8b so sánh 5 mô hình × 3 split, kiểm tra đảo chiều (notebook 09)  │
+│  S8c Novelty@10 / Diversity@10 từ top-K (06/08/10/11/13, mới 20/11) │
+│  S8d SASRec+CE GPU local, eval subset user         (notebook 13)    │
 └──────────────────────────────────────────────────────────────────────┘
                               │
 ┌─ TẦNG 4 ─ LƯU TRỮ & TRỰC QUAN ──────────────────────────────────────┐
@@ -367,13 +377,15 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
 |---|---|---|:---:|
 | L4 | 3 split ghi đĩa, `matches_expected=True`, `overlap=0` | ✅ PASS | `20261115_191009_04_build_splits_2a395f07` |
 | L5 | `temporal_violation_global_pct(random) > 95%` và `== 0` với temporal | ✅ PASS (98,9158% user-relative / 0,0000%) | `20261115_192229_05_audit_split_leakage_8e672786` |
-| L6a | MostPopular NDCG giảm đơn điệu random → temporal → LOO | ✅ PASS (0,0852 → 0,0455 → 0,0183) | `20261115_192522_06_mostpopular_baseline_c39572de`; rerun `20261118_021147_06_mostpopular_baseline_6d59bb2c` (thêm npz per-user) |
+| L6a | MostPopular NDCG giảm đơn điệu random → temporal → LOO | ✅ PASS (0,0852 → 0,0455 → 0,0183) | `20261115_192522_06_mostpopular_baseline_c39572de`; rerun `20261118_021147_06_mostpopular_baseline_6d59bb2c` (thêm npz per-user); rerun 2026-11-20 `20261120_004801_06_mostpopular_baseline_cde8a34b` (thêm novelty10/diversity10) |
 | L6b | 5 fixture NDCG khớp tính tay, tolerance `1e-12` | ✅ PASS | `20261115_190933_07_ndcg_manual_check_e1cc5714` |
-| L6c | ALS ≥ MostPopular cả 3 split + `seen_exclusion` PASS | ✅ PASS (3/3) | `20261115_192654_08_als_implicit_0c1385ff` (FULL: `20261117_185700_08_als_implicit_7be22080`, rerun FULL `20261117_234312_08_als_implicit_da15debf`) |
-| L10 | Random sàn: NDCG thấp nhất mọi split, `seen_exclusion` PASS, bias ≈ 1 | ✅ PASS (3/3) | `20261118_144717_10_random_baseline_d8644ac1` |
-| L7 | `reversals_found == 0` hoặc liệt kê rõ cặp đảo chiều | ✅ PASS (0 ở 3/3 cặp so với sàn; `best_model_reversals_found = 2`) | `20261118_151159_09_compare_and_reversal_1e0f72fa` (ghép **5 model**; bản 4 model: `20261118_022749_..._c9482d3f`) |
-| L11 | ItemKNN `seen_exclusion` PASS và NDCG > Random mọi split | ✅ PASS (3/3 seen; `knn_above_random` = true, 893,0× / 156,6× / 461,0× Random) | `20261118_150305_11_itemknn_baseline_0b7511ee` (503 s, scipy sparse driver-bound) |
+| L6c | ALS ≥ MostPopular cả 3 split + `seen_exclusion` PASS | ✅ PASS (3/3) | `20261115_192654_08_als_implicit_0c1385ff` (FULL: `20261117_185700_08_als_implicit_7be22080`, rerun FULL `20261117_234312_08_als_implicit_da15debf`); rerun 2026-11-20 `20261120_012429_08_als_implicit_73a9947b` (thêm novelty10/diversity10) |
+| L10 | Random sàn: NDCG thấp nhất mọi split, `seen_exclusion` PASS, bias ≈ 1 | ✅ PASS (3/3) | `20261118_144717_10_random_baseline_d8644ac1`; rerun 2026-11-20 `20261120_004945_10_random_baseline_dc453187` (thêm novelty10/diversity10) |
+| L7 | `reversals_found == 0` hoặc liệt kê rõ cặp đảo chiều | ✅ PASS (0 ở 3/3 cặp so với sàn; `best_model_reversals_found = 2`) | `20261118_151159_09_compare_and_reversal_1e0f72fa` (ghép **5 model**; bản 4 model: `20261118_022749_..._c9482d3f`; rerun 2026-11-20 `20261120_012944_09_compare_and_reversal_21d0811a` (thêm `friedman`) |
+| L11 | ItemKNN `seen_exclusion` PASS và NDCG > Random mọi split | ✅ PASS (3/3 seen; `knn_above_random` = true, 893,0× / 156,6× / 461,0× Random) | `20261118_150305_11_itemknn_baseline_0b7511ee` (503 s, scipy sparse driver-bound); rerun 2026-11-20 `20261120_005139_11_itemknn_baseline_979f28e2` |
 | L12 | Mọi cặp kiểm định: `n_paired >= 30`, báo đủ p + 95% CI + r | ✅ PASS (**20/20 cặp, 5 model**, min n=6.214; CI không chứa 0 ở 19/20, ngoại lệ ALS-vs-ItemKNN ở LOO p=0,153) | `20261118_151202_12_paired_stats_9b864f59` (bản 12 cặp: `20261118_022320_..._077f538e`) |
+
+> **Rerun 2026-11-20 (Bài 04):** 06/08/10/11/13 ghi `novelty10`/`diversity10` vào `*_summary.json`; 09 ghi key `friedman` vào `comparison.json`. Số + run id: `Metrics.md` §4.12. Serendipity KHÔNG đo; Nemenyi KHÔNG chạy.
 
 > **G7 cảnh báo:** `eval_relevant_users` chênh rất lớn giữa split (158.692 / 6.219 / 96.003). NDCG **không** so cặp được giữa các split. Xem `Drawbacks.md` §3.3.
 

@@ -167,15 +167,12 @@ for strategy in split_lib.STRATEGIES:
         'rnd_ndcg10': rnd['ndcg10'] if rnd else None,
         'knn_ndcg10': knn['ndcg10'] if knn else None,
         'sasrec_ndcg10': sas['ndcg10'] if sas else None,
-        'sasrec_ndcg10': sas['ndcg10'] if sas else None,
         'als_over_rand': round(als['ndcg10'] / rnd['ndcg10'], 1) if rnd and rnd['ndcg10'] else None,
         'pop_over_rand': round(pop['ndcg10'] / rnd['ndcg10'], 1) if rnd and rnd['ndcg10'] else None,
         'knn_over_rand': round(knn['ndcg10'] / rnd['ndcg10'], 1) if knn and rnd and rnd['ndcg10'] else None,
         'sasrec_over_rand': round(sas['ndcg10'] / rnd['ndcg10'], 1) if sas and rnd and rnd['ndcg10'] else None,
-        'sasrec_over_rand': round(sas['ndcg10'] / rnd['ndcg10'], 1) if sas and rnd and rnd['ndcg10'] else None,
         'delta_ndcg': delta,
         'delta_knn_vs_als': round(knn['ndcg10'] - als['ndcg10'], 4) if knn else None,
-        'delta_sasrec_vs_best': delta_sasrec_vs_best,
         'delta_sasrec_vs_best': delta_sasrec_vs_best,
         'winner': 'ALS' if delta > 0 else ('MostPopular' if delta < 0 else 'tie'),
         'best_model': best_model,
@@ -185,25 +182,33 @@ for strategy in split_lib.STRATEGIES:
         'knn_hit10': knn['hit_rate10'] if knn else None,
         'sasrec_hit10': sas['hit_rate10'] if sas else None,
         'sasrec_mrr10': sas['mrr10'] if sas else None,
-        'sasrec_hit10': sas['hit_rate10'] if sas else None,
-        'sasrec_mrr10': sas['mrr10'] if sas else None,
         'pop_coverage': pop['bias']['catalog_coverage'],
         'als_coverage': als['bias']['catalog_coverage'],
         'knn_coverage': knn['bias']['catalog_coverage'] if knn else None,
-        'sasrec_coverage': sas['bias']['catalog_coverage'] if sas else None,
         'sasrec_coverage': sas['bias']['catalog_coverage'] if sas else None,
         'pop_bias_ratio': pop['bias']['popularity_bias_ratio'],
         'als_bias_ratio': als['bias']['popularity_bias_ratio'],
         'knn_bias_ratio': knn['bias']['popularity_bias_ratio'] if knn else None,
         'sasrec_bias_ratio': sas['bias']['popularity_bias_ratio'] if sas else None,
-        'sasrec_bias_ratio': sas['bias']['popularity_bias_ratio'] if sas else None,
         'rnd_bias_ratio': rnd['bias']['popularity_bias_ratio'] if rnd else None,
-        'als_fit_seconds': als.get('fit_seconds'),
-        'knn_fit_seconds': knn.get('fit_seconds') if knn else None,
-        'sasrec_fit_seconds': sas.get('fit_seconds') if sas else None,
-        'sasrec_hardware': sasrec_summary['hardware']['device'] if sasrec_summary else None,
-        'sasrec_fit_seconds': sas.get('fit_seconds') if sas else None,
-        'sasrec_hardware': sasrec_summary['hardware']['device'] if sasrec_summary else None,
+        # Độ đo bổ sung của Bài 04. Run cũ (trước 2026-11-20) chưa có → None, in '—'.
+        'pop_novelty10': pop.get('novelty10'),
+        'als_novelty10': als.get('novelty10'),
+        'knn_novelty10': knn.get('novelty10') if knn else None,
+        'rnd_novelty10': rnd.get('novelty10') if rnd else None,
+        'sasrec_novelty10': sas.get('novelty10') if sas else None,
+        'pop_diversity10': pop.get('diversity10'),
+        'als_diversity10': als.get('diversity10'),
+        'knn_diversity10': knn.get('diversity10') if knn else None,
+        'rnd_diversity10': rnd.get('diversity10') if rnd else None,
+        'sasrec_diversity10': sas.get('diversity10') if sas else None,
+        # Chi phí vận hành (Bài 04 yêu cầu báo runtime kèm metric).
+        'pop_seconds': pop.get('elapsed_seconds'),
+        'rnd_seconds': rnd.get('total_seconds') if rnd else None,
+        'als_seconds': als.get('total_seconds'),
+        'knn_seconds': knn.get('total_seconds') if knn else None,
+        'sasrec_seconds': sas.get('total_seconds') if sas else None,
+        'sasrec_hardware': sasrec_summary.get('hardware', {}).get('device') if sasrec_summary else None,
         'eval_users_pop': pop['eval_users'],
         'eval_users_als': als['eval_users'],
         'eval_relevant_users': audits[strategy]['eval_relevant_users'],
@@ -316,6 +321,136 @@ if 'random80_20' in delta and 'leave_one_out' in delta:
     print('Khi do dung bai toan (doan tuong lai), ALS van thang nhung cach biet hep lai manh.')
 
 run.checkpoint('delta_reported', 'PASS', checks={'rows': len(rows)})"""),
+    md("""## 4b. Độ đo bổ sung theo Bài 04 — Novelty, Diversity và chi phí vận hành
+
+Bài 04 (Phần 3) nói rõ: NDCG@k và MRR là chuẩn của RecSys/SIGIR, nhưng **không đủ**. Phải báo thêm ba thứ:
+
+| Độ đo | Bài 04 yêu cầu | Trong đề tài |
+|---|---|---|
+| **Novelty** | đề xuất item đuôi dài, ít người biết | CÓ — `novelty@10 = trung bình -log2(pop(item)/tổng tương tác train)` |
+| **Diversity** | danh sách gợi ý không một màu | CÓ — `diversity@10 = trung bình khoảng cách Jaccard bộ genre` |
+| **Serendipity** | bất ngờ *và* vẫn đúng | **KHÔNG đo** — cần một model "nguyên thuỷ" làm mốc so sánh; đề tài không có model đó, tự bịa mốc là không trung thực |
+| **Chi phí vận hành** | runtime, throughput, bộ nhớ | CÓ một phần — runtime `total_seconds` từng model; **bộ nhớ (VRAM/RAM) KHÔNG đo** |
+
+Vì sao chọn Jaccard trên genre thay vì cosine trên vector ẩn của model: vector ALS/SASRec không được lưu lại sau mỗi run, còn genre có sẵn trong `movies.csv` và là thứ **người xem cảm nhận được**. Đo bằng genre thì con số giải thích được với người đọc, không phải "trục ẩn số 7 của ma trận".
+
+Ba con số dưới đây lấy từ `*_summary.json`. Run cũ (trước 2026-11-20) chưa có khoá `novelty10`/`diversity10` nên in `—`; chạy lại notebook 06/08/10/11/13 là có."""),
+    code("""def show(value, fmt='{:.4f}'):
+    return fmt.format(value) if value is not None else '—'
+
+print(f"{'split':<18}{'pop':>8}{'als':>8}{'knn':>8}{'rnd':>8}{'sas':>8}   novelty@10")
+print('-' * 70)
+for r in rows:
+    print(f"{r['split']:<18}" + ''.join(
+        f"{show(r[k]):>8}" for k in
+        ('pop_novelty10', 'als_novelty10', 'knn_novelty10', 'rnd_novelty10', 'sasrec_novelty10')))
+
+print()
+print(f"{'split':<18}{'pop':>8}{'als':>8}{'knn':>8}{'rnd':>8}{'sas':>8}   diversity@10")
+print('-' * 70)
+for r in rows:
+    print(f"{r['split']:<18}" + ''.join(
+        f"{show(r[k]):>8}" for k in
+        ('pop_diversity10', 'als_diversity10', 'knn_diversity10', 'rnd_diversity10', 'sasrec_diversity10')))
+
+measured = [r for r in rows if r['als_novelty10'] is not None]
+print()
+if measured:
+    print('Doc so:')
+    print('1) MostPopular co novelty thap nhat — no luon chon top item pho bien, ai cung nhan')
+    print('   mot danh sach gan giong nhau. Day la dinh nghia cua "khong ca nhan hoa".')
+    print('2) Diversity thi NGUOC lai: ALS co diversity thap nhat, du no ca nhan hoa hon')
+    print('   MostPopular. Ly do: ham muc tieu cua ALS van keo ve cum item hay xuat hien cung')
+    print('   nhau, nen danh sach cua ALS don genre hon danh sach top-pho-bien.')
+    print('3) Random co novelty CAO NHAT (cao hon ca SASRec) nhung NDCG gan 0 —')
+    print('   "moi la" khong dong nghia voi "tot". Phai doc novelty cung NDCG.')
+    print('=> Ket luan: khong co model nao tot moi mat. Pop re + do chinh xac thap;')
+    print('   ALS chinh xac cao nhung don genre; Random da dang nhung vo dung.')
+else:
+    print('CHUA CO SO: chay lai notebook 06/08/10/11/13 roi chay lai notebook nay.')
+
+run.log('SUPPLEMENTARY_METRICS', rows=[
+    {k: r[k] for k in r if k.endswith(('_novelty10', '_diversity10'))} for r in rows
+])
+run.checkpoint('supplementary_metrics', 'PASS' if measured else 'INFO',
+               checks={'splits_with_novelty': len(measured)})"""),
+    md("""## 4c. Chi phí vận hành và kiểm định nhiều model (Friedman / Nemenyi)
+
+**Chi phí.** `total_seconds` là wall-clock của cả split (đọc dữ liệu → fit → chấm điểm), không phải riêng bước fit. Máy: Spark `local[4]`, 16 logical CPU; SASRec chạy GPU. Con số tuyệt đối không so được với cluster thật — chỉ dùng để so **tương đối giữa các model trên cùng máy**.
+
+**Kiểm định nhiều model.** Notebook 12 dùng Wilcoxon cho **từng cặp** (2 model). Bài 04 nói: khi so **≥3 model cùng lúc** thì dùng **Friedman** (giả thuyết không: mọi model ngang nhau), rồi **Nemenyi** để biết cặp nào thực sự khác (Demšar, JMLR 2006). Ô dưới chạy Friedman trên per-user NDCG của 4 model **dùng chung tập user** (bỏ SASRec vì tập eval của nó khác hẳn 4 baseline)."""),
+    code("""from scipy import stats as scipy_stats
+
+print(f"{'split':<18}{'pop(s)':>9}{'rnd(s)':>9}{'als(s)':>9}{'knn(s)':>9}{'sas(s)':>9}")
+print('-' * 63)
+for r in rows:
+    print(f"{r['split']:<18}" + ''.join(
+        f"{(v if v is not None else 0.0):>9.1f}" for v in
+        (r['pop_seconds'], r['rnd_seconds'], r['als_seconds'], r['knn_seconds'], r['sasrec_seconds'])))
+print()
+print('SASRec hardware:', next((r['sasrec_hardware'] for r in rows if r['sasrec_hardware']), '—'))
+
+def load_peruser(pattern):
+    found = sorted(runs_dir.glob(pattern), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not found:
+        return None
+    data = np.load(found[0])
+    return {int(u): float(s) for u, s in zip(data['userId'], data['ndcg'])}
+
+MODEL_NPZ = [
+    ('MostPopular', 'peruser_ndcg_{s}.npz'),
+    ('ALS', 'peruser_ndcg_{s}.npz'),
+    ('Random', 'peruser_ndcg_random_{s}.npz'),
+    ('ItemKNN', 'peruser_ndcg_itemknn_{s}.npz'),
+]
+
+friedman_rows = []
+for strategy in split_lib.STRATEGIES:
+    peruser = {}
+    for name, tpl in MODEL_NPZ:
+        scores = load_peruser(f"*/outputs/{tpl.format(s=strategy)}")
+        if scores:
+            peruser[name] = scores
+    if len(peruser) < 3:
+        print(f'{strategy}: chi {len(peruser)} model — Friedman can >=3, bo qua')
+        continue
+    common = sorted(set.intersection(*[set(v) for v in peruser.values()]))
+    if not common:
+        print(f'{strategy}: khong co user chung')
+        continue
+    rng = np.random.default_rng(spark_utils.DEFAULT_SEED)
+    if len(common) > 5000:
+        pick = rng.choice(len(common), size=5000, replace=False)
+        common = [common[i] for i in sorted(pick)]
+    model_names = list(peruser)
+    matrix = np.array([[peruser[m][u] for m in model_names] for u in common])
+    fr = scipy_stats.friedmanchisquare(*[matrix[:, i] for i in range(matrix.shape[1])])
+    ranks = np.apply_along_axis(lambda row: scipy_stats.rankdata(-row), 1, matrix).mean(axis=0)
+    print()
+    print(f"=== {strategy} ===  users={len(common):,}  Friedman chi2={fr.statistic:.1f}  p={fr.pvalue:.3e}")
+    for m, rk in zip(model_names, ranks):
+        print(f'  hang trung binh {m:<12}{rk:.3f}')
+    friedman_rows.append({
+        'split': strategy,
+        'users_sampled': len(common),
+        'models': model_names,
+        'friedman_chi2': round(float(fr.statistic), 3),
+        'friedman_p': float(fr.pvalue),
+        'mean_ranks': {m: round(float(rk), 3) for m, rk in zip(model_names, ranks)},
+    })
+
+print()
+if friedman_rows:
+    print('Doc so: hang trung binh thap = tot hon. p<0.05 nghia la KHONG PHAI moi model ngang nhau')
+    print('— nhung no KHONG noi cap nao khac cap nao. Muon biet cap nao, can Nemenyi (critical')
+    print('difference) hoac dung Wilcoxon tung cap o notebook 12. Chi2 phu thuoc so user lay mau nen')
+    print('khong so sanh chi2 giua 3 split voi nhau.')
+else:
+    print('Khong chay duoc Friedman: thieu per-user npz.')
+
+run.log('FRIEDMAN', results=friedman_rows)
+run.checkpoint('friedman_done', 'PASS' if friedman_rows else 'INFO',
+               checks={'splits': len(friedman_rows)})"""),
     md("""## 5. Interaction plot
 
 Vẽ bằng matplotlib, lưu PNG. Trục x là split, trục y là NDCG@10, mỗi model một đường (Random/MostPopular/ItemKNN/ALS/SASRec+CE). Panel phải vẽ ΔNDCG ALS−MostPopular và ΔNDCG ItemKNN−ALS cạnh nhau — đây là hình chính của phần RQ1 trong báo cáo."""),
@@ -389,6 +524,12 @@ comparison = {
     'fit_scope': 'FULL 162,541 users (ALS 2026-11-17; Random/ItemKNN 2026-11-18; SASRec_CE GPU run)',
     'rows': rows,
     'pairs': pair_results,
+    'friedman': friedman_rows,
+    'supplementary_metrics_note': (
+        'novelty@10 = mean -log2(pop_train(item)/positive_train_rows); '
+        'diversity@10 = mean Jaccard distance over genre sets; computed on max 5000 seeded users per split. '
+        'Serendipity NOT measured: needs a primitive reference recommender this project does not have.'
+    ),
     'reversals_found': reversals_found,
     'best_model_reversals_found': best_reversals_found,
     'population_note': 'NDCG per split computed on that split own eligible+relevant population; not a paired comparison across splits.',
@@ -461,6 +602,54 @@ for r in rows:
     ar = f", ALS/san (Random) = {r['als_over_rand']}x" if r['als_over_rand'] else ''
     knn_part = f", ItemKNN-ALS = {r['delta_knn_vs_als']:+.4f}" if r['delta_knn_vs_als'] is not None else ''
     answer_lines.append(f"- {r['split']}: delta = {r['delta_ndcg']:+.4f}, ALS/MostPopular = {r['als_ndcg10']/r['pop_ndcg10']:.2f}x{ar}{knn_part}" if r['pop_ndcg10'] else f"- {r['split']}: delta = {r['delta_ndcg']:+.4f}")
+answer_lines.append('')
+answer_lines.append('## (b2) Do do bo sung — Novelty / Diversity (Bai 04 Phan 3)')
+answer_lines.append('')
+
+
+def _cell(value):
+    return f'{value:.4f}' if value is not None else '-'
+
+
+answer_lines.append('Novelty@10 (cao hon = it pho bien hon):')
+answer_lines.append('')
+answer_lines.append('| Split | Random | MostPopular | ItemKNN | ALS | SASRec+CE |')
+answer_lines.append('|---|---:|---:|---:|---:|---:|')
+for r in rows:
+    answer_lines.append(
+        f"| {r['split']} | {_cell(r['rnd_novelty10'])} | {_cell(r['pop_novelty10'])} "
+        f"| {_cell(r['knn_novelty10'])} | {_cell(r['als_novelty10'])} | {_cell(r['sasrec_novelty10'])} |"
+    )
+answer_lines.append('')
+answer_lines.append('Diversity@10 (cao hon = da dang genre hon):')
+answer_lines.append('')
+answer_lines.append('| Split | Random | MostPopular | ItemKNN | ALS | SASRec+CE |')
+answer_lines.append('|---|---:|---:|---:|---:|---:|')
+for r in rows:
+    answer_lines.append(
+        f"| {r['split']} | {_cell(r['rnd_diversity10'])} | {_cell(r['pop_diversity10'])} "
+        f"| {_cell(r['knn_diversity10'])} | {_cell(r['als_diversity10'])} | {_cell(r['sasrec_diversity10'])} |"
+    )
+answer_lines.append('')
+answer_lines.append('Novelty = trung binh -log2(pop_train(item) / tong tuong tac positive cua train).')
+answer_lines.append('Diversity = trung binh khoang cach Jaccard bo genre giua moi cap item trong top-10.')
+answer_lines.append('Do tren toi da 5.000 user moi split (seed 42). Serendipity KHONG do — can mot model "nguyen thuy" lam moc.')
+answer_lines.append('')
+answer_lines.append('Doc so: MostPopular novelty thap nhat (8,42–8,49) — no dua cung mot danh sach top pho bien cho moi user.')
+answer_lines.append('Nhung Diversity lai KHONG phai MostPopular thap nhat: ALS don genre nhat (0,735–0,747), thap hon ca MostPopular (0,765–0,788).')
+answer_lines.append('Ly do: ham muc tieu cua ALS van keo ve cum item hay xuat hien cung nhau, nen top-10 nghieng ve mot cum genre.')
+answer_lines.append('Random novelty cao nhat (20,2–21,1) nhung NDCG gan 0 — "moi la" khong dong nghia "tot". Phai doc kem NDCG.')
+if friedman_rows:
+    answer_lines.append('')
+    answer_lines.append('## (b3) Friedman tren per-user NDCG (4 model chung tap user)')
+    answer_lines.append('')
+    for fr_row in friedman_rows:
+        ranks = ', '.join(f"{m}={rk}" for m, rk in fr_row['mean_ranks'].items())
+        answer_lines.append(
+            f"- {fr_row['split']}: chi2={fr_row['friedman_chi2']:.1f}, p={fr_row['friedman_p']:.2e}, "
+            f"n={fr_row['users_sampled']:,}, hang trung binh: {ranks}"
+        )
+    answer_lines.append('Friedman bac bo "moi model ngang nhau", nhung khong chi ra cap nao khac — dung Wilcoxon tung cap (notebook 12) cho viec do.')
 answer_lines.append('')
 answer_lines.append('## (c) Gioi han')
 answer_lines.append('- Chi 1 seed (42). Khong tuyen bo on dinh qua seed.')

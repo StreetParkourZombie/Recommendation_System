@@ -6,7 +6,7 @@
 
 Khi chỉ còn vài ngày, deliverable chính là **method-informed implementation**: dùng phương pháp data-leakage của Paper 01 trên environment project hiện có. Paper 01 faithful reproduction chỉ là track phụ; không để BPR/TensorFlow 1.14 full training chặn kết quả chính.
 
-Phạm vi đã chốt (cập nhật 2026-11-18): MovieLens-25M project dataset, `random80_20` / `temporal_global` / `leave_one_out`, 5 model (`Random`, `MostPopular`, `ALS`, `ItemKNN cosine`, `SASRec+CE`), **1 seed 42**, HR/NDCG/**MRR@10**, leakage diagnostics, popularity metrics và runtime. Bản 3 seed `[42, 2024, 7]` là thiết kế cũ, đã bỏ.
+Phạm vi đã chốt (cập nhật 2026-11-18): MovieLens-25M project dataset, `random80_20` / `temporal_global` / `leave_one_out`, 5 model (`Random`, `MostPopular`, `ALS`, `ItemKNN cosine`, `SASRec+CE`), **1 seed 42**, HR/NDCG/**MRR@10**, leakage diagnostics, popularity metrics, runtime; từ 2026-11-20 thêm Novelty@10/Diversity@10 + Friedman (Serendipity KHÔNG đo). Bản 3 seed `[42, 2024, 7]` là thiết kế cũ, đã bỏ.
 
 Kết quả phải ghi là `method_informed_implementation` nếu khác dataset subset, model, preprocessing, environment hoặc protocol Paper 01. Smoke test Paper 01 ghi `smoke_test_pass`; full run không khả thi ghi `blocked` hoặc `partial_reproduction`.
 

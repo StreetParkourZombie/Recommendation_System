@@ -152,6 +152,16 @@ for strategy in split_lib.STRATEGIES:
     recall_mean, _ = metrics.mean_metric(recommendations, truth, metrics.recall_at_k, spark_utils.TOP_K)
     mrr_mean, _ = metrics.mean_metric(recommendations, truth, metrics.mrr_at_k, spark_utils.TOP_K)
 
+    # Độ đo bổ sung theo Bài 04 (Phần 3): Novelty + Diversity.
+    # Đo trên CÙNG tập user đã có truth, mẫu tối đa 5.000 user (seeded) cho nhanh;
+    # popularity tham chiếu lấy từ train của chính split này — không rò rỉ test.
+    diversity = pop_lib.diversity_metrics(
+        recommendations,
+        popularity_by_split[strategy],
+        pop_lib.genre_map(),
+        k=spark_utils.TOP_K,
+    )
+
     metrics_by_split[strategy] = {
         'model': 'MostPopular',
         'strategy': strategy,
@@ -160,6 +170,9 @@ for strategy in split_lib.STRATEGIES:
         'hit_rate10': round(hit_mean, 4),
         'recall10': round(recall_mean, 4),
         'mrr10': round(mrr_mean, 4),
+        'novelty10': diversity['novelty_at_k'],
+        'diversity10': diversity['diversity_at_k'],
+        'diversity_users_measured': diversity['users_measured'],
         'eval_users': len(ndcg_per_user),
         'relevant_test_items': sum(len(v) for v in truth.values()),
         'topk': topk,
@@ -170,6 +183,7 @@ for strategy in split_lib.STRATEGIES:
 
     print(f'--- {strategy} ---')
     print(f"  ndcg@10={ndcg_mean:.4f}  dcg@10={dcg_mean:.4f}  hit@10={hit_mean:.4f}  recall@10={recall_mean:.4f}  mrr@10={mrr_mean:.4f}")
+    print(f"  novelty@10={diversity['novelty_at_k']:.4f}  diversity@10={diversity['diversity_at_k']:.4f} (genre Jaccard, {diversity['users_measured']:,} user)")
     print(f'  eval users={len(ndcg_per_user):,}  relevant test items={sum(len(v) for v in truth.values()):,}')
     run.log('POPULARITY_METRICS', strategy=strategy, metrics=metrics_by_split[strategy])
 

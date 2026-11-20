@@ -1,7 +1,7 @@
 # Metrics — Định nghĩa chỉ số đánh giá
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-15 (bổ sung §4.5 — hai đường tính, hai bộ số)
+**Cập nhật:** 2026-11-20 (bổ sung §4.12 — Novelty/Diversity/Friedman theo Bài 04)
 
 Mọi chỉ số dưới đây được tính **theo từng chiến lược chia tập** → điểm mấu chốt của đề tài là so sánh cùng một mô hình, cùng một dữ liệu, **ba cách chia**.
 
@@ -127,6 +127,30 @@ Chỉ tính cho ALS. Popularity không có (không tách theo user được sinh
 ### 2.2 `DCG@10` — giá trị tuyệt đối (bổ sung, không thay NDCG)
 
 Vì NDCG chuẩn hoá theo số item liên quan, nó có thể giấu mức giảm "độ khó" của tập test. `DCG@10` trung bình cho biết mô hình đạt được bao nhiêu điểm thô.
+
+### 2.3 `novelty10` — độ mới lạ của danh sách gợi ý
+
+```
+novelty10 = (1/K) Σ_{i ∈ top-K} −log2( pop_train(i) / P_train )
+```
+
+`pop_train(i)` = số tương tác positive của item `i` trong **train**; `P_train` = tổng số tương tác positive của train. Item càng phổ biến → `pop_train/P_train` càng lớn → `−log2` càng nhỏ → novelty càng thấp. Item chưa có trong train (`pop = 0`) được coi là `pop = 1` để tránh `log2(0)`.
+
+**Cao hơn = ít phổ biến hơn.** Nhưng novelty cao **không** đồng nghĩa tốt — Random có novelty cao nhất mà NDCG ≈ 0. Luôn đọc kèm NDCG. Cài đặt: `novelty_at_k` trong [`src/audit/metrics.py`](../../../src/audit/metrics.py). Số đo: §4.12.2.
+
+### 2.4 `diversity10` — độ đa dạng trong danh sách gợi ý
+
+```
+diversity10 = (1 / C(K,2)) · Σ_{i<j ∈ top-K} ( 1 − Jaccard(genre_i, genre_j) )
+```
+
+`Jaccard(A,B) = |A∩B| / |A∪B|` trên **bộ genre** của hai phim (lấy từ `movies.csv`). Hai phim khác genre hoàn toàn → khoảng cách 1; cùng bộ genre → 0. Danh sách < 2 item → `0.0`.
+
+**Cao hơn = đa dạng genre hơn.** Vì sao chọn genre thay vì cosine trên vector ẩn: vector ALS/SASRec không được lưu sau mỗi run, và genre là thứ người xem cảm nhận được. Cài đặt: `categorical_diversity_at_k` (và `intra_list_diversity_at_k` cho trường hợp có vector). Số đo: §4.12.3.
+
+### 2.5 `serendipity` — KHÔNG đo
+
+Bài 04 định nghĩa serendipity = item **bất ngờ** *và* **vẫn đúng**, đo bằng cách so với một **model "nguyên thuỷ"** (primitive recommender) làm mốc. Đề tài **không có** model mốc đó, và tự bịa mốc thì con số vô nghĩa. Hàm `serendipity_at_k` đã cài đặt nhưng chỉ theo **định nghĩa hẹp** (trung bình novelty của item vừa nằm trong top-K vừa relevant) — **không** được trích như serendipity đầy đủ của bài giảng.
 
 ---
 
@@ -402,6 +426,9 @@ Bốn điều nói được:
 
 **Memory chưa đo được** — pipeline không instrument RSS/peak heap; `spark.driver.memory` 6g/10g là *cấu hình cấp phát*, không phải mức dùng thật, nên **không** được trích vào cột memory của bảng đối chuẩn. Cách đo rẻ đã ghi trong tài liệu RQ3 (Spark `statusTracker` cho `numTasks`/`shuffleReadBytes`, `MemoryPoolMXBean` cho peak heap, `psutil` RSS), **chưa triển khai**.
 
+> [!NOTE]
+> Bảng trên là bản gốc 2026-11-18. Đợt re-run 2026-11-20 (để lấy Novelty/Diversity) có `total_seconds` hơi khác — xem bảng thay thế ở **§4.12.4**.
+
 ### 4.8 Baseline ItemKNN cosine (kinh điển) — notebook 11, run 2026-11-18
 
 ItemKNN cosine thuộc danh sách đã đăng kí. Triển khai bằng **scipy sparse** (`src/audit/itemknn.py`), không phải Spark self-join: lần đầu (2026-11-18 00:46) thử co-count bằng self-join `(user,item) × (user,item)` → ~1,2 tỷ cặp shuffle, **chạy hơn 1 giờ không xong 1 split** (timeout cell 3600s). Cách chuẩn trong tài liệu RecSys: `R` (users × items, implicit positive) → `S = Rᵀ·R` bằng sparse matmul, cosine `W_ij = S_ij / √(pop_i·pop_j)`, giữ top-k=100 neighbor mỗi item.
@@ -497,7 +524,115 @@ python scripts\run_notebook.py notebooks\jupyter\07_ndcg_manual_check.ipynb
 
 ---
 
----
+### 4.12 Novelty@10 / Diversity@10 và Friedman — bổ sung theo Bài 04, 2026-11-20
+
+Bài 04 (Phần 3) nói NDCG/MRR là chuẩn SIGIR nhưng **không đủ**: còn Novelty, Diversity, Serendipity và chi phí vận hành. Mục này ghi đúng những gì **đã đo** và **chưa đo**.
+
+#### 4.12.1 Đo cái gì, bằng công thức nào
+
+| Độ đo | Công thức | Trạng thái |
+|---|---|---|
+| `novelty10` | trung bình `-log2(pop_train(item) / P)` trên top-10, `P` = tổng tương tác positive của train | **CÓ** |
+| `diversity10` | trung bình `1 − Jaccard(genre(item_i), genre(item_j))` trên mọi cặp trong top-10 | **CÓ** |
+| `serendipity` | cần một model "nguyên thuỷ" làm mốc (item bất ngờ *và* vẫn đúng) | **KHÔNG đo** — đề tài không có model mốc; tự bịa mốc là không trung thực |
+| chi phí runtime | `fit_seconds`, `total_seconds` | **CÓ một phần** |
+| chi phí bộ nhớ (RAM/VRAM) | peak RSS / VRAM | **KHÔNG đo** — pipeline không instrument; `spark.driver.memory` là cấu hình cấp phát, không phải mức dùng |
+
+Vì sao **Jaccard trên genre** thay vì cosine trên vector ẩn của model: ma trận factor của ALS và embedding của SASRec **không được lưu** sau mỗi run, nên không thể tính lại; genre có sẵn trong `movies.csv` (62.423 phim) và là thứ người xem cảm nhận được. Đo bằng genre thì con số giải thích được, không phải "trục ẩn số 7".
+
+Cài đặt: [`src/audit/metrics.py`](../../../src/audit/metrics.py) — `novelty_at_k`, `intra_list_diversity_at_k`, `categorical_diversity_at_k`, `serendipity_at_k`. Helper gom theo split: `diversity_metrics` trong [`src/audit/popularity.py`](../../../src/audit/popularity.py), genre map đọc từ `movies.csv` (cache module-level).
+
+**Kiểm chứng độc lập:** `SUPPLEMENTARY_FIXTURES` (10 ca tính tay, gồm ca biên `pop = 0`, danh sách 1 item, không có item relevant) + `FIXTURES` gốc (5 ca NDCG/Hit). `metrics.assert_against_fixture(10)` → **15/15 PASS**, tolerance `1e-12`. Chạy lại:
+
+```powershell
+.\.venv\Scripts\python.exe -c "import sys; sys.path.insert(0,'.'); from src.audit import metrics; metrics.assert_against_fixture(10)"
+```
+
+Đo trên **tối đa 5.000 user mỗi split** (seed 42, lấy mẫu có seed) — sai số lấy mẫu ~1e-3, tiết kiệm 162.541 × 45 cặp Jaccard. Cột `diversity_users_measured` trong summary ghi đúng số user đã đo.
+
+#### 4.12.2 Kết quả — Novelty@10 (cao hơn = ít phổ biến hơn)
+
+| Split | Random | MostPopular | ItemKNN | ALS | SASRec+CE |
+|---|---:|---:|---:|---:|---:|
+| `random80_20` | 20,9153 | 8,4909 | 9,2263 | 9,9637 | 11,7014 |
+| `temporal_global` | 20,1790 | 8,4194 | 9,4513 | 10,8393 | 12,3186 |
+| `leave_one_out` | 21,0842 | 8,4907 | 9,2901 | 10,1006 | 11,5506 |
+
+#### 4.12.3 Kết quả — Diversity@10 (cao hơn = đa dạng genre hơn)
+
+| Split | Random | MostPopular | ItemKNN | ALS | SASRec+CE |
+|---|---:|---:|---:|---:|---:|
+| `random80_20` | 0,8410 | 0,7648 | 0,7878 | 0,7440 | 0,8234 |
+| `temporal_global` | 0,8296 | 0,7883 | 0,7921 | 0,7351 | 0,8149 |
+| `leave_one_out` | 0,8400 | 0,7648 | 0,7891 | 0,7472 | 0,8240 |
+
+Đọc số — ba điều **ngược trực giác**, phải nói đúng:
+
+1. **MostPopular có novelty thấp nhất** (8,42–8,49) như mong đợi: nó đưa **cùng một danh sách top phổ biến** cho mọi user. Đây là định nghĩa của "không cá nhân hoá".
+2. **Nhưng MostPopular KHÔNG có diversity thấp nhất — ALS mới thấp nhất** (0,735–0,747, thấp hơn cả MostPopular 0,765–0,788). Nguyên nhân: hàm mục tiêu ALS vẫn kéo về **cụm item hay xuất hiện cùng nhau**, nên top-10 nghiêng về một cụm genre dù item trong đó ít phổ biến hơn. **Cá nhân hoá không tự động kéo theo đa dạng.**
+3. **Random có novelty cao nhất** (20,2–21,1, cao hơn cả SASRec) nhưng NDCG gần 0 — "mới lạ" không đồng nghĩa "tốt". **Không được đọc novelty mà bỏ NDCG**, và không được đọc NDCG mà bỏ novelty.
+
+SASRec+CE nằm giữa: novelty cao hơn ItemKNN/ALS nhưng diversity cao gần bằng Random — đúng bản chất model học chuỗi, không tối ưu cho độ chính xác top-10 ở `tuning_budget = 0`.
+
+Nguồn: `novelty10` / `diversity10` trong từng `runs/<run_id>/outputs/*_summary.json` (xem §4.12.5 cho run id).
+
+#### 4.12.4 Chi phí vận hành — số re-run 2026-11-20
+
+Re-run 5 notebook để lấy novelty/diversity nên `total_seconds` thay đổi nhẹ so với §4.7 (cùng máy, cùng `local[4]`, cùng seed — chênh do dao động I/O). Bảng §4.7 vẫn giữ làm bản gốc; **bảng dưới là bản dùng cho báo cáo cuối** vì cùng một đợt run với novelty/diversity.
+
+| Split | Model | fit (giây) | total (giây) |
+|---|---|---:|---:|
+| `random80_20` | MostPopular | — | 10,5 * |
+| `random80_20` | Random | 0,0 | 48,1 |
+| `random80_20` | ALS | 38,7 | 103,7 |
+| `random80_20` | ItemKNN | 61,5 | 203,1 |
+| `random80_20` | SASRec+CE | 491,9 | 558,2 |
+| `temporal_global` | MostPopular | — | 2,5 * |
+| `temporal_global` | Random | 0,0 | 17,1 |
+| `temporal_global` | ALS | 36,2 | 65,9 |
+| `temporal_global` | ItemKNN | 55,0 | 88,0 |
+| `temporal_global` | SASRec+CE | 304,6 | 332,1 |
+| `leave_one_out` | MostPopular | — | 3,8 * |
+| `leave_one_out` | Random | 0,0 | 34,2 |
+| `leave_one_out` | ALS | 35,2 | 91,6 |
+| `leave_one_out` | ItemKNN | 77,4 | 172,3 |
+| `leave_one_out` | SASRec+CE | 524,4 | 564,1 |
+
+\* MostPopular chỉ ghi `elapsed_seconds`.
+
+**Cảnh báo khi đọc cột total:** SASRec+CE chạy **GPU RTX 4050 6 GB** (`torch 2.14.1+cu126`), 4 baseline còn lại chạy **CPU** Spark `local[4]`. **Không được kết luận "SASRec đắt hơn 5×"** từ bảng này — đó là so GPU với CPU, khác phần cứng. Muốn so công bằng phải chạy cùng thiết bị.
+
+#### 4.12.5 Kiểm định nhiều model — Friedman (Demšar, JMLR 2006)
+
+Notebook 12 dùng Wilcoxon cho **từng cặp** (2 model). Bài 04 yêu cầu: khi so **≥3 model cùng lúc** thì dùng **Friedman** (giả thuyết không: mọi model ngang nhau), rồi **Nemenyi** để biết cặp nào thực sự khác. Đã chạy Friedman trên per-user NDCG của **4 model dùng chung tập user** — bỏ SASRec vì tập eval của nó khác (`val_fraction_users = 0.1`), giao user sẽ quá nhỏ.
+
+| Split | n users | χ² | p | Hạng TB (Pop / ALS / Random / ItemKNN) |
+|---|---:|---:|---:|---|
+| `random80_20` | 5.000 | 7.017,3 | ≈0 | 2,147 / 2,147 / 3,609 / 2,097 |
+| `temporal_global` | 5.000 | 4.206,0 | ≈0 | 2,262 / 2,262 / 3,222 / 2,253 |
+| `leave_one_out` | 5.000 | 773,1 | 2,91e-167 | 2,449 / 2,449 / 2,643 / 2,458 |
+
+Đọc số:
+
+1. **Friedman bác bỏ "mọi model ngang nhau"** ở cả 3 split (p ≈ 0). Nhưng Friedman **không chỉ ra cặp nào khác** — việc đó là của Wilcoxon từng cặp (notebook 12) hoặc Nemenyi post-hoc.
+2. **Random luôn hạng bét** (2,64–3,61) — đúng vai trò sàn.
+3. **Khoảng cách hạng giữa MostPopular / ALS / ItemKNN rất hẹp** ở `leave_one_out` (2,449 / 2,449 / 2,458) — khớp với §4.9: ở split này hiệu ứng co lại gần bằng 0 và Wilcoxon không có ý nghĩa (p = 0,153).
+4. Hạng của MostPopular và ALS **trùng nhau** (2,147 / 2,147; 2,262 / 2,262; 2,449 / 2,449) là hệ quả của việc hai model cho NDCG gần bằng nhau trên phần lớn user — không phải lỗi code. Cặp bằng điểm được scipy xử lý theo hạng trung bình.
+
+Nguồn: key `friedman` trong `runs/<run_id>/outputs/comparison.json`, block `(b3)` trong `rq1_answer.md`.
+
+#### 4.12.6 Run id dùng cho mục này (2026-11-20)
+
+| Notebook | Run id |
+|---|---|
+| 06 MostPopular | `20261120_004801_06_mostpopular_baseline_cde8a34b` |
+| 08 ALS | `20261120_012429_08_als_implicit_73a9947b` |
+| 09 ghép đối chiếu | `20261120_012944_09_compare_and_reversal_21d0811a` |
+| 10 Random | `20261120_004945_10_random_baseline_dc453187` |
+| 11 ItemKNN | `20261120_005139_11_itemknn_baseline_979f28e2` |
+| 13 SASRec+CE | `20261120_005943_13_sasrec_ce_f31d7945` |
+
+Run 2026-11-18 giữ nguyên truy vết, không trích số vào §4.12 (thiếu `novelty10`/`diversity10`).
 
 ## 5. Nguyên tắc báo cáo
 

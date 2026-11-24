@@ -368,7 +368,7 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
 | G4   | `temporal_violation_global_pct(random) > 95%`                         | ✅ pass (100,0000%)                      | kiểm tra lại định nghĩa split       |
 | G5   | `temporal_violation_global_pct(temporal_global) == 0`                 | ✅ pass (0,0000%)                        | kiểm tra threshold                      |
 | G6   | NDCG của ALS ≥ NDCG popularity (sanity)                               | ✅ pass (3/3 split)                      | kiểm tra top-K/mask                     |
-| G7   | `eval_relevant_users` > 0 ở mọi split (tập đánh giá khả dụng) | ✅ pass (temporal: 6.219 > 0)            | cảnh báo khi so sánh NDCG giữa split |
+| G7   | `eval_relevant_users` > 0 ở mọi split (tập đánh giá khả dụng) | ✅ pass (temporal: 6.214 > 0 — số ALS)            | cảnh báo khi so sánh NDCG giữa split |
 | G8   | Gap 3 phần nằm trong 200–250 từ                                     | ✅ pass (237 từ)                        | rút gọn `scripts/09_count_gap.py`    |
 
 ### 7.1 Gate notebook-first (2026-11-15)
@@ -387,7 +387,7 @@ ratings.csv ──► part-00000.parquet ──► HDFS /recsys/ratings/
 
 > **Rerun 2026-11-20 (Bài 04):** 06/08/10/11/13 ghi `novelty10`/`diversity10` vào `*_summary.json`; 09 ghi key `friedman` vào `comparison.json`. Số + run id: `Metrics.md` §4.12. Serendipity KHÔNG đo; Nemenyi KHÔNG chạy.
 
-> **G7 cảnh báo:** `eval_relevant_users` chênh rất lớn giữa split (158.692 / 6.219 / 96.003). NDCG **không** so cặp được giữa các split. Xem `Drawbacks.md` §3.3.
+> **G7 cảnh báo:** `eval_relevant_users` chênh rất lớn giữa split (158.692 / 6.219 / 96.003 — số của Popularity/Random/ItemKNN; ALS: 158.626 / 6.214 / 95.977). NDCG **không** so cặp được giữa các split. Xem `Drawbacks.md` §3.3.
 
 ## 8. Tầng 6 — Kiểm định thống kê (bổ sung 2026-11-04)
 

@@ -1,62 +1,62 @@
 [
   {
     "png": "D:\\Master Exers\\Big Data\\Recomendation_System\\docs\\Project\\Main\\Presentation\\Slides\\figures\\limitation\\01_TOIS2022_Ji_scope.png",
-    "page": 21,
+    "page": 22,
     "clip": [
-      39.6,
-      259.3,
-      446.5,
-      291.2
+      39.8,
+      351.9,
+      447.8,
+      383.8
     ],
     "px": [
-      1132,
-      89
+      1134,
+      90
     ],
-    "sha256": "81302c8dc93fbf6b",
+    "sha256": "0378c06385b523f0",
     "slug": "01_TOIS2022_Ji_scope",
     "doi": "10.1145/3569930",
-    "label": "[1] Ji et al., TOIS 2022 — tr.21",
-    "gap": "Chỉ chỉ ra rò rỉ làm đổi accuracy + thứ hạng; KHÔNG định nghĩa chỉ số đo rò rỉ",
+    "label": "[1] Ji et al., TOIS 41(3) — tr.22",
+    "gap": "Thiếu SLI theo lịch sử từng người",
     "file": "01_TOIS2022_DataLeakage_RS_OfflineEvaluation.pdf"
   },
   {
     "png": "D:\\Master Exers\\Big Data\\Recomendation_System\\docs\\Project\\Main\\Presentation\\Slides\\figures\\limitation\\02_TOIS2023_Navarro_limitations.png",
-    "page": 20,
+    "page": 8,
     "clip": [
       39.8,
-      160.6,
-      448.0,
-      192.6
+      411.0,
+      446.3,
+      442.9
     ],
     "px": [
-      1135,
-      89
+      1130,
+      90
     ],
-    "sha256": "4a1192d17e88e99a",
+    "sha256": "6aac0c90dd7ecd2f",
     "slug": "02_TOIS2023_Navarro_limitations",
     "doi": "10.1145/3637066",
-    "label": "[2] TOIS 2023 — tr.20",
-    "gap": "Tách 4 yếu tố gây mâu thuẫn; KHÔNG gắn quy mô Big Data",
+    "label": "[2] Daniil et al., TORS 2(1) — tr.8",
+    "gap": "Chưa đo đổi thứ hạng/chi phí",
     "file": "02_TOIS2023_Reproducing_PopularityBias_EvaluationStrategies.pdf"
   },
   {
     "png": "D:\\Master Exers\\Big Data\\Recomendation_System\\docs\\Project\\Main\\Presentation\\Slides\\figures\\limitation\\03_RecSys2025_TimeToSplit_limitation.png",
     "page": 8,
     "clip": [
-      47.8,
-      400.6,
-      301.6,
-      430.4
+      312.0,
+      430.1,
+      565.7,
+      460.0
     ],
     "px": [
       706,
       84
     ],
-    "sha256": "a783cce4ba6e6015",
+    "sha256": "51f13af362a4fff1",
     "slug": "03_RecSys2025_TimeToSplit_limitation",
     "doi": "10.1145/3705328.3748164",
-    "label": "[3] Chen et al., RecSys '25 — tr.8",
-    "gap": "Chỉ sequential RS + ground-truth validation; cần GPU, không đo chi phí phân tán",
+    "label": "[3] Gusak et al., RecSys '25 — tr.8",
+    "gap": "Chỉ mô hình chuỗi; thiếu bias/chi phí",
     "file": "03_RecSys2025_TimeToSplit.pdf"
   },
   {
@@ -64,19 +64,19 @@
     "page": 7,
     "clip": [
       312.0,
-      173.1,
-      566.5,
-      210.8
+      397.0,
+      566.4,
+      429.9
     ],
     "px": [
       708,
-      106
+      93
     ],
-    "sha256": "0f49c98584d919c1",
+    "sha256": "0b75c7bea0b1859a",
     "slug": "04_RecSys2026_Discussion_Limitations",
     "doi": "10.1145/3773078.3831818",
-    "label": "[4] RecSys '26 — tr.7",
-    "gap": "Sparse ranking != dense judgment; chưa đo coverage/bias kèm thứ hạng",
+    "label": "[4] Parajuli et al., RecSys '26 — tr.7",
+    "gap": "Chưa gắn Big Data; thiếu bias quy mô lớn",
     "file": "04_RecSys2026_ConvergentValidity_OfflineEvaluation.pdf"
   }
 ]

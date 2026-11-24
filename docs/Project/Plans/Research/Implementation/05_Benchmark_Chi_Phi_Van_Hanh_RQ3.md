@@ -57,7 +57,7 @@ Nguồn run id:
 | Random | `leave_one_out` | 162.541 | — | PASS |
 | MostPopular | `random80_20` | — | — | — (có `relevant_test_items` = 2.491.871; không ghi `seen_exclusion`) |
 | MostPopular | `temporal_global` | — | — | — (có `relevant_test_items` = 290.588) |
-| MostPopular | `leave_one_out` | — | — | — (có `relevant_test_items` = 96.003) |
+| MostPopular | `leave_one_out` | — | — | — (có `relevant_test_items` = 96.003; ALS dùng tập eval riêng: 95.977 item / 6.214 user ở temporal) |
 | ItemKNN | `random80_20` | 5.002.121 | 9.960.940 | PASS |
 | ItemKNN | `temporal_global` | 5.000.816 | 9.980.888 | PASS |
 | ItemKNN | `leave_one_out` | 162.541 | 12.356.808 | PASS |

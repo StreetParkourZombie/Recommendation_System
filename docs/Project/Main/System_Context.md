@@ -216,12 +216,12 @@ Các kết quả PoC trước cập nhật này vẫn là kết quả project-co
 ### 11.1 Bốn phát hiện chính (đã kiểm định thống kê)
 
 1. **Thứ hạng mô hình không đảo chiều** (ALS > Popularity ở cả 3 split, Wilcoxon p < 0,001),
-   nhưng **độ lớn thay đổi 5,45 lần** và **hiệu ứng co lại** theo độ khó split
+   nhưng **độ lớn thay đổi 5,5 lần** và **hiệu ứng co lại** theo độ khó split
    (`dz` của NDCG@10: 0,764 → 0,521 → 0,169).
 2. **Định nghĩa rò rỉ phải tương đối theo user** — toàn cục cho `leave_one_out` = 99,9988%
    (vô nghĩa) vs user-relative = 0,0000% (đúng).
 3. **Đổi rò rỉ lấy dịch chuyển miền** — `temporal_global` mất **96,1%** mẫu đánh giá
-   (158.688 → 6.219 user).
+   (158.688 → 6.219 user — số của Popularity; ALS là 158.626 → 6.214).
 4. **Giảm thiên lệch ≠ xử lý thiên lệch** — `PerUserPopSkew` giảm mạnh (dz −2,28 đến −3,46,
    có ý nghĩa) nhưng `longtail_coverage = 0` ở cả 6 tổ hợp.
 

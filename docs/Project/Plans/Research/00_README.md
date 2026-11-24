@@ -3,7 +3,7 @@
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
 **Phục vụ đồng thời:** IT252BIDA (Xử lý dữ liệu lớn) + IT252STRM (Phương pháp nghiên cứu khoa học)
 **Ngày lập:** 2026-11-03 · **Deadline đề cương:** 2026-11-08
-**Trạng thái (2026-11-20):** Dataset chốt (MovieLens ml-25m) · pipeline notebook 01→12 chạy xong, **10/10 gate PASS** · 5 model đã chạy FULL 162.541 user × 3 split · novelty có bằng chứng định lượng (RQ1 `best_model_reversals_found = 2`, RQ2 bias_ratio, RQ3 bảng chi phí) · tầng SOTA (SASRec+CE) đã reproduce 3 split trên GPU local (không tuning) — notebook 13 đã chạy 3 split trên GPU local RTX 4050 6 GB. **Bổ sung 2026-11-20:** 06/08/10/11/13 rerun lấy `novelty10`/`diversity10`, 09 rerun lấy `friedman`; 15/15 fixture metrics PASS; Serendipity KHÔNG đo. Xem `../../Main/Metrics.md` §4.12.
+**Trạng thái (2026-11-20):** Dataset chốt (MovieLens ml-25m) · pipeline notebook 01→12 chạy xong, **10/10 gate PASS** · 5 model đã chạy FULL 162.541 user × 3 split · novelty có bằng chứng định lượng (RQ1 `best_model_reversals_found = 2`, RQ2 bias_ratio, RQ3 bảng chi phí) · tầng SOTA (SASRec+CE) đã reproduce 3 split trên GPU local (không tuning) — notebook 13 đã chạy 3 split trên GPU local RTX 4050 6 GB. **Bổ sung 2026-11-20:** 06/08/10/11/13 rerun lấy `novelty10`/`diversity10`, 09 rerun lấy `friedman`; 15/15 fixture metrics PASS; Serendipity KHÔNG đo. Xem `../../Main/Metrics.md` §4.12. **Slide hiện hành:** `../../Main/Presentation/Slides/PPNCKH_DeCuong_20slides.pptx` — 20 trang chính + 4 phụ lục, số trên slide lấy từ `audit_report.json` (đường E). **TLTK:** 13 bài (10 Nhóm A + 3 Nhóm B ở §0C của `03_Tai_lieu_tham_khao.md`).
 
 ---
 

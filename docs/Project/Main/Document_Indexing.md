@@ -1,8 +1,8 @@
 # Chỉ Mục Tài Liệu Hệ Thống — Recommender System Project
 
 **Đề tài:** Phân tích rò rỉ, thiên lệch phổ biến trong hệ thống gợi ý bằng kiểm toán chiến lược chia tập trên Spark.
-**Cập nhật:** 2026-11-20
-**Trạng thái:** luồng notebook-first `00`–`13` đã chạy xong, gate PASS; rerun 2026-11-20 thêm Novelty/Diversity (06/08/10/11/13) + Friedman (09).
+**Cập nhật:** 2026-11-25
+**Trạng thái:** luồng notebook-first `00`–`13` đã chạy xong, gate PASS; rerun 2026-11-20 thêm Novelty/Diversity (06/08/10/11/13) + Friedman (09). Slide hiện hành: `PPNCKH_DeCuong_20slides.pptx` (20 trang chính + 4 phụ lục), sinh từ `scripts/generate_slides.py`.
 
 ---
 
@@ -82,6 +82,8 @@ Chi tiết cách chạy + bảng gate đầy đủ: [`notebooks/jupyter/README.m
 | `scripts/07_dashboard.py`, `15_screenshot_dashboard.py` | Streamlit + CDP screenshot | ✅ |
 | `scripts/13_prisma_flow.py`, `10_fetch_papers.py`, `16_fetch_publisher_versions.py` | PRISMA + tải paper | ✅ |
 | `scripts/14_perf_benchmark.py` | Benchmark wall-clock/shuffle | ✅ |
+| `scripts/19_audit_report.py` | Gộp `runs/*/outputs` → `audit_report.json` (ô O1 của ma trận) | ✅ |
+| `scripts/generate_slides.py`, `generate_slide_figures.py` | Sinh slide 20+4 và 4 hình minh hoạ | ✅ |
 
 ---
 
@@ -118,6 +120,7 @@ D:\recsys_data\splits\<strategy>\{train,test}\*.parquet  735 MB, 3 split
 | Thiết kế nghiên cứu | `04_Ma_tran_tong_quan_5_cot.md`, `05_Ke_hoach_thuc_nghiem.md`, `05B_Ma_tran_tieu_chi_thiet_ke.md`, `05C_Baseline_3_tang_DSRM.md` |
 | Gap & dự phòng | `06_Du_phong_va_phuong_an_B.md`, `07_Gap_3_phan_Known_CriticalGap_Proposed.md`, `08_Tao_tac_SLI_va_giao_thuc_audit.md` |
 | Thực thi | `Implementation/00_Notebook_First_Plan.md`, `01_Phase_Plan.md`, `02_Reproduction_Report_Template.md`, `03_Paper_Experiment_Matrix.md`, `04_Research_Questions_Gaps_and_Action_Map.md`, `05_Benchmark_Chi_Phi_Van_Hanh_RQ3.md`, `06_Huong_Dan_Chay_SASRec_va_MRR.md` |
+| Trình bày | `Presentation/Plans/00_Slide_Plan.md` (= `Plan.md`), `Presentation/Slides/PPNCKH_DeCuong_20slides.pptx` (20 chính + 4 phụ lục), `Presentation/Script_ThuyetTrinh_15Slides.md` (nội dung đã là 20 slide) |
 | Nháp | `Others/TEMP.md` (kế hoạch cell-level cho 04–09) |
 
 ---

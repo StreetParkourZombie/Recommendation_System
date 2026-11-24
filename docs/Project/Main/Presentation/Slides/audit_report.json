@@ -1,0 +1,59 @@
+{
+  "report": "Phiếu chẩn đoán cách chia dữ liệu",
+  "explain": "Mỗi cách chia dữ liệu nhận một phiếu. Đọc từ trên xuống: mức rò rỉ, số người thật sự được chấm điểm, rồi mới tới kết luận. SAFE = dùng được; WARN = dùng được nhưng phải ghi chú; BLOCK = không được dùng để so sánh.",
+  "thresholds": {
+    "sli_user_pct": {
+      "safe": "nhỏ hơn 0,05",
+      "warn": "0,05 đến 0,30",
+      "block": "từ 0,30 trở lên"
+    },
+    "note": "Ba ngưỡng do đề tài tự đặt, không phải chuẩn công bố.",
+    "eval_users_ratio_block": "lệch hơn 1,20 lần thì cấm so sánh"
+  },
+  "eval_users_ratio_max_over_min": 25.5272,
+  "sources": {
+    "comparison": "D:\\Master Exers\\Big Data\\Recomendation_System\\runs\\20261120_012944_09_compare_and_reversal_21d0811a\\outputs\\comparison.json",
+    "audit": "D:\\Master Exers\\Big Data\\Recomendation_System\\runs\\20261115_233616_05_audit_split_leakage_3fa5a49e\\outputs\\data_level_audit.json",
+    "protocol_id": "project_protocol_v1",
+    "seed": 42,
+    "k": 10
+  },
+  "splits": [
+    {
+      "split": "random80_20",
+      "split_vi": "trộn ngẫu nhiên 80/20",
+      "sli_user_pct": 98.9158,
+      "sli_global_pct": 100.0,
+      "eval_users": 158626,
+      "unseen_item_pct": 0.0573,
+      "verdict": "BLOCK",
+      "verdict_sli": "BLOCK",
+      "comparable_with_other_splits": true,
+      "reason": "Rò rỉ 98,92% số dòng test: những dòng này cũ hơn lượt chấm mới nhất của chính người đó, tức mô hình đã nhìn thấy tương lai của người ấy. Không dùng điểm số này để kết luận."
+    },
+    {
+      "split": "temporal_global",
+      "split_vi": "cắt theo mốc thời gian toàn cục",
+      "sli_user_pct": 0.0,
+      "sli_global_pct": 0.0,
+      "eval_users": 6214,
+      "unseen_item_pct": 8.7595,
+      "verdict": "BLOCK",
+      "verdict_sli": "SAFE",
+      "comparable_with_other_splits": false,
+      "reason": "Rò rỉ 0,00% số dòng test: không có dòng nào cũ hơn lượt chấm mới nhất của người đó. Nhưng chỉ chấm được 6.214 người, bằng 3,9% của cách chia lớn nhất (158.626 người) — lệch 25,5 lần, vượt ngưỡng 1,20. Vì vậy không được nói 'mô hình này tốt hơn', chỉ được nói 'điểm cao hơn trên một mẫu khác'. 8,76% số dòng test trỏ tới phim chưa từng xuất hiện trong train (phim mới hoàn toàn) — phần điểm này không phản ánh khả năng gợi ý cho người dùng cũ."
+    },
+    {
+      "split": "leave_one_out",
+      "split_vi": "giữ lượt chấm cuối của mỗi người",
+      "sli_user_pct": 0.0,
+      "sli_global_pct": 99.9988,
+      "eval_users": 95977,
+      "unseen_item_pct": 0.0388,
+      "verdict": "BLOCK",
+      "verdict_sli": "SAFE",
+      "comparable_with_other_splits": false,
+      "reason": "Rò rỉ 0,00% số dòng test: không có dòng nào cũ hơn lượt chấm mới nhất của người đó. Nhưng chỉ chấm được 95.977 người, bằng 60,5% của cách chia lớn nhất (158.626 người) — lệch 1,7 lần, vượt ngưỡng 1,20. Vì vậy không được nói 'mô hình này tốt hơn', chỉ được nói 'điểm cao hơn trên một mẫu khác'."
+    }
+  ]
+}

@@ -214,3 +214,20 @@ Script: `scripts/13_prisma_flow.py` → `figures/fig8_prisma_flow.svg`.
 - **Springer (journalofbigdata.springeropen.com):** chặn `urllib` bằng "Client Challenge" (JS). Cách đúng: browser đã PASS challenge → trong page chạy `fetch(pdfUrl, {credentials:'include'})` → trả base64 → Node ghi file. **Lưu ý:** gửi header `Range` bừa sẽ nhận **416**; bỏ `Range` thì nhận **206 + đủ bytes**.
 - **ScienceDirect / Elsevier:** CAPTCHA "Are you a robot?" cho cả browser lẫn HTTP client → **không tự động hóa được**, phải tải tay.
 - **Kiểm chứng bản thật:** `pypdf` đọc `/Creator`: `arXiv GenPDF` = bản preprint; `acmart` / `MiKTeX-pdfTeX` / `Acrobat Distiller` + footer bản quyền ACM/Springer = bản xuất bản.
+
+
+---
+
+## 0C. Nhóm B — bài gốc của mô hình dùng làm đối chuẩn (2026-11-24)
+
+Slide 9 cần trả lời câu hỏi "mô hình kinh điển/SOTA đi với bài nào". Corpus Nhóm A (10 bài ở §0B) chỉ *dùng* mô hình làm baseline, không phải bài *đề xuất* mô hình. Vì vậy thêm 3 bài gốc bên dưới. DOI đã query trực tiếp `api.crossref.org` ngày **2026-11-24**; chỉ trích dẫn bản nhà xuất bản, **chưa tải PDF**.
+
+| Mã slide | Mô hình | Bài gốc | Venue (theo Crossref) | DOI | Vai trò |
+|---|---|---|---|---|---|
+| B1 | ItemKNN (cosine) | Sarwar, Karypis, Konstan, Riedl — *Item-based collaborative filtering recommendation algorithms* | WWW 2001 | `10.1145/371920.372071` | Nguồn gốc ItemKNN;slide 9 ghi tên bài, A4 ghi DOI đầy đủ |
+| B2 | ALS implicit | Hu, Koren, Volinsky — *Collaborative Filtering for Implicit Feedback Datasets* | ICDM 2008 | `10.1109/ICDM.2008.22` | Nguồn gốc ALS trên dữ liệu chấm ẩn; slide 9/A4 trích |
+| B3 | SASRec + CE | Kang & McAuley — *Self-Attentive Sequential Recommendation* | ICDM 2018 | `10.1109/ICDM.2018.00035` | Kiến trúc SASRec; cấu hình full-catalog CE lấy từ `[3]` RecSys '25 |
+
+Hai sàn **Random** và **MostPopular** không có bài gốc riêng. Slide 9 khai báo thẳng: "sàn tầm thường, không viện dẫn" — không bịa DOI.
+
+> **Trạng thái:** 3 bài B1–B3 nằm trong `_manifest.json` với `status: "referenced-not-downloaded"`, không đếm vào 14 PDF đã tải. §0B vẫn giữ nguyên 10 bài Nhóm A dùng cho gap. Tổng tài liệu trích dẫn trên slide: **13 bài = 10 Nhóm A + 3 Nhóm B**, cộng dataset Harper & Konstan (bắt buộc theo license, không đếm vào 13).

@@ -1,7 +1,7 @@
 # Metrics — Định nghĩa chỉ số đánh giá
 
 **Project:** `D:\Master Exers\Big Data\Recomendation_System`
-**Cập nhật:** 2026-11-20 (bổ sung §4.12 — Novelty/Diversity/Friedman theo Bài 04)
+**Cập nhật:** 2026-11-25 (thêm §4.0 quy ước số; đồng bộ SLI 98,9158%)
 
 Mọi chỉ số dưới đây được tính **theo từng chiến lược chia tập** → điểm mấu chốt của đề tài là so sánh cùng một mô hình, cùng một dữ liệu, **ba cách chia**.
 
@@ -37,7 +37,7 @@ temporal_violation_user_pct = 100 × temporal_violation_user / |test|
 
 | Split | toàn cục | tương đối user |
 |---|---|---|
-| random80_20 | **100,0000%** | **98,9084%** |
+| random80_20 | **100,0000%** | **98,9158%** |
 | temporal_global | 0,0000% | 0,0000% |
 | leave_one_out | 99,9988% | **0,0000%** |
 
@@ -52,7 +52,7 @@ unseen_item_pct = 100 × unseen_item_rows / |test|
 
 **Ý nghĩa:** tương tác kiểm định trỏ tới phim mà mô hình **chưa từng thấy** → không thể có trọng số → đo lỗi không tránh được.
 
-**Kết quả đo thật:** `random80_20` 0,0559% · `temporal_global` **8,7594%** · `leave_one_out` 0,0388%.
+**Kết quả đo thật:** `random80_20` 0,0573% · `temporal_global` **8,7595%** · `leave_one_out` 0,0388%.
 
 → Đây là **cái giá** của việc loại bỏ rò rỉ thời gian: 8,76% số dòng kiểm định trong temporal_global trỏ tới phim chưa từng xuất hiện.
 
@@ -73,6 +73,8 @@ coldstart_user_rows = |{ r ∈ test : r.userId ∉ distinct(train.userId) }|
 Cố định ngưỡng 5 cho cả 3 split để **so sánh công bằng** (cùng tập user đánh giá).
 
 **Kết quả đo thật — phát hiện quan trọng:**
+
+> Bảng dưới là số của **Popularity/Random/ItemKNN**. ALS có tập eval riêng: **158.626 / 6.214 / 95.977**.
 
 | Split | eval_users | eval_relevant_users | tỷ lệ co lại |
 |---|---|---|---|
@@ -194,6 +196,22 @@ G = (2 Σ_{i=1..n} i·e_i) / (n · Σ e_i) − (n+1)/n
 
 ---
 
+## 4.0 Quy ước số — đọc trước khi trích bất kỳ số nào
+
+| Đường | Thời điểm | Trạng thái | Nguồn |
+|---|---|---|---|
+| **A** | 2026-11-04 | **lịch sử — không trích** | `scripts/04_audit_spark.py`, `11_peruser_ndcg.py` |
+| **B** | 2026-11-15 | lịch sử — chỉ để chứng minh ổn định | notebook 06/08 (subsample 30k) |
+| **C** | 2026-11-17 | chuẩn từ 17/11 — fit FULL 162.541 user | `runs/20261117_185700_08_als_implicit_7be22080` |
+| **D** | 2026-11-18 | chuẩn — ghép 4 model | `runs/20261118_022749_09_compare_and_reversal_c9482d3f` |
+| **E** | 2026-11-20 | **chuẩn hiện hành — 5 model + Friedman** | `runs/20261120_012944_09_compare_and_reversal_21d0811a` |
+
+**Luật:** đề cương/báo cáo/slide chỉ được trích **C, D, E**. Mục §4 và §4.4 giữ số đường A nguyên văn để truy vết — **không** xoá, **không** trích.
+
+**Hai tập eval khác nhau (đừng lẫn):**
+- `eval_relevant_users` của Popularity/Random/ItemKNN: **158.692 / 6.219 / 96.003**
+- `eval_relevant_users` của ALS: **158.626 / 6.214 / 95.977**
+
 ## 4. Bảng so sánh kết quả — đường script, đo thật 2026-11-04
 
 Nguồn: `D:\recsys_data\poc\poc6_<split>.json` → MongoDB `recsys.audit_metrics`.
@@ -235,9 +253,9 @@ Bảng CSV `reports/*.csv` cũ đã bị gỡ khỏi repo; số dưới đây v�
 
 ### 4.3 4 phát hiện chính
 
-1. **Thứ hạng mô hình không đảo chiều** (ALS > Popularity ở cả 3 split) — nhưng **độ lớn thay đổi 5,5 lần** (NDCG của ALS: 0,2584 → 0,0474). Kết luận “ALS cho NDCG cao” vẫn đúng, nhưng kết luận về *mức hiệu quả* thì phụ thuộc hoàn toàn vào chiến lược chia tập.
+1. **Thứ hạng mô hình không đảo chiều** (ALS > Popularity ở cả 3 split) — nhưng **độ lớn thay đổi 5,5 lần** (NDCG của ALS: 0,2584 → 0,0474 ở đường A; đường C: 0,2581 → 0,0469). Kết luận “ALS cho NDCG cao” vẫn đúng, nhưng kết luận về *mức hiệu quả* thì phụ thuộc hoàn toàn vào chiến lược chia tập.
 2. **Ngẫu nhiên 80/20 rò rỉ 98,91%** so với lịch sử của chính user → mọi metric trên split này là ước lượng lạc quan.
-3. **Đổi rò rỉ lấy dịch chuyển miền**: temporal_global loại rò rỉ (0%) nhưng mất 96,1% mẫu đánh giá (158.688 → 6.219 user) và có 8,76% item chưa từng xuất hiện.
+3. **Đổi rò rỉ lấy dịch chuyển miền**: temporal_global loại rò rỉ (0%) nhưng mất 96,1% mẫu đánh giá (158.688 → 6.219 user — số của Popularity) và có 8,76% item chưa từng xuất hiện.
 4. **Thiên lệch phổ biến**: Popularity 101–165× so với trung bình catalog; ALS chỉ 11–12×. Nhưng `longtail_coverage = 0` ở cả 6 tổ hợp → **giảm thiên lệch ≠ xử lý thiên lệch**.
 
 ---
@@ -357,6 +375,8 @@ Cùng một protocol (`project_protocol_v1`, seed 42, `rating ≥ 4,0`, K=10) nh
 | `leave_one_out` | 0,0183 | 0,0183 | 0,0474 | 0,0467 | **0,0469** | +0,0284 | +0,0286 |
 
 **Đường C là chuẩn từ 2026-11-17** — ALS fit toàn bộ 162.541 user (run `20261117_185700_08_als_implicit_7be22080`, RUN_FINISH COMPLETED, mọi gate PASS). So với đường B: NDCG chênh ≤ 1% (0,2556 → 0,2581 random80_20) — subsample 30k trước đó đủ đại diện. Bias ratio ALS (đường C): 18,66 / 12,69 / 17,31; eval_users ALS: 158.626 / 6.214 / 95.977.
+
+> **Chỉ cột ALS (C)** được trích cho đề cương/báo cáo/slide: **0,2581 / 0,1332 / 0,0469**. Cột A và B chỉ để chứng minh tính ổn định của kết luận.
 
 ### 4.5.2 Đối chiếu chỉ số thiên lệch
 

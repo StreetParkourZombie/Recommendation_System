@@ -31,7 +31,7 @@ CHƯƠNG 2
 CHƯƠNG 2
 Bài toán & tài liệu
 6 câu hỏi
-14 bài + bảng tổng hợp
+10 bài + bảng tổng hợp
 →
 45%
 CHƯƠNG 3
@@ -70,17 +70,19 @@ Thông tin
 Hiểu gì
 Hiểu ra
 Cùng ALS, chỉ đổi cách chia:
-NDCG@10 0,2581 → 0,0469.
+Độ đúng top-10: 0,2581 → 0,0469.
 Thấp hơn 5,5 lần.
 →
 Làm gì
 Quyết định
-Đo rò rỉ trước (SLI), đọc chỉ số sau.
-Lệch quá 1,2 lần thì dừng so sánh.
-Ghi rõ điều kiện chia khi báo cáo.
+Xem SLI (độ rò rỉ) trước, NDCG sau.
+Số người đánh giá: trộn 158.688 · thời gian 6.219 · giữ cuối 96.003.
+Số người: trộn gấp 25,5 lần thời gian (> 1,20) → cấm nói 'tốt hơn'.
+Báo kèm tên cách chia, số người và seed.
 Đây là ví dụ có số thật của đề tài, không phải ví dụ giả định trong bài giảng.
+Quy ước: dấu phẩy là dấu thập phân — 1,20 = 1.20, 8,76% = 8.76%.
 --- NOTES ---
-Bốn bước: dữ liệu 25 triệu lượt; thông tin đếm được; hiểu ra số đo đổi 5,5 lần; quyết định dùng SLI và kiểm tra 3 bước.
+Bốn bước: dữ liệu 25 triệu lượt; thông tin đếm được; hiểu ra số đo đổi 5,5 lần; quyết định dùng SLI và kiểm tra 3 bước. Ngưỡng 1,20 = 1.20: lấy số người của cách chia này chia cho số người của cách chia kia. random80_20 có 158.688 người; temporal_global có 6.219; leave_one_out có 96.003. random80_20/temporal_global = 25,5 lần; random80_20/leave_one_out = 1,65; temporal_global/leave_one_out = 15,4 — cả 3 đều > 1,20, cấm nói 'tốt hơn'. Nói 'điểm cao hơn trên mẫu khác'. Dấu phẩy là dấu thập phân: 8,76% = 8.76%, 0,2581 = 0.2581.
 
 ===== SLIDE 4 =====
 Cách tư duy áp dụng
@@ -92,7 +94,7 @@ Diễn dịch
 2. Áp xuống trường hợp trước mặt
 3. Thấy khác → sửa cách hiểu
 Ví dụ thật
-Nghiên cứu 2022: cần cùng mốc thời gian.
+Bài trước: muốn so công bằng cần cùng mốc thời gian.
 Trộn ngẫu nhiên lộ 98,91%; giữ lượt cuối: 0%.
 1 trường hợp ngược đủ bác cách hiểu cũ.
 Cách 2 · CHỦ ĐẠO
@@ -101,7 +103,7 @@ Quy nạp
 2. Rút ra quy luật chung
 3. Kết luận từ dữ liệu thật
 Ví dụ thật
-3 cách chia · 2 mô hình · 6 cách đo
+Thử 3 cách chia, 2 mô hình, 6 cách đo
 trên 25 triệu lượt chấm.
 Quy luật: hỏi cách đo trước, tin số sau.
 Chủ đạo vì kết luận từ dữ liệu thật.
@@ -147,17 +149,18 @@ ALS NDCG 0,2581 (trộn) → 0,0469
 (giữ lượt cuối): chênh 5,5 lần.
 Cách kiểm tra
 Làm sao?
-3 cách chia × 5 mô hình × 6 chỉ số
-trên 25 triệu tương tác.
+Chạy 3 cách chia × 5 mô hình;
+so SLI → số người đánh giá → rồi mới đọc NDCG.
+Xem chi tiết slide 3.
 Chuỗi phát biểu vấn đề: thực trạng → hậu quả → hạn chế của tài liệu → giải pháp (SLI + kiểm tra 3 bước).
 --- NOTES ---
-W5H2: What, Who, Where/When, Why, How much, How. Thực trạng: đa số dùng random 80/20. Hậu quả: chỉ số phóng đại, thứ hạng có thể đảo. Hạn chế: bài trước đo riêng từng mặt. Giải pháp: SLI + kiểm tra 3 bước.
+W5H2: What, Who, Where/When, Why, How much, How. Thực trạng: đa số dùng random 80/20. Hậu quả: chỉ số phóng đại, thứ hạng có thể đảo. Hạn chế: bài trước đo riêng từng mặt. Giải pháp: SLI + kiểm tra 3 bước. Cách kiểm tra 3 bước (xem slide 3): (1) xem SLI (độ rò rỉ) trước NDCG; (2) báo số người đánh giá cạnh mọi chỉ số; (3) so số người giữa 2 cách chia — random80_20 có 158.688, temporal_global có 6.219, tỷ lệ 25,5 lần (> 1,20) — thì chỉ nói 'điểm cao hơn trên mẫu khác', cấm nói 'tốt hơn'. Chạy 3 cách chia × 5 mô hình là thí nghiệm; 3 bước kia là cách đọc kết quả.
 
 ===== SLIDE 6 =====
 Kiểm tra tài liệu
-Chương 2 — 14 bài bản nhà xuất bản, không dùng arXiv
+Chương 2 — 10 bài bản nhà xuất bản, không dùng arXiv
 6 / 15
-14
+10
 bài được giữ lại
 9
 bài CORE A*/A
@@ -165,22 +168,20 @@ bài CORE A*/A
 bài chỉ có arXiv
 Nguồn | Xếp hạng | Số bài
 ACM TOIS / TORS | Q1 · CORE A | 4
-ACM RecSys ('25, '26, '23, '21, '20) | Q1 · CORE A* | 5
-ACM SIGIR '23 | Q1 · CORE A* | 1
-Springer UMAI 2024 / J. Big Data 2019 | Q1 · CORE —/C | 2
-Elsevier ESWA 2023 | Q1 · CORE B | 1
+ACM RecSys ('25, '26, '21, '20) | Q1 · CORE A* | 5
+Springer UMAI 2024 | Q1 · CORE — | 1
 Cách làm
 Kiểm tra từng bài
-14/14 là bản nhà xuất bản.
-10/14 có DOI ACM.
+10/10 là bản nhà xuất bản.
+9/10 có DOI ACM.
 Loại bản chỉ có arXiv: 10.48550/arxiv.2011.07931
 DOI mở được, có bản quyền rõ.
 Ghi sha256 trong _manifest.json.
-Zotero: rò rỉ 5 · thiên lệch 6 · chia tập 2 · Big Data 2
+Zotero: rò rỉ 1 · thiên lệch 5 · chia tập 4
 Mã đối chuẩn: github.com/putatu/dataLeakageRec
 Chụp trang đầu từng PDF có trong phụ lục. Tìm theo 3 trục: bài toán – cách làm – phạm vi.
 --- NOTES ---
-Quy trình tìm: DOI từ OpenAlex/Unpaywall → chỉ lấy bản nhà xuất bản → kiểm tra /Creator → tra SCImago/CORE → ghi manifest sha256. 14 bài, 9 bài CORE A*/A. Mã nguồn bài đối chuẩn: github.com/putatu/dataLeakageRec.
+Quy trình tìm: DOI từ OpenAlex/Unpaywall → chỉ lấy bản nhà xuất bản → kiểm tra /Creator → tra SCImago/CORE → ghi manifest sha256. 10 bài, 9 bài CORE A*/A. Mã nguồn bài đối chuẩn: github.com/putatu/dataLeakageRec.
 
 ===== SLIDE 7 =====
 Bảng tổng hợp và khoảng trống
@@ -188,50 +189,55 @@ Chương 2 — hạn chế trong bảng dẫn tới câu hỏi
 7 / 15
 5 bài · 4 nhận xét
 Bài | Cách làm | Kết quả | Hạn chế → chỗ đề tài vào
-Wang, TOIS 2022 | So sánh có/không dùng mốc thời gian chung | Rò rỉ đổi độ đúng và thứ hạng | Chưa có thước đo rò rỉ
-Abdollahpouri, TOIS 2023 | Tách dữ liệu / thuật toán / nhóm người / cách đánh giá | Cách đánh giá giải thích mâu thuẫn | Chưa gắn quy mô lớn
-Chen, RecSys '25 | SASRec+ / BERT4Rec / GRU4Rec trên 8 tập | Cách chia đổi thứ hạng | Chỉ mô hình chuỗi; cần GPU lớn
-RecSys '26 | Kiểm tra độ tin của đánh giá offline | Xếp hạng thưa khác đánh giá dày | Chưa đo độ phủ và thiên lệch
-RecSys '20 | So sánh cách chia tập | Chia tập là lựa chọn thiết kế | Quy mô vừa
-[1] TOIS 2022: đổi thứ hạng nhưng chưa đặt tên thước đo
-[2] TOIS 2023: chưa gắn quy mô dữ liệu lớn
-[3] RecSys '25: chỉ mô hình chuỗi, tốn GPU lớn
-[4] RecSys '26: xếp hạng thưa khác đánh giá dày
-Khoảng trống: chưa bài nào đo cùng lúc đảo thứ hạng + thiên lệch + chi phí trên cùng một pipeline. Đóng góp của đề tài: hệ thống + thực nghiệm; KHÔNG nhận phương pháp mới hay miền mới.
+Ji, TOIS 41(3) | So sánh có/không dùng mốc thời gian chung | Rò rỉ đổi độ đúng và thứ hạng | Thiếu SLI theo từng người
+Daniil, TORS 2024 | Tách dữ liệu / thuật toán / nhóm người / cách đánh giá | Cách đánh giá giải thích mâu thuẫn | Chưa đo thứ hạng/chi phí
+Gusak, RecSys '25 | SASRec+ / BERT4Rec / GRU4Rec trên 8 tập | Cách chia đổi thứ hạng | Chỉ chuỗi; thiếu bias/chi phí
+Parajuli, RecSys '26 | Kiểm tra độ tin của đánh giá offline | Xếp hạng thưa khác đánh giá dày | Chưa gắn Big Data; thiếu bias
+Meng, RecSys '20 | So sánh cách chia tập | Chia tập là lựa chọn thiết kế | Thiếu bias + chi phí
+[1] Ji et al., TOIS 41(3): thiếu SLI theo lịch sử từng người
+[2] Daniil et al., TORS 2(1): chưa đo đổi thứ hạng/chi phí
+[3] RecSys '25: chỉ mô hình chuỗi; thiếu bias/chi phí
+[4] RecSys '26: chưa gắn Big Data; thiếu bias quy mô lớn
+Khoảng trống: chưa có nghiên cứu đo đồng thời đổi thứ hạng + thiên lệch + chi phí trên cùng một pipeline dữ liệu lớn. Đề tài bổ sung SLI theo lịch sử từng người; KHÔNG nhận mô hình mới hay miền mới.
 --- NOTES ---
-Bảng 5 bài. 4 ảnh là câu hạn chế cắt từ bản nhà xuất bản, có trang nguồn trong phụ lục. Gap 3 phần (đã biết / điểm nghẽn / cách làm đề xuất) nằm ở báo cáo; slide chỉ tóm tắt. Đóng góp theo 4 loại của bài giảng: bài toán (một phần), phương pháp (không), miền ứng dụng (không), lý giải (một phần).
+Bảng 5 bài lấy từ synthesis matrix 10 bài cuối; S13/S14 chỉ đối chiếu bảo vệ. 4 ảnh là câu hạn chế cắt từ bản nhà xuất bản, có trang nguồn trong phụ lục. Cột hạn chế là nền trực tiếp của Critical Gap: (i) đổi thứ hạng, (ii) popularity bias định lượng, (iii) chi phí trên pipeline Big Data. Ngoài ra đề tài bổ sung SLI theo lịch sử từng người: Ji có định nghĩa rò rỉ toàn cục nhưng chưa có SLI tương đối. Chi phí ở đây là runtime đã đo; bộ nhớ và so sánh CPU/GPU chưa đo, nên không overclaim. 07_Gap có bảng trích dẫn cũ (Wang/Abdollahpouri, TOIS 41(2), TIST 6(4)); slide dùng final list từ 03_Tai_lieu_tham_khao. Đóng góp theo 4 loại của bài giảng: bài toán một phần, phương pháp SLI/giao thức, miền ứng dụng không, lý giải một phần.
 
 ===== SLIDE 8 =====
 Mục tiêu và câu hỏi
-Chương 3 — việc cần làm gắn với câu hỏi
+Chương 3 — GO/SO/RQ khép kín; MRQ được trả lời bởi 4 RQ chính
 8 / 15
-Công thức tiêu đề: [cách làm] + [mục tiêu] + [phạm vi] — kiểm tra cách chia → đo rò rỉ và thiên lệch → Spark, MovieLens 25M
-Tỷ trọng 20%
-Việc 1 · Dữ liệu
-Chuẩn hóa MovieLens 25M.
-Tạo 3 cách chia; đếm phổ biến.
-Chưa gắn câu hỏi riêng.
-Tỷ trọng 40%
-Việc 2 · Thước đo
-SLI theo từng người, 3 mức.
-Kiểm tra 3 bước.
-Trả lời câu hỏi 1, 2.
-Tỷ trọng 20%
-Việc 3 · Đối chuẩn
-5 mô hình × 3 cách chia.
-1 seed (đã khai báo giới hạn).
-Trả lời câu hỏi 1.
-Tỷ trọng 20%
-Việc 4 · Thử thêm
-Đổi ngưỡng; lấy mẫu nhỏ.
-Thử 2 cách tính SLI.
-Trả lời câu hỏi 2, 4.
-Câu hỏi 1: chia tập có đảo thứ hạng? · 2: thiên lệch đổi bao nhiêu? · 3: chi phí chạy?
-Câu hỏi 4: kiểm tra 3 bước dùng được không? · 5 (mở rộng): sang tập dữ liệu khác.
-Biến: độc lập = cách chia; phụ thuộc = NDCG/MRR/SLI; kiểm soát = dữ liệu, seed, ngân sách chỉnh.
-H0: không khác biệt giữa các cách chia; H1: có khác biệt; bác H0 khi p < 0,05.
+Tiêu đề = [kiểm toán chiến lược chia tập] + [đo tác động] + [Spark, MovieLens 25M]
+GO: Đo và giải thích tác động của chiến lược chia tập đến tín hiệu đo và thiên lệch phổ biến trong hệ thống gợi ý trên Spark
+MRQ: Ở mức độ nào chiến lược chia tập đổi tín hiệu đo và thiên lệch khi dữ liệu, seed 42, ngân sách chỉnh giữ nguyên?
+20% · RQ3
+SO1 · Dữ liệu
+Đối chuẩn 25.000.095 lượt, 3 chiến lược split.
+Đếm 323.737 key phổ biến bằng MapReduce.
+Đo chi phí thời gian / task / I/O trên Spark/HDFS.
+40% · RQ4
+SO2 · Thước đo
+Đề xuất SLI theo từng user, 3 ngưỡng.
+Thiết kế giao thức audit 3 bước.
+Đóng góp Models + Methods của đề tài.
+20% · RQ1
+SO3 · Đối chuẩn
+Đối chuẩn 5 mô hình × 3 split, seed 42.
+Random/MostPopular · ALS/ItemKNN · SASRec+CE.
+Đo mức độ đảo thứ hạng NDCG@10.
+20% · RQ2
+SO4 · Độ nhạy
+Kiểm chứng đổi ngưỡng relevant, subsample.
+So sánh 2 định nghĩa SLI.
+Đo đổi coverage / Gini / long-tail exposure.
+RQ1 ↔ SO3: Mức độ đảo thứ hạng NDCG@10 giữa các split là bao nhiêu?
+RQ2 ↔ SO4: Coverage / Gini / long-tail đổi bao nhiêu khi đổi ngưỡng, subsample, định nghĩa SLI?
+RQ3 ↔ SO1: Chi phí thời gian / task / I/O của mỗi split trên Spark/HDFS ở 25M như thế nào?
+RQ4 ↔ SO2: Giao thức SLI + 3 bước giữ tín hiệu đo, phát hiện thiên lệch với seed 42 ra sao?
+RQ5 (mở rộng, chưa cam kết): Mức độ kết luận giữ được khi sang Amazon 2023 / Steam?
+H0: phân bố NDCG@10 không khác nhau giữa các split · H1: có khác nhau · bác bỏ khi p < 0,05
+Wilcoxon cho từng cặp; Friedman cho k ≥ 3; cùng dữ liệu, seed 42, ngân sách chỉnh giữ nguyên.
 --- NOTES ---
-SO2 nặng nhất. RQ1–RQ5 như slide. S8 dùng 1 seed thay vì 3+ seed như bản cũ. Bảng biến và H0/H1 theo bài giảng 03.
+GO lấy từ 08_Tao_tac_SLI_va_giao_thuc_audit.md:191-199. MRQ và RQ1-RQ4 viết lại dạng mở theo raw_03_Phuong_Phap_Luan_Thiet_Ke_NC.txt:357-376; RQ5 là mở rộng, không nằm trong 4 SO. Ánh xạ khép kín: SO1↔RQ3, SO2↔RQ4, SO3↔RQ1, SO4↔RQ2. Tránh orphan RQ trong phạm vi cam kết. SO2 nặng 40% vì tạo tác Models + Methods là SLI và giao thức audit 3 bước. Chỉ 1 seed 42, không phải 3+ seed. Động từ SO dùng bậc cao (Đối chuẩn, Đề xuất, Thiết kế, Kiểm chứng), không dùng 'tìm hiểu/cài đặt'. RQ5 cần Amazon 2023/Steam nên để mở rộng; không gán SO.
 
 ===== SLIDE 9 =====
 Kiểm tra tính khả thi
@@ -244,7 +250,7 @@ Tiêu chí 2
 Đáng quan tâm
 Trả lời 'cách đo đúng chưa' quan trọng hơn 'mô hình nào cao hơn'.
 Tiêu chí 3
-Mới
+Có điểm mới
 SLI: giữ lượt cuối tính toàn cục 99,9988% nhưng theo từng người là 0%.
 Tiêu chí 4
 Đạo đức
@@ -260,66 +266,76 @@ FINER = Feasible, Interesting, Novel, Ethical, Relevant. Mỗi ô gắn một b�
 Quy trình thực hiện
 Chương 3 — bốn tầng, đã chạy thật
 10 / 15
-Tầng 1 · Chứa dữ liệu
+Tầng 1
+1 · Chứa dữ liệu
 CSV 25M → Parquet
 Spark đọc trực tiếp
-Tầng 2 · Xử lý lớn
+Tầng 2
+2 · Xử lý lớn
 MapReduce + Spark
 323.737 khóa phổ biến
-Tầng 3 · Lưu kết quả
+Tầng 3
+3 · Lưu kết quả
 MongoDB
 42 trường audit
-Tầng 4 · Xem & kiểm định
+Tầng 4
+4 · Xem & kiểm định
 R + Streamlit
 Wilcoxon theo từng người
-MapReduce chạy xong 2026-11-04 (container đã gỡ, dựng lại được) · đối chiếu G3 đúng 100% · 10/10 notebook đạt · 4 mô hình CPU, SASRec GPU local.
+MapReduce chạy xong 2026-11-04 (container đã gỡ, dựng lại được) · đối chiếu G3 đúng 100% · 10/10 bước kiểm tra đạt (04–12); 4 mô hình CPU, SASRec GPU riêng.
 --- NOTES ---
 Bốn tầng: lưu trữ Parquet + Spark; xử lý lớn MapReduce Java + PySpark local[4]; lưu chỉ số MongoDB; trình bày R + Streamlit. SASRec chạy GPU RTX 4050 6 GB.
 
 ===== SLIDE 11 =====
 Chỉ số và mô hình đối chuẩn
-Chương 3 — đo gì, so với ai
+Chương 3 — công thức độ đo + tham số + đối chuẩn
 11 / 15
-Chỉ số rò rỉ
+Công thức rò rỉ
 SLI
-Trung bình tỷ lệ rò rỉ theo từng người.
-Không dùng tỷ lệ gộp cả tập.
-An toàn < 0,05 · nhẹ 0,05–0,30 · nặng ≥ 0,30
-Chỉ số xếp hạng
+SLI theo từng user: Σ rò rỉ / Σ tương tác test
+Ngưỡng: <0,05 an toàn · 0,05–0,30 nhẹ · ≥0,30 nặng
+Công thức xếp hạng
 NDCG / MRR
-NDCG@10 = DCG/IDCG (5 ca tính tay).
-Hit@10 · Recall@10 · MRR@10.
-Chỉ số thiên lệch
-Độ phủ
-Độ phủ danh mục · Gini mức hiển thị.
-Tỷ lệ phim phổ biến · độ phủ phim ít xem.
+NDCG@10=mean(DCG/IDCG), DCG=Σ rel(k)/log₂(k+1)
+MRR@10=mean(1/rank_first_relevant)
+Hit@10=% user có ≥1 item phù hợp top-10
+Công thức thiên lệch
+Coverage / Gini
+Coverage=|item đề xuất|/|item catalog|
+Gini=Σ i·e_(i)−(n+1)/n, đo độ phủ đều
+Công thức bổ sung
+Mới lạ / Đa dạng
+Novelty=−log(pop_item), cao=ít phổ biến
+Diversity=1−Jaccard(thể loại), cao=khác nhau
 5/5 mô hình đã chạy
 Ba nhóm đối chuẩn
-Sàn: MostPopular, Random · Kinh điển: ALS, ItemKNN · Đối chuẩn mới: SASRec + CE.
-SASRec + CE là mô hình đối chuẩn, KHÔNG phải mô hình thắng; GPU RTX 4050 6 GB, seed 42, không chỉnh thêm.
-4 mô hình chạy CPU, SASRec chạy GPU; KHÔNG so thời gian CPU với GPU.
-Kiểm định: Wilcoxon theo từng người + khoảng tin cậy 95% + độ lớn hiệu ứng.
-20/20 cặp có ít nhất 30 người; ít nhất 6.214 người. Dùng Wilcoxon vì điểm theo từng người lệch phải.
+Đối chuẩn cùng split, seed 42, ngân sách chỉnh bằng nhau.
+Sàn: Random/MostPopular · Kinh điển: ALS/ItemKNN · Mới: SASRec+CE.
+SASRec+CE là đối chuẩn, KHÔNG phải mô hình thắng; 4 CPU, SASRec GPU RTX 4050 6 GB.
+Không so thời gian CPU với GPU; không EASE.
+Kiểm định: Wilcoxon two-sided từng cặp + 95% CI không chứa 0 + effect size (rank-biserial r).
+Friedman cho k ≥ 3 mô hình; hậu kiểm Nemenyi KHÔNG chạy.
+20/20 cặp n ≥ 30, nhỏ nhất 6.214 người; bác bỏ 'mọi mô hình ngang nhau' khi p < 0,05.
 --- NOTES ---
-Wilcoxon dùng vì NDCG theo từng người lệch phải. 20 cặp gồm 12 cặp baseline + 8 cặp SASRec. SASRec là SOTA reference/local reproduction, tuning_budget=0, không phải model thắng.
+Công thức lấy từ 08_Tao_tac_SLI_va_giao_thuc_audit.md:43-66 và 05_Ke_hoach_thuc_nghiem.md:37-51; chiết khấu log₂(rank+1) theo raw_04_Du_Lieu_Thuc_Nghiem_va_Danh_Gia.txt:263-264. NDCG chuẩn là DCG/IDCG; 5 ca gốc + 10 ca bổ sung = 15/15 PASS. MRR lấy hạng relevant đầu tiên, 0 nếu không có. Cảnh báo: SLI trên slide là định nghĩa macro theo user; output notebook 05 hiện dùng mẫu gộp |test| và ×100. Khi báo cáo phải ghi rõ đường dùng, không trộn 98,9084% với 98,9158% hay 98,91%. Slide 11 có thêm Hit@10 theo 00_Slide_Plan.md:154 (tỷ lệ user có ít nhất 1 relevant item trong top-10); micro/macro phải ghi rõ khi báo cáo.Wilcoxon official notebook 12 dùng SciPy + CI t + rank-biserial theo dấu; không trộn script lịch sử 12_stats_tests.py. Friedman loại SASRec, dùng ≤5.000 user chung, Nemenyi chưa chạy. Bài 04: novelty/diversity đã đo; serendipity chưa đo vì cần mô hình mốc.
 
 ===== SLIDE 12 =====
 Kết quả sơ bộ
-Chương 3 — số thật, chưa phải kết luận cuối
+Chương 3 — số thật 20/11; NDCG = độ đúng top-10; Đa dạng = 10 phim khác thể loại
 12 / 15
 Rò rỉ theo từng người
 Thứ hạng đổi thế nào
-Mô hình | NDCG r80 | NDCG thời gian | NDCG LOO | MRR r80 | MRR thời gian | MRR LOO
-ItemKNN | 0,2679 | 0,1409 | 0,0461 | 0,4604 | 0,2644 | 0,0330
-ALS | 0,2581 | 0,1332 | 0,0469 | 0,4342 | 0,2491 | 0,0328
-SASRec + CE (GPU) | 0,0163 | 0,0188 | 0,0067 | 0,0381 | 0,0449 | 0,0043
-MostPopular | 0,0852 | 0,0455 | 0,0183 | 0,1751 | 0,0964 | 0,0123
-Random | 0,0003 | 0,0009 | 0,0001 | 0,0009 | 0,0023 | 0,0001
-ItemKNN − ALS | +0,0098 | +0,0077 | −0,0008 | +0,0262 | +0,0153 | +0,0002
-Wilcoxon p | 2,8e-60 | 3,0e-03 | 0,153 | — | — | —
-Seed 42 · 1 seed · SASRec đối chuẩn, tuning_budget=0 · KHÔNG Mean±Std · KHÔNG đo bộ nhớ · SASRec đánh giá trên tập người con nên so cặp trên giao người.
+Mô hình | NDCG trộn | NDCG thời gian | NDCG giữ cuối | MRR trộn | MRR thời gian | MRR giữ cuối | Đa dạng trộn | Đa dạng thời gian | Đa dạng giữ cuối
+ItemKNN | 0,2679 | 0,1409 | 0,0461 | 0,4604 | 0,2644 | 0,0330 | 0,7878 | 0,7921 | 0,7891
+ALS | 0,2581 | 0,1332 | 0,0469 | 0,4342 | 0,2491 | 0,0328 | 0,7440 | 0,7351 | 0,7472
+SASRec + CE (GPU) | 0,0163 | 0,0187 | 0,0067 | 0,0380 | 0,0449 | 0,0043 | 0,8234 | 0,8149 | 0,8240
+MostPopular | 0,0852 | 0,0455 | 0,0183 | 0,1751 | 0,0964 | 0,0123 | 0,7648 | 0,7883 | 0,7648
+Random | 0,0003 | 0,0009 | 0,0001 | 0,0009 | 0,0023 | 0,0001 | 0,8410 | 0,8296 | 0,8400
+ItemKNN − ALS | +0,0098 | +0,0077 | −0,0008 | +0,0262 | +0,0153 | +0,0002 | +0,0438 | +0,0570 | +0,0419
+Wilcoxon p | 2,8e-60 | 3,0e-03 | 0,153 | — | — | — | — | — | —
+Đa dạng@10 = trung bình 1 − Jaccard(bộ thể loại) trên mọi cặp trong top-10, tính trên 5.000 người mỗi cách chia · Cao hơn = đa dạng hơn, nhưng KHÔNG đồng nghĩa tốt hơn (Random cao nhất mà NDCG ≈ 0) · Bất ngờ (serendipity) chưa đo · Seed 42 · 1 seed · KHÔNG Mean±Std.
 --- NOTES ---
-ItemKNN dẫn ở random và temporal; ALS dẫn ở LOO nhưng p=0,153, CI chứa 0 → không kết luận. SASRec là đối chuẩn SOTA chạy lại trên máy, không phải model thắng. 1 seed, không Mean±Std, không memory.
+Số SASRec lấy từ run 20261120_005943_13_sasrec_ce_f31d7945 (MRR trộn 0,0380; NDCG thời gian 0,0187); §4.10 của Metrics.md giữ run 20261118_144646_13_sasrec_ce_8225755a (0,0381 / 0,0188) để truy vết. ItemKNN dẫn ở random và temporal; ALS dẫn ở LOO nhưng p=0,153, CI chứa 0 → không kết luận. SASRec là đối chuẩn SOTA chạy lại trên máy, không phải model thắng. 1 seed, không Mean±Std, không memory. Đa dạng@10 là độ đo Bài 04 yêu cầu bổ sung (Metrics.md §4.12.3): trung bình 1 − Jaccard bộ thể loại trên mọi cặp trong top-10, đo trên tối đa 5.000 người mỗi cách chia (seed 42). Đọc số: ALS đa dạng THẤP NHẤT ở cả 3 cách chia (0,7351–0,7472), thấp hơn cả MostPopular (0,7648–0,7883); ItemKNN hơn ALS +0,0419 đến +0,0570. Random và SASRec đa dạng cao nhất (0,81–0,84) nhưng Random NDCG ≈ 0 → 'đa dạng' không bằng 'tốt'. Cá nhân hoá không tự động kéo theo đa dạng. Mới lạ@10 (Bài 04, Metrics.md §4.12.2): MostPopular 8,49 thấp nhất, ALS 9,96, ItemKNN 9,23, SASRec 11,70, Random 20,92. Bất ngờ (serendipity) không đo vì cần một mô hình mốc mà đề tài không có. Số đầy đủ: Metrics.md mục 4.12.
 
 ===== SLIDE 13 =====
 Hiệu quả, chi phí và kế hoạch
@@ -327,8 +343,9 @@ Chương 3 — chặn sớm, làm tiếp theo lộ trình
 13 / 15
 Hiệu quả
 Chạy nhanh, chặn sớm
-Kiểm tra tự chặn 3/3 cặp so không hợp lệ.
-Lệch 25,5× / 1,65× / 15,4× > ngưỡng 1,2.
+3/3 cặp so số người đều > 1,20: chỉ nói 'điểm cao hơn', không nói 'tốt hơn'.
+Số người: random 158.688 · thời gian 6.219 · giữ cuối 96.003.
+Tỷ lệ: random/thời gian 25,5× · random/giữ cuối 1,65× · thời gian/giữ cuối 15,4× (> 1,20).
 Tính SLI khoảng 2 phút cho mỗi cách chia mới.
 3 kết quả: thước đo SLI · kiểm tra 3 bước · pipeline chạy lại được.
 Rủi ro
@@ -369,7 +386,8 @@ Hướng thêm
 Sang tập khác; thêm seed.
 Chỉnh SASRec; đo bộ nhớ.
 Giới hạn nói thẳng: local[4] không phải cụm; container đã gỡ; 5/5 mô hình chạy (SASRec GPU, tập người con);
-không so CPU/GPU; 1 seed; không Mean±Std; không đo bộ nhớ; không so NDCG giữa các split.
+không so CPU/GPU; 1 seed; không Mean±Std; không đo bộ nhớ; không so NDCG giữa các split;
+Nemenyi KHÔNG chạy; chưa đo "bất ngờ" (serendipity) vì thiếu mô hình mốc — mới lạ và đa dạng thì đã đo.
 Chưa nhận bản sao SOTA đầy đủ; muốn chắc hơn thì thêm seed, thêm tập dữ liệu, đo thêm bộ nhớ.
 Bốn nhóm an toàn của nghiên cứu: dữ liệu/thiết kế/đo lường/thống kê — mới đáp ứng một phần; cách giảm rủi ro được ghi ở dòng giới hạn.
 --- NOTES ---
@@ -379,12 +397,17 @@ Nói thẳng giới hạn trước khi hội đồng hỏi. Chưa chứng minh �
 Hỏi và đáp
 Cảm ơn hội đồng
 15 / 15
-# | Tài liệu tham khảo (IEEE)
-[1] | Y. Wang et al., “A Critical Study on Data Leakage in Recommender System Offline Evaluation,” ACM TOIS, 41(3), 2022. DOI: 10.1145/3569930
-[2] | H. Abdollahpouri et al., “Reproducing Popularity Bias in Recommendation,” ACM TORS, 2(1), 2023. DOI: 10.1145/3637066
-[3] | Y. Chen et al., “Time to Split,” Proc. RecSys '25, 2025, pp. 874–883. DOI: 10.1145/3705328.3748164
-[4] | “On the Convergent Validity of Offline Evaluation Designs,” Proc. RecSys '26, 2026. DOI: 10.1145/3773078.3831818
-[5] | F. M. Harper and J. A. Konstan, “The MovieLens Datasets,” ACM TIST, 5(4), 2015. DOI: 10.1145/2827872
+# | Tài liệu tham khảo (IEEE, rút gọn)
+[1] | Y. Ji et al., TOIS 41(3), 2023 — Data Leakage. DOI: 10.1145/3569930
+[2] | S. Daniil et al., TORS 2(1), 2024 — Popularity Bias. DOI: 10.1145/3637066
+[3] | D. Gusak et al., RecSys '25, 2025 — Time to Split. DOI: 10.1145/3705328.3748164
+[4] | S. Parajuli et al., RecSys '26, 2026 — Convergent Validity. DOI: 10.1145/3773078.3831818
+[5] | J. Chen et al., TOIS 41(3), 2023 — Bias and Debias. DOI: 10.1145/3564284
+[6] | A. Klimashevskaia et al., UMAI 34(5), 2024 — Popularity Bias Survey. DOI: 10.1007/s11257-024-09406-0
+[7] | G. Meehan, J. Pauwels, RecSys '25, 2025 — Cold-Start Bias. DOI: 10.1145/3705328.3748035
+[8] | X. Shi et al., TOIS 42(2), 2024 — Relieving Popularity Bias. DOI: 10.1145/3618107
+[9] | Y.-M. Tamm et al., RecSys '21, 2021 — Quality Metrics. DOI: 10.1145/3460231.3478848
+[10] | Z. Meng et al., RecSys '20, 2020 — Data Splitting. DOI: 10.1145/3383313.3418479
 Chuẩn bị
 Câu hỏi dự phòng
 Vì sao giữ lượt cuối lại không rò rỉ?
@@ -394,4 +417,4 @@ SASRec có phải mô hình thắng không?
 Mã nguồn và tham số: https://github.com/StreetParkourZombie/Recommendation_System
 Giải thích ngắn nằm trong speaker notes của từng slide.
 --- NOTES ---
-Giải thích ngắn: LOO lấy mốc là lượt muộn nhất của chính người đó; ALS chạy đủ 162.541 người; mới 1 seed nên chưa nói độ ổn định. SASRec là đối chuẩn, không phải mô hình thắng.
+Nguồn dữ liệu: F. M. Harper, J. A. Konstan, TIST 5(4), 2015 — MovieLens. DOI: 10.1145/2827872. Giải thích ngắn: LOO lấy mốc là lượt muộn nhất của chính người đó; ALS chạy đủ 162.541 người; mới 1 seed nên chưa nói độ ổn định. SASRec là đối chuẩn, không phải mô hình thắng.

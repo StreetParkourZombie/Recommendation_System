@@ -44,7 +44,7 @@ Format: `### [YYYY-MM-DD] [Category] Title` -> Vấn đề / Nguyên nhân / B�
 
 - **Vấn đề:** Khi chia theo mốc thời gian toàn cục (P80 timestamp), tập test xuất hiện lượng lớn item và user chưa từng có trong tập train.
 - **Bằng chứng đo được:**
-  - `unseen_item_rows`: 8,7594% số dòng test thuộc về phim chưa từng xuất hiện ở train.
+  - `unseen_item_rows`: 8,7595% số dòng test thuộc về phim chưa từng xuất hiện ở train.
   - `coldstart_user_rows`: 4.235.246 dòng test thuộc về user mới hoàn toàn.
 - **Hậu quả:** Mô hình lọc cộng tác cổ điển (ALS / Matrix Factorization) hoàn toàn bất lực trước user/item cold-start này nếu không có fallback hoặc cơ chế hybrid.
 - **Giải pháp:** Định nghĩa rõ tập `eval_users` (user có $\ge 5$ tương tác trong train và $\ge 1$ tương tác test có rating $\ge 4.0$) để đo lường công bằng trên cùng tập user hợp lệ giữa 3 phương pháp chia.

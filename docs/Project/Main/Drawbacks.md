@@ -80,13 +80,13 @@
 
 ### 3.3. NDCG Không So Cặp Được Giữa Các Split
 
-- Mỗi split có tập user đánh giá riêng: **158.692 / 6.219 / 96.003** user có ≥ 1 tương tác liên quan.
+- Mỗi split có tập user đánh giá riêng: **158.692 / 6.219 / 96.003** user có ≥ 1 tương tác liên quan (số của Popularity/Random/ItemKNN; ALS là **158.626 / 6.214 / 95.977**).
 - **Hạn chế:** NDCG của `temporal_global` (0,1332) và `random80_20` (0,2581) được tính trên hai quần thể khác nhau → **không** so sánh trực tiếp được bằng test ghép cặp. (Số FULL run 2026-11-17; số subsample cũ 0,1311 / 0,2556.)
 - Kiểm định Wilcoxon chỉ hợp lệ **trong** một split (so ALS với Popularity trên cùng user). So sánh **giữa** split chỉ được dùng để mô tả **độ lớn hiệu ứng co lại**, kèm chỉ số cấp dữ liệu giải thích nguyên nhân.
 
 ### 3.4. `temporal_global` Đổi Rò Rỉ Lấy Dịch Chuyển Miền
 
-- Loại được rò rỉ (0,0000%) nhưng **mất 96,1% mẫu đánh giá** (158.692 → 6.219 user) và có **8,7595%** dòng test trỏ tới item chưa từng thấy trong train.
+- Loại được rò rỉ (0,0000%) nhưng **mất 96,1% mẫu đánh giá** (158.692 → 6.219 user — số của Popularity) và có **8,7595%** dòng test trỏ tới item chưa từng thấy trong train.
 - **Hệ quả:** NDCG thấp ở split này một phần là do tập test khó hơn, không hoàn toàn do mô hình yếu.
 
 ### 3.5. Năm Baseline Đã Chạy — SASRec Có Điều Kiện
@@ -106,6 +106,8 @@
 ## 4. Hạn Chế Truy Vết Số Liệu
 
 ### 4.1. Hai Đường Tính Cho Hai Bộ Số Hơi Khác Nhau
+
+> Bảng truy vết **lịch sử**. Chỉ đường **C/D/E** được trích vào báo cáo; A và B giữ để chứng minh kết luận không phụ thuộc đường tính.
 
 - Đường A (script, 2026-11-04): ALS NDCG 0,2584 / 0,1364 / 0,0474.
 - Đường B (notebook subsample, 2026-11-15): ALS NDCG 0,2556 / 0,1311 / 0,0467.

@@ -181,6 +181,8 @@ Chỉ số (mỗi ô):
 
 ### 7.3 Kết quả PoC — **ĐÃ ĐO THẬT 04/11/2026**
 
+> **Quy ước số:** hai bảng dưới là **đường A (script, 04/11/2026)** — giữ để truy vết. Số chính thức dùng cho đề cương/báo cáo/slide là **đường C/D/E** ở **§7.3b**.
+
 Nguồn: `results/poc6_<split>.json` → MongoDB `recsys.audit_metrics` → `reports/metrics_summary.csv`.
 Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam 0,05, alpha 10, seed 42, **FULL 162.541 user — run 2026-11-17**, subsample 30.000 chỉ là run lịch sử 15/11).
 
@@ -191,11 +193,12 @@ Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam
 | Train rows                                        | 19.997.972          | 19.999.206          | 24.837.554        |
 | Test rows                                         | 5.002.123           | 5.000.889           | 162.541           |
 | **Temporal violation (toàn cục)**         | **100,0000%** | 0,0000%             | 99,9988%          |
-| **Temporal violation (tương đối user)** | **98,9084%**  | 0,0000%             | **0,0000%** |
-| Item chưa từng xuất hiện                      | 0,0559%             | **8,7594%**   | 0,0388%           |
+| **Temporal violation (tương đối user)** | **98,9158%**  | 0,0000%             | **0,0000%** |
+| Item chưa từng xuất hiện                      | 0,0573%             | **8,7595%**   | 0,0388%           |
 | User lạnh (cold-start)                           | 0                   | **4.235.246** | 0                 |
 | User đánh giá                                  | 162.541             | 137.839             | 162.541           |
-| **User có phản hồi liên quan**          | 158.688             | **6.219**     | 96.003            |
+| **User có phản hồi liên quan** (Pop/Random/ItemKNN) | 158.688 | **6.219** | 96.003 |
+| **User có phản hồi liên quan** (ALS)    | 158.626             | 6.214         | 95.977            |
 
 **Tầng 2-3 — hiệu quả gợi ý và thiên lệch phổ biến**
 
@@ -212,12 +215,26 @@ Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam
 | **Popularity-bias ratio — Popularity** | **158,64** | **101,26** | **165,27** |
 | **Popularity-bias ratio — ALS**        | **12,26**  | **11,20**  | **12,41**  |
 
+### 7.3b Số chính thức — đường C/D/E (2026-11-20, `runs/20261120_012944_09_compare_and_reversal_21d0811a`)
+
+| Chỉ số | random 80/20 | temporal global | leave-one-out |
+|---|---:|---:|---:|
+| NDCG@10 — ItemKNN | 0,2679 | 0,1409 | 0,0461 |
+| NDCG@10 — ALS | **0,2581** | **0,1332** | **0,0469** |
+| NDCG@10 — MostPopular | 0,0852 | 0,0455 | 0,0183 |
+| NDCG@10 — Random | 0,0003 | 0,0009 | 0,0001 |
+| NDCG@10 — SASRec+CE | 0,0163 | 0,0187 | 0,0067 |
+| eval_relevant_users (Pop/Random/ItemKNN) | 158.692 | 6.219 | 96.003 |
+| eval_relevant_users (ALS) | 158.626 | 6.214 | 95.977 |
+
+> Đọc bảng này: **thứ hạng giữa 5 model không đảo khi so với sàn**, nhưng ngôi đầu đổi chỗ ItemKNN ↔ ALS ở 2/3 split (`best_model_reversals_found = 2`) — khác biệt nhỏ hơn sai số thực hành.
+
 ### 7.4 Bằng chứng định lượng đã có (dùng được cho phần Gap)
 
 **B1 — rò rỉ dữ liệu dưới split ngẫu nhiên:**
 
 - Định nghĩa toàn cục: 100,0000% test trước mốc lớn nhất của train.
-- **Định nghĩa tương đối theo user: 98,9084%** → rò rỉ không chỉ là hiện tượng toàn cục mà **xảy ra ở gần như từng người dùng**, kể cả khi so với lịch sử của chính họ.
+- **Định nghĩa tương đối theo user: 98,9158%** → rò rỉ không chỉ là hiện tượng toàn cục mà **xảy ra ở gần như từng người dùng**, kể cả khi so với lịch sử của chính họ.
 - → Bằng chứng mạnh và **chi tiết hơn** các nghiên cứu B1 (vốn chỉ nêu rủi ro ở mức cấu hình).
 
 **B2 — thiên lệch phổ biến thay đổi theo chiến lược split:**
@@ -229,13 +246,13 @@ Ngưỡng liên quan `rating >= 4,0`; ALS implicit (rank 16, maxIter 8, regParam
 **B3 — thứ hạng mô hình KHÔNG đảo chiều, nhưng độ lớn thay đổi mạnh:**
 
 - ALS > Popularity ở cả 3 split.
-- NDCG@10 của ALS: 0,2584 (random) → 0,1364 (temporal) → 0,0474 (LOO) = **chênh lệch 5,45 lần**.
+- NDCG@10 của ALS: 0,2581 (random) → 0,1332 (temporal) → 0,0469 (LOO) = **chênh lệch 5,5 lần** (đường C).
 - → Bổ sung (cập nhật 2026-11-18 sau khi có ItemKNN): B3 nói "thứ hạng có thể đảo chiều". Kết quả: **thứ hạng không đảo khi so với sàn** (ALS và ItemKNN đều hơn MostPopular/Random hàng trăm lần), **nhưng ngôi đầu đổi chỗ giữa hai model kinh điển ở 2/3 split** (ItemKNN dẫn `random80_20` +0,0098 và `temporal_global` +0,0077; ALS dẫn `leave_one_out` −0,0008) — `best_model_reversals_found = 2`. Effect size |r| = 0,005–0,030 nên khác biệt gần như không về thực hành.
 
 **Phát hiện mới (đóng góp chính):**
 
 1. **Định nghĩa rò rỉ phải tương đối theo user.** Toàn cục cho LOO = 99,9988% (vô nghĩa), tương đối = 0% (đúng thiết kế). Chỉ số phụ thuộc định nghĩa → cần chuẩn hoá.
-2. **Đổi rò rỉ lấy dịch chuyển miền.** Temporal loại rò rỉ (0%) nhưng mất **96,1% mẫu đánh giá** (158.688 → 6.219 user) và có 8,76% item chưa từng xuất hiện. Không có chiến lược nào "miễn phí".
+2. **Đổi rò rỉ lấy dịch chuyển miền.** Temporal loại rò rỉ (0%) nhưng mất **96,1% mẫu đánh giá** (158.688 → 6.219 user — số của Popularity; ALS là 158.626 → 6.214) và có 8,76% item chưa từng xuất hiện. Không có chiến lược nào "miễn phí".
 3. **NDCG thấp không phải lỗi mô hình mà lỗi thiết kế đo lường.** ALS explicit cho NDCG xấp xỉ 0 vì xếp hạng theo sai số dự đoán rating; phải dùng implicit ALS + ngưỡng liên quan >= 4,0.
 4. **Hệ quả vận hành:** đổi chiến lược split làm thay đổi cả quy mô dữ liệu huấn luyện (20,0M → 24,8M rows) → khác biệt về thời gian chạy và chi phí tính toán, không chỉ về chất lượng đánh giá.
 
